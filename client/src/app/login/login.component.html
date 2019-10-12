@@ -1,0 +1,39 @@
+<div class="container">
+
+  <div class="row">
+    
+    <div class="col-md-6">
+
+      <h1 class="form-signin-heading">Sign in</h1>
+      <p class="lead">Not a member? Please <a routerLink="/signup">signup</a> instead.</p>
+  
+      <form class="mt-5" [formGroup]="loginForm" (ngSubmit)="onSubmit(loginForm.value)">
+        <div class="form-group">
+          <label for="email">Email address</label>
+          <input type="email" [class.is-invalid]="getControl('email').invalid && getControl('email').touched && submitted"
+            class="form-control" id="email" formControlName="email" placeholder="Enter email">
+          <div *ngIf="getControl('email').invalid && getControl('email').touched && submitted">
+            <div *ngIf="getControl('email').errors?.required" class="invalid-feedback d-block">Email is required.</div>
+            <div *ngIf="getControl('email').errors?.notValidEmail" class="invalid-feedback d-block">Email is not valid.</div>
+            <div *ngIf="!getControl('email').errors?.emailTaken" class="invalid-feedback d-block">No user is signed up with
+              this email address.</div>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input type="password"
+            [class.is-invalid]="getControl('password').invalid && getControl('password').touched && submitted"
+            class="form-control" id="password" formControlName="password" placeholder="Enter password">
+          <div *ngIf="getControl('password').invalid && getControl('password').touched && submitted">
+            <div *ngIf="getControl('password').errors?.required" class="invalid-feedback d-block">Password is required.</div>
+            <div *ngIf="getControl('password').errors?.minlength" class="invalid-feedback d-block">Password length must be at
+              least {{ getControl('password').errors?.minlength.requiredLength }} characters.</div>
+          </div>
+        </div>
+        <button type="submit" class="btn btn-primary" [disabled]="this.loginForm.invalid && submitted">Login</button>
+      </form>
+
+    </div>
+  </div>
+
+</div>

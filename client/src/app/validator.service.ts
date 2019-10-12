@@ -1,0 +1,67 @@
+import { Injectable } from '@angular/core';
+import { AbstractControl } from '@angular/forms';
+import { AuthenticationService } from './authentication.service';
+
+@Injectable({
+  providedIn: 'root'
+})
+export class ValidatorService {
+  constructor(private authService: AuthenticationService) { }
+
+  async IsUsernameTakenValidator(control: AbstractControl) {
+    const username = control.value;
+    const isUsernameTaken = await this.authService.checkIfUsernameIsTaken(username);
+
+    return isUsernameTaken ? { usernameTaken: true } : null;
+  }
+
+  async IsEmailTakenValidator(control: AbstractControl) {
+    const email = control.value;
+    const isEmailTaken = await this.authService.checkIfEmailIsTaken(email);
+
+    return isEmailTaken ? { emailTaken: true } : null;
+  }
+
+  UsernameValidator(control: AbstractControl) {
+    const VALID_USERNAME_REGEX = /^[a-zA-Z0-9_]+$/;
+    const VALID_ALPHANUMERIC_REGEX = /[a-zA-Z0-9]+/;
+
+    const isValidUsername = VALID_USERNAME_REGEX.test(control.value);
+    const containsAlphanumeric = VALID_ALPHANUMERIC_REGEX.test(control.value);
+
+    if (!isValidUsername) {
+      return { notValidUsername: true };
+    } else if (!containsAlphanumeric) {
+      return { doesntContainAlphanumeric: true };
+    } else {
+      return null;
+    }
+  }
+
+  EmailValidator(control: AbstractControl) {
+    // tslint:disable-next-line: max-line-length
+    const VALID_EMAIL_REGEX = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    const isValid = VALID_EMAIL_REGEX.test(control.value);
+
+    return isValid ? null : { notValidEmail: true };
+  }
+
+  PasswordValidator(control: AbstractControl) {
+    const VALID_PASSWORD_REGEX = /(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[$@$!%*?&])[A-Za-z\d$@$!%*?&].{8,}/;
+    const isValid = VALID_PASSWORD_REGEX.test(control.value);
+
+    return isValid ? null : { notValidPassword: true };
+  }
+
+  ConfirmPasswordValidator(control: AbstractControl) {
+    const password = control.get('password');
+    const confirmPassword = control.get('confirmPassword');
+    if (password.pristine || confirmPassword.pristine) {
+      return null;
+    }
+
+    if (password && confirmPassword && (password.value !== confirmPassword.value)) {
+      return { passwordsNotMatching: true };
+    }
+  }
+}
