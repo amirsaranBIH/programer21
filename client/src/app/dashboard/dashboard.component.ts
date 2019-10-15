@@ -2,15 +2,15 @@ import { Component, OnInit } from '@angular/core';
 import { AuthenticationService, UserDetails } from '../authentication.service';
 
 @Component({
-  templateUrl: './profile.component.html'
+  templateUrl: './dashboard.component.html'
 })
-export class ProfileComponent implements OnInit {
+export class DashboardComponent implements OnInit {
   details: UserDetails;
 
   constructor(private auth: AuthenticationService) {}
 
   ngOnInit() {
-    this.auth.profile().subscribe(user => {
+    this.auth.dashboard().subscribe(user => {
       this.details = user;
     }, (err) => {
       console.error(err);

@@ -8,13 +8,6 @@ import { AuthenticationService } from './authentication.service';
 export class ValidatorService {
   constructor(private authService: AuthenticationService) { }
 
-  async IsUsernameTakenValidator(control: AbstractControl) {
-    const username = control.value;
-    const isUsernameTaken = await this.authService.checkIfUsernameIsTaken(username);
-
-    return isUsernameTaken ? { usernameTaken: true } : null;
-  }
-
   async IsEmailTakenValidator(control: AbstractControl) {
     const email = control.value;
     const isEmailTaken = await this.authService.checkIfEmailIsTaken(email);
@@ -22,17 +15,13 @@ export class ValidatorService {
     return isEmailTaken ? { emailTaken: true } : null;
   }
 
-  UsernameValidator(control: AbstractControl) {
-    const VALID_USERNAME_REGEX = /^[a-zA-Z0-9_]+$/;
-    const VALID_ALPHANUMERIC_REGEX = /[a-zA-Z0-9]+/;
+  NameValidator(control: AbstractControl) {
+    const VALID_NAME_REGEX = /^[a-zA-Z]+$/;
 
-    const isValidUsername = VALID_USERNAME_REGEX.test(control.value);
-    const containsAlphanumeric = VALID_ALPHANUMERIC_REGEX.test(control.value);
+    const isValidName = VALID_NAME_REGEX.test(control.value);
 
-    if (!isValidUsername) {
-      return { notValidUsername: true };
-    } else if (!containsAlphanumeric) {
-      return { doesntContainAlphanumeric: true };
+    if (!isValidName) {
+      return { nameNotValid: true };
     } else {
       return null;
     }

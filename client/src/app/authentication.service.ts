@@ -6,7 +6,8 @@ import { Router } from '@angular/router';
 
 export interface UserDetails {
   _id: string;
-  username?: string;
+  first_name?: string;
+  last_name?: string;
   email?: string;
   verifiedEmail: boolean;
   verifyToken?: string;
@@ -32,7 +33,8 @@ interface TokenResponse {
 export interface TokenPayload {
   email: string;
   password: string;
-  username?: string;
+  first_name?: string;
+  last_name?: string;
 }
 
 @Injectable()
@@ -74,7 +76,7 @@ export class AuthenticationService {
     }
   }
 
-  private request(method: 'post'|'get', type: 'login'|'signup'|'profile', user?: TokenPayload): Observable<any> {
+  private request(method: 'post'|'get', type: 'login'|'signup'|'dashboard', user?: TokenPayload): Observable<any> {
     let base;
 
     if (method === 'post') {
@@ -103,18 +105,14 @@ export class AuthenticationService {
     return this.request('post', 'login', user);
   }
 
-  public profile(): Observable<UserDetails> {
-    return this.request('get', 'profile');
+  public dashboard(): Observable<UserDetails> {
+    return this.request('get', 'dashboard');
   }
 
   public logout(): void {
     this.token = '';
     window.localStorage.removeItem('mean-token');
     this.router.navigateByUrl('/');
-  }
-
-  public async checkIfUsernameIsTaken(username: string) {
-    return await this.http.post<boolean>('/api/isUsernameTaken', { username }).toPromise();
   }
 
   public async checkIfEmailIsTaken(email: string) {

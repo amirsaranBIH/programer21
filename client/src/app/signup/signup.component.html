@@ -1,63 +1,74 @@
 <div class="container">
-
-  <div class="row">
-    <div class="col-md-6">
+  <div class="signup">
+    <form class="form form--max-width" [formGroup]="signupForm" (ngSubmit)="onSubmit(signupForm.value)">
       <h1>Sign Up</h1>
-      <p class="lead">Already a member? Please <a routerLink="/login">log in</a> instead.</p>
-      <form class="mt-5" [formGroup]="signupForm" (ngSubmit)="onSubmit(signupForm.value)">
-        <div class="form-group">
-          <label for="username">Username</label>
-          <input type="text" [class.is-invalid]="username.invalid && username.touched" class="form-control" id="username"
-            formControlName="username" placeholder="Enter username">
-          <div *ngIf="username.invalid && username.touched">
-            <div *ngIf="username.errors?.required" class="invalid-feedback d-block">Username is required.</div>
-            <div *ngIf="username.errors?.minlength" class="invalid-feedback d-block">Username length must be more than
-              {{ username.errors?.minlength.requiredLength }} letters.</div>
-            <div *ngIf="username.errors?.maxlength" class="invalid-feedback d-block">Username length must be less than
-              {{ username.errors?.maxlength.requiredLength }} letters.</div>
-            <div *ngIf="username.errors?.doesntContainAlphanumeric" class="invalid-feedback d-block">Username must contain at
-              least one alphanumeric character.</div>
-            <div *ngIf="username.errors?.notValidUsername" class="invalid-feedback d-block">Username can only contain
-              alphanumeric characters and underscores (_).</div>
-            <div *ngIf="username.errors?.usernameTaken" class="invalid-feedback d-block">Username already taken.</div>
+      <div class="form__group--flex">
+        <div class="form__group__section">
+          <label for="first_name">First Name</label>
+          <input type="text" [class.is-invalid]="first_name.invalid && first_name.touched" id="first_name"
+            formControlName="first_name" placeholder="Enter first name">
+          <div class="form__help text--small" *ngIf="first_name.invalid && first_name.touched">
+            <div *ngIf="first_name.errors?.required" class="invalid-feedback d-block">First name is required.</div>
+            <div *ngIf="first_name.errors?.minlength" class="invalid-feedback d-block">First name length must be more
+              than
+              {{ first_name.errors?.minlength.requiredLength }} letters.</div>
+            <div *ngIf="first_name.errors?.nameNotValid" class="invalid-feedback d-block">First name can only contain
+              characters.</div>
           </div>
         </div>
-        <div class="form-group">
-          <label for="email">Email address</label>
-          <input type="email" [class.is-invalid]="email.invalid && email.touched" class="form-control" id="email"
-            formControlName="email" placeholder="Enter email">
-          <div *ngIf="email.invalid && email.touched">
-            <div *ngIf="email.errors?.required" class="invalid-feedback d-block">Email is required.</div>
-            <div *ngIf="email.errors?.notValidEmail" class="invalid-feedback d-block">Email is not valid.</div>
-            <div *ngIf="email.errors?.emailTaken" class="invalid-feedback d-block">User with this email is already signed up.
-            </div>
+        <div class="form__group__section">
+          <label for="last_name">Last Name</label>
+          <input type="text" [class.is-invalid]="last_name.invalid && last_name.touched" id="last_name"
+            formControlName="last_name" placeholder="Enter first name">
+          <div class="form__help text--small" *ngIf="last_name.invalid && last_name.touched">
+            <div *ngIf="last_name.errors?.required" class="invalid-feedback d-block">Last name is required.</div>
+            <div *ngIf="last_name.errors?.minlength" class="invalid-feedback d-block">Last name length must be more than
+              {{ last_name.errors?.minlength.requiredLength }} letters.</div>
+            <div *ngIf="last_name.errors?.nameNotValid" class="invalid-feedback d-block">Last name can only contain
+              characters.</div>
           </div>
         </div>
-        <div class="form-group">
-          <label for="password">Password</label>
-          <input type="password" [class.is-invalid]="password.invalid && password.touched" class="form-control" id="password"
-            formControlName="password" placeholder="Password">
-          <div *ngIf="password.invalid && password.touched">
-            <div *ngIf="password.errors?.required" class="invalid-feedback d-block">Password is required.</div>
-            <div *ngIf="password.errors?.minlength" class="invalid-feedback d-block">Password length must be at least
-              {{ password.errors?.minlength.requiredLength }} characters.</div>
-            <div *ngIf="password.errors?.notValidPassword" class="invalid-feedback d-block">Password must contain lower and
-              upper case letters, numbers and special characters.</div>
+      </div>
+      <div class="form__group">
+        <label for="email">Email address</label>
+        <input type="email" [class.is-invalid]="email.invalid && email.touched" id="email" formControlName="email"
+          placeholder="Enter email">
+        <div class="form__help text--small" *ngIf="email.invalid && email.touched">
+          <div *ngIf="email.errors?.required" class="invalid-feedback d-block">Email is required.</div>
+          <div *ngIf="email.errors?.notValidEmail" class="invalid-feedback d-block">Email is not valid.</div>
+          <div *ngIf="email.errors?.emailTaken" class="invalid-feedback d-block">User with this email is already
+            signed up.
           </div>
         </div>
-        <div class="form-group">
-          <label for="confirmPassword">Confirm Password</label>
-          <input type="password"
-            [class.is-invalid]="(confirmPassword.invalid && confirmPassword.touched) || signupForm.errors"
-            class="form-control" id="confirmPassword" formControlName="confirmPassword" placeholder="Confirm Password">
-          <div *ngIf="(confirmPassword.invalid && confirmPassword.touched) || signupForm.errors">
-            <div *ngIf="confirmPassword.errors?.required" class="invalid-feedback d-block">Confirm password is required.</div>
-            <div *ngIf="signupForm.errors?.passwordsNotMatching" class="invalid-feedback d-block">Passwords don't match.</div>
+      </div>
+      <div class="form__group">
+        <label for="password">Password</label>
+        <input type="password" [class.is-invalid]="password.invalid && password.touched" id="password"
+          formControlName="password" placeholder="Password">
+        <div class="form__help text--small" *ngIf="password.invalid && password.touched">
+          <div *ngIf="password.errors?.required" class="invalid-feedback d-block">Password is required.</div>
+          <div *ngIf="password.errors?.minlength" class="invalid-feedback d-block">Password length must be at least
+            {{ password.errors?.minlength.requiredLength }} characters.</div>
+          <div *ngIf="password.errors?.notValidPassword" class="invalid-feedback d-block">Password must contain lower
+            and
+            upper case letters, numbers and special characters.</div>
+        </div>
+      </div>
+      <div class="form__group">
+        <label for="confirmPassword">Confirm Password</label>
+        <input type="password"
+          [class.is-invalid]="(confirmPassword.invalid && confirmPassword.touched) || signupForm.errors"
+          id="confirmPassword" formControlName="confirmPassword" placeholder="Confirm Password">
+        <div class="form__help text--small"
+          *ngIf="(confirmPassword.invalid && confirmPassword.touched) || signupForm.errors">
+          <div *ngIf="confirmPassword.errors?.required" class="invalid-feedback d-block">Confirm password is required.
+          </div>
+          <div *ngIf="signupForm.errors?.passwordsNotMatching" class="invalid-feedback d-block">Passwords don't
+            match.
           </div>
         </div>
-        <button type="submit" class="btn btn-primary" [disabled]="this.signupForm.invalid">Sign Up</button>
-      </form>      
-    </div>
+      </div>
+      <button type="submit" class="button button--large" [disabled]="this.signupForm.invalid">Sign Up</button>
+    </form>
   </div>
-
 </div>

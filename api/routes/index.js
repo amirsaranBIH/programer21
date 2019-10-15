@@ -7,17 +7,16 @@ var auth = jwt({
   userProperty: 'payload'
 });
 
-var ctrlProfile = require('../controllers/profile');
+var ctrlDashboard = require('../controllers/dashboard');
 var ctrlAuth = require('../controllers/authentication');
 
-// profile
-router.get('/profile', auth, ctrlProfile.profileRead);
+// dashboard
+router.get('/dashboard', auth, ctrlDashboard.dashboardRead);
 
 // authentication
 router.post('/signup', ctrlAuth.signup);
 router.post('/login', ctrlAuth.login);
 router.get('/verifyEmail/:user_id/:verify_token', ctrlAuth.verifyEmail);
-router.post('/isUsernameTaken', ctrlAuth.isUsernameTaken);
 router.post('/isEmailTaken', ctrlAuth.isEmailTaken);
 
 module.exports = router;

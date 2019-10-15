@@ -13,16 +13,10 @@ var sendJSONresponse = function(res, status, content) {
 
 module.exports.signup = function(req, res) {
 
-  // if(!req.body.username || !req.body.email || !req.body.password) {
-  //   sendJSONresponse(res, 400, {
-  //     "message": "All fields required"
-  //   });
-  //   return;
-  // }
-
   var user = new User();
 
-  user.username = req.body.username;
+  user.first_name = req.body.first_name;
+  user.last_name = req.body.last_name;
   user.email = req.body.email;
   user.verifyToken = randtoken.generate(32);
 
@@ -88,14 +82,6 @@ module.exports.verifyEmail = function(req, res) {
     res.send(false);
   });
 };
-
-module.exports.isUsernameTaken = async function(req, res) {
-  let user = await User.findOne({
-    username: req.body.username
-  });
-
-  res.send(user ? true : false);
-}
 
 module.exports.isEmailTaken = async function(req, res) {
   let user = await User.findOne({

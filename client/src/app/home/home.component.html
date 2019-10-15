@@ -1,7 +1,154 @@
+<div class="container--full">
+  <section class="featured-courses">
+    <section class="featured-courses__course">
+      <section class="featured-courses__course__content">
+        <span class="featured-courses__course__heading">HTML</span>
+        <p class="featured-courses__course__brief">Lorem ipsum dolor sit amet consectetur adipisicing elit. Quasi
+          officia dignissimos non voluptate, animi fugiat...</p>
+        <a href="/" class="button button--large">Start course</a>
+      </section>
+    </section>
+  </section>
+</div>
+
 <div class="container">
-  
-  <h1>Hello there</h1>
+  <section class="why section">
+    <h2 class="text-center section-heading">Why learn with Avika?</h2>
+    <div class="why__grid">
+      <div class="why__section flex">
+        <div class="why__section__image">
+          <img src="https://syntaxxx.com/wp-content/uploads/2014/08/html5-logo-600-580x580.jpg" alt="html">
+        </div>
+        <div class="why__section__content">
+          <h3>Free</h3>
+          <p class="text--small">Lorem ipsum dolor sit amet consectetur adipisicing elit. Nemo exercitationem fugiat
+            autem maxime veritatis
+            similique nostrum mollitia.</p>
+          <p class="text--small">Placeat in officiis culpa ducimus sint eveniet eos perspiciatis eum labore provident
+            tempore.</p>
+        </div>
+      </div>
+      <div class="why__section flex">
+        <div class="why__section__image">
+          <img src="https://syntaxxx.com/wp-content/uploads/2014/08/html5-logo-600-580x580.jpg" alt="html">
+        </div>
+        <div class="why__section__content">
+          <h3>Free</h3>
+          <p class="text--small">Lorem ipsum dolor sit amet consectetur adipisicing elit. Nemo exercitationem fugiat
+            autem maxime veritatis
+            similique nostrum mollitia.</p>
+          <p class="text--small">Placeat in officiis culpa ducimus sint eveniet eos perspiciatis eum labore provident
+            tempore.</p>
+        </div>
+      </div>
+      <div class="why__section flex">
+        <div class="why__section__image">
+          <img src="https://syntaxxx.com/wp-content/uploads/2014/08/html5-logo-600-580x580.jpg" alt="html">
+        </div>
+        <div class="why__section__content">
+          <h3>Free</h3>
+          <p class="text--small">Lorem ipsum dolor sit amet consectetur adipisicing elit. Nemo exercitationem fugiat
+            autem maxime veritatis
+            similique nostrum mollitia.</p>
+          <p class="text--small">Placeat in officiis culpa ducimus sint eveniet eos perspiciatis eum labore provident
+            tempore.</p>
+        </div>
+      </div>
+    </div>
+  </section>
 
-  <p>Won't you please <a routerLink="/login">sign in</a> or <a routerLink="/signup">signup</a>?</p>
+  <section class="faq section">
+    <h2 class="text-center section-heading">What is Avika?</h2>
+    <div class="faq__content">
+      <div class="faq__content__questions">
+        <ul>
+          <li *ngFor="let qa of questionsAndAnswers; let i = index" (click)="changeSelectedQuestion(i)">{{qa.question}}
+          </li>
+        </ul>
+      </div>
+      <div class="faq__content__answer">
+        <p>{{questionsAndAnswers[selectedQuestion].answer}}</p>
+      </div>
+    </div>
+  </section>
 
+  <section class="quick-signup section">
+    <h2 class="text-center section-heading">Start learning today!</h2>
+    <div class="quick-signup__content">
+      <form class="form form--max-width" [formGroup]="quickSignupForm" (ngSubmit)="onSubmit(quickSignupForm.value)">
+        <div class="form__group--flex">
+          <div class="form__group__section">
+            <label for="first_name">First Name</label>
+            <input type="text" [class.is-invalid]="first_name.invalid && first_name.touched" id="first_name"
+              formControlName="first_name" placeholder="Enter first name">
+            <div class="form__help text--small" *ngIf="first_name.invalid && first_name.touched">
+              <div *ngIf="first_name.errors?.required" class="invalid-feedback d-block">First name is required.</div>
+              <div *ngIf="first_name.errors?.minlength" class="invalid-feedback d-block">First name length must be more
+                than
+                {{ first_name.errors?.minlength.requiredLength }} letters.</div>
+              <div *ngIf="first_name.errors?.nameNotValid" class="invalid-feedback d-block">First name can only contain
+                characters.</div>
+            </div>
+          </div>
+          <div class="form__group__section">
+            <label for="last_name">Last Name</label>
+            <input type="text" [class.is-invalid]="last_name.invalid && last_name.touched" id="last_name"
+              formControlName="last_name" placeholder="Enter first name">
+            <div class="form__help text--small" *ngIf="last_name.invalid && last_name.touched">
+              <div *ngIf="last_name.errors?.required" class="invalid-feedback d-block">Last name is required.</div>
+              <div *ngIf="last_name.errors?.minlength" class="invalid-feedback d-block">Last name length must be more
+                than
+                {{ last_name.errors?.minlength.requiredLength }} letters.</div>
+              <div *ngIf="last_name.errors?.nameNotValid" class="invalid-feedback d-block">Last name can only contain
+                characters.</div>
+            </div>
+          </div>
+        </div>
+        <div class="form__group">
+          <label for="email">Email address</label>
+          <input type="email" [class.is-invalid]="email.invalid && email.touched" id="email" formControlName="email"
+            placeholder="Enter email">
+          <div class="form__help text--small" *ngIf="email.invalid && email.touched">
+            <div *ngIf="email.errors?.required" class="invalid-feedback d-block">Email is required.</div>
+            <div *ngIf="email.errors?.notValidEmail" class="invalid-feedback d-block">Email is not valid.</div>
+            <div *ngIf="email.errors?.emailTaken" class="invalid-feedback d-block">User with this email is already
+              signed up.
+            </div>
+          </div>
+        </div>
+        <div class="form__group">
+          <label for="password">Password</label>
+          <input type="password" [class.is-invalid]="password.invalid && password.touched" id="password"
+            formControlName="password" placeholder="Password">
+          <div class="form__help text--small" *ngIf="password.invalid && password.touched">
+            <div *ngIf="password.errors?.required" class="invalid-feedback d-block">Password is required.</div>
+            <div *ngIf="password.errors?.minlength" class="invalid-feedback d-block">Password length must be at least
+              {{ password.errors?.minlength.requiredLength }} characters.</div>
+            <div *ngIf="password.errors?.notValidPassword" class="invalid-feedback d-block">Password must contain lower
+              and
+              upper case letters, numbers and special characters.</div>
+          </div>
+        </div>
+        <div class="form__group">
+          <label for="confirmPassword">Confirm Password</label>
+          <input type="password"
+            [class.is-invalid]="(confirmPassword.invalid && confirmPassword.touched) || quickSignupForm.errors"
+            id="confirmPassword" formControlName="confirmPassword" placeholder="Confirm Password">
+          <div class="form__help text--small"
+            *ngIf="(confirmPassword.invalid && confirmPassword.touched) || quickSignupForm.errors">
+            <div *ngIf="confirmPassword.errors?.required" class="invalid-feedback d-block">Confirm password is required.
+            </div>
+            <div *ngIf="quickSignupForm.errors?.passwordsNotMatching" class="invalid-feedback d-block">Passwords don't
+              match.
+            </div>
+          </div>
+        </div>
+        <button type="submit" class="button button--large" [disabled]="this.quickSignupForm.invalid">Sign Up</button>
+      </form>
+    </div>
+  </section>
+
+  <section class="copyright section">
+    <p class="text-center">Copyright 2019 Avika</p>
+  </section>
 </div>

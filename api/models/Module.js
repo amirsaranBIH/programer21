@@ -1,16 +1,11 @@
 const mongoose = require('mongoose');
 
 const ModuleSchema = new mongoose.Schema({
-    moduleNumber: {
-        type: Number,
-        unique: true,
-        min: 1,
-        required: true
-    },
     title: {
         type: String,
         trim: true,
-        required: true
+        required: true,
+        unique: true
     },
     description: {
         type: String,
@@ -30,7 +25,7 @@ const ModuleSchema = new mongoose.Schema({
         },
         required: true
     },
-    belongsTo: {
+    category: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Category',
         required: true
@@ -71,13 +66,7 @@ const ModuleSchema = new mongoose.Schema({
         type: Boolean,
         default: false,
         required: true
-    },
-    lectures: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Lecture'
-    }]
+    }
 });
 
-var Module = mongoose.model('Module', ModuleSchema);
-
-module.exports = Module;
+mongoose.model('Module', ModuleSchema);

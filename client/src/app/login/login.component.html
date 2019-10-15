@@ -1,39 +1,33 @@
 <div class="container">
-
-  <div class="row">
-    
-    <div class="col-md-6">
-
-      <h1 class="form-signin-heading">Sign in</h1>
-      <p class="lead">Not a member? Please <a routerLink="/signup">signup</a> instead.</p>
-  
-      <form class="mt-5" [formGroup]="loginForm" (ngSubmit)="onSubmit(loginForm.value)">
-        <div class="form-group">
+    <div class="signup">
+      <form class="form form--max-width" [formGroup]="loginForm" (ngSubmit)="onSubmit(loginForm.value)">
+        <h1>Log In</h1>
+        <div class="form__group">
           <label for="email">Email address</label>
-          <input type="email" [class.is-invalid]="getControl('email').invalid && getControl('email').touched && submitted"
-            class="form-control" id="email" formControlName="email" placeholder="Enter email">
-          <div *ngIf="getControl('email').invalid && getControl('email').touched && submitted">
-            <div *ngIf="getControl('email').errors?.required" class="invalid-feedback d-block">Email is required.</div>
-            <div *ngIf="getControl('email').errors?.notValidEmail" class="invalid-feedback d-block">Email is not valid.</div>
-            <div *ngIf="!getControl('email').errors?.emailTaken" class="invalid-feedback d-block">No user is signed up with
-              this email address.</div>
+          <input type="email" [class.is-invalid]="email.invalid && email.touched" id="email" formControlName="email"
+            placeholder="Enter email">
+          <div class="form__help text--small" *ngIf="email.invalid && email.touched">
+            <div *ngIf="email.errors?.required" class="invalid-feedback d-block">Email is required.</div>
+            <div *ngIf="email.errors?.notValidEmail" class="invalid-feedback d-block">Email is not valid.</div>
+            <div *ngIf="email.errors?.emailTaken" class="invalid-feedback d-block">User with this email is already
+              signed up.
+            </div>
           </div>
         </div>
-        <div class="form-group">
+        <div class="form__group">
           <label for="password">Password</label>
-          <input type="password"
-            [class.is-invalid]="getControl('password').invalid && getControl('password').touched && submitted"
-            class="form-control" id="password" formControlName="password" placeholder="Enter password">
-          <div *ngIf="getControl('password').invalid && getControl('password').touched && submitted">
-            <div *ngIf="getControl('password').errors?.required" class="invalid-feedback d-block">Password is required.</div>
-            <div *ngIf="getControl('password').errors?.minlength" class="invalid-feedback d-block">Password length must be at
-              least {{ getControl('password').errors?.minlength.requiredLength }} characters.</div>
+          <input type="password" [class.is-invalid]="password.invalid && password.touched" id="password"
+            formControlName="password" placeholder="Password">
+          <div class="form__help text--small" *ngIf="password.invalid && password.touched">
+            <div *ngIf="password.errors?.required" class="invalid-feedback d-block">Password is required.</div>
+            <div *ngIf="password.errors?.minlength" class="invalid-feedback d-block">Password length must be at least
+              {{ password.errors?.minlength.requiredLength }} characters.</div>
+            <div *ngIf="password.errors?.notValidPassword" class="invalid-feedback d-block">Password must contain lower
+              and
+              upper case letters, numbers and special characters.</div>
           </div>
         </div>
-        <button type="submit" class="btn btn-primary" [disabled]="this.loginForm.invalid && submitted">Login</button>
+        <button type="submit" class="button button--large" [disabled]="this.loginForm.invalid">Login</button>
       </form>
-
     </div>
   </div>
-
-</div>

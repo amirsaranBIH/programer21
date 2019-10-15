@@ -31,7 +31,7 @@ export class LoginComponent implements OnInit {
 
   onSubmit(credentials: TokenPayload) {
     this.authService.login(credentials).subscribe(() => {
-      this.router.navigateByUrl('/profile');
+      this.router.navigateByUrl('/dashboard');
     }, (err) => {
       console.error(err);
     });

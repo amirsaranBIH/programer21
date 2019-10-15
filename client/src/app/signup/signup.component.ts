@@ -14,11 +14,16 @@ export class SignupComponent implements OnInit {
 
   ngOnInit() {
     this.signupForm = this.fb.group({
-      username: ['', [
+      first_name: ['', [
         Validators.required,
-        Validators.minLength(3),
+        Validators.minLength(1),
         Validators.maxLength(16),
-      ], [this.validators.IsUsernameTakenValidator.bind(this)]],
+      ]],
+      last_name: ['', [
+        Validators.required,
+        Validators.minLength(1),
+        Validators.maxLength(16),
+      ]],
       email: ['', [
         Validators.required,
         this.validators.EmailValidator
@@ -36,8 +41,12 @@ export class SignupComponent implements OnInit {
       });
   }
 
-  get username() {
-    return this.signupForm.get('username');
+  get first_name() {
+    return this.signupForm.get('first_name');
+  }
+
+  get last_name() {
+    return this.signupForm.get('last_name');
   }
 
   get email() {
@@ -54,7 +63,7 @@ export class SignupComponent implements OnInit {
 
   onSubmit(credentials: TokenPayload) {
     this.authService.signup(credentials).subscribe(() => {
-      this.router.navigateByUrl('/profile');
+      this.router.navigateByUrl('/dashboard');
     }, (err) => {
       console.error(err);
     });

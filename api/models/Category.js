@@ -1,16 +1,11 @@
 const mongoose = require('mongoose');
 
 const CategorySchema = new mongoose.Schema({
-    categoryNumber: {
-        type: Number,
-        unique: true,
-        min: 1,
-        required: true
-    },
     title: {
         type: String,
         trim: true,
-        required: true
+        required: true,
+        unique: true
     },
     description: {
         type: String,
@@ -40,20 +35,18 @@ const CategorySchema = new mongoose.Schema({
         ref: 'User',
         required: true
     },
-    modules: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Module'
-    }],
-    usersEnrolled: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'User'
-    }],
-    usersFinished: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'User'
+    users: [{
+        status: {
+            type: String,
+            enum: ['enrolled', 'skipped', 'finished'],
+            default: 'user',
+            required: true
+        },
+        user: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'User'
+        }
     }],
 });
 
-var Category = mongoose.model('Category', CategorySchema);
-
-module.exports = Category;
+mongoose.model('Category', CategorySchema);

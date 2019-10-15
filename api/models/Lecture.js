@@ -1,23 +1,18 @@
 const mongoose = require('mongoose');
 
 const LectureSchema = new mongoose.Schema({
-    lectureNumber: {
-        type: Number,
-        unique: true,
-        min: 1,
-        required: true
-    },
     title: {
         type: String,
         trim: true,
-        required: true
+        required: true,
+        unique: true
     },
     description: {
         type: String,
         trim: true,
         required: true
     },
-    belongsTo: {
+    module: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Module',
         required: true
@@ -66,6 +61,4 @@ const LectureSchema = new mongoose.Schema({
     },
 });
 
-var Lecture = mongoose.model('Lecture', LectureSchema);
-
-module.exports = Lecture;
+mongoose.model('Lecture', LectureSchema);
