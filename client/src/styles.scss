@@ -189,6 +189,12 @@ img {
     nav ul li + li {
         margin-left: 2.5em;
     }
+
+    &__profile-image {
+        height: 30px;
+        width: 30px;
+        margin-right: .5em;
+    }
 }
 
 .text-center {
@@ -403,7 +409,12 @@ img {
                 }
             }
 
+            &__role {
+                text-transform: capitalize;
+            }
+
             &__email {
+                padding-right: .25em;
                 position: relative;
 
                 &:hover::after {

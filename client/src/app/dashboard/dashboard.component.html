@@ -2,10 +2,10 @@
   <div class="dashboard">
     <div class="dashboard__section dashboard__user">
       <div class="dashboard__user__content">
-        <img src="https://syntaxxx.com/wp-content/uploads/2014/08/html5-logo-600-580x580.jpg" alt="html">
-        <h3 class="dashboard__user__content__name">Amir Saran</h3>
-        <p class="dashboard__user__content__role">User</p>
-        <p class="dashboard__user__content__email">amir.saranbih@gmail.com</p>
+        <img [src]="auth.getUserDetails.picture" alt="{{auth.getUserDetails.first_name}} {{auth.getUserDetails.last_name}}">
+        <h3 class="dashboard__user__content__name">{{auth.getUserDetails.first_name}} {{auth.getUserDetails.last_name}}</h3>
+        <p class="dashboard__user__content__role">{{auth.getUserDetails.role}}</p>
+        <p class="dashboard__user__content__email">{{auth.getUserDetails.email}}</p>
       </div>
     </div>
     <div class="dashboard__section dashboard__pick">

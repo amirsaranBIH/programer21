@@ -5,6 +5,12 @@
       <li><a href="/admin-panel">Admin Panel</a></li>
       <li><a href="/learn">Learn</a></li>
       <li><a href="/games">Educational Games</a></li>
+      <li *ngIf="auth.isLoggedIn()" class="flex flex--center">
+        <a href="/dashboard">
+          <img class="header__profile-image" [src]="auth.getUserDetails.picture" alt="{{auth.getUserDetails.first_name}} {{auth.getUserDetails.last_name}}">
+        </a>
+        <a href="/dashboard">{{auth.getUserDetails.first_name}} {{auth.getUserDetails.last_name}}</a>
+      </li>
       <li *ngIf="!auth.isLoggedIn()"><a href="/login">Login</a></li>
       <li *ngIf="!auth.isLoggedIn()"><a href="/signup" class="button">Sign Up</a></li>
       <li *ngIf="auth.isLoggedIn()"><a (click)="auth.logout()">Logout</a></li>

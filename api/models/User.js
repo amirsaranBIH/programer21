@@ -42,9 +42,9 @@ var UserSchema = new mongoose.Schema({
   },
   picture: {
     type: String,
-    default: 'default_profile_picture.jpg',
+    default: 'default_profile_picture.png',
     get: image => {
-        return '/images/user_pictures/' + image;
+        return 'assets/images/user_pictures/' + image;
     },
     required: true
   },
