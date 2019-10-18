@@ -8,11 +8,11 @@
           <input type="text" [class.is-invalid]="first_name.invalid && first_name.touched" id="first_name"
             formControlName="first_name" placeholder="Enter first name">
           <div class="form__help text--small" *ngIf="first_name.invalid && first_name.touched">
-            <div *ngIf="first_name.errors?.required" class="invalid-feedback d-block">First name is required.</div>
-            <div *ngIf="first_name.errors?.minlength" class="invalid-feedback d-block">First name length must be more
+            <div *ngIf="first_name.errors?.required">First name is required.</div>
+            <div *ngIf="first_name.errors?.minlength">First name length must be more
               than
               {{ first_name.errors?.minlength.requiredLength }} letters.</div>
-            <div *ngIf="first_name.errors?.nameNotValid" class="invalid-feedback d-block">First name can only contain
+            <div *ngIf="first_name.errors?.nameNotValid">First name can only contain
               characters.</div>
           </div>
         </div>
@@ -21,10 +21,10 @@
           <input type="text" [class.is-invalid]="last_name.invalid && last_name.touched" id="last_name"
             formControlName="last_name" placeholder="Enter first name">
           <div class="form__help text--small" *ngIf="last_name.invalid && last_name.touched">
-            <div *ngIf="last_name.errors?.required" class="invalid-feedback d-block">Last name is required.</div>
-            <div *ngIf="last_name.errors?.minlength" class="invalid-feedback d-block">Last name length must be more than
+            <div *ngIf="last_name.errors?.required">Last name is required.</div>
+            <div *ngIf="last_name.errors?.minlength">Last name length must be more than
               {{ last_name.errors?.minlength.requiredLength }} letters.</div>
-            <div *ngIf="last_name.errors?.nameNotValid" class="invalid-feedback d-block">Last name can only contain
+            <div *ngIf="last_name.errors?.nameNotValid">Last name can only contain
               characters.</div>
           </div>
         </div>
@@ -34,9 +34,9 @@
         <input type="email" [class.is-invalid]="email.invalid && email.touched" id="email" formControlName="email"
           placeholder="Enter email">
         <div class="form__help text--small" *ngIf="email.invalid && email.touched">
-          <div *ngIf="email.errors?.required" class="invalid-feedback d-block">Email is required.</div>
-          <div *ngIf="email.errors?.notValidEmail" class="invalid-feedback d-block">Email is not valid.</div>
-          <div *ngIf="email.errors?.emailTaken" class="invalid-feedback d-block">User with this email is already
+          <div *ngIf="email.errors?.required">Email is required.</div>
+          <div *ngIf="email.errors?.notValidEmail">Email is not valid.</div>
+          <div *ngIf="email.errors?.emailTaken">User with this email is already
             signed up.
           </div>
         </div>
@@ -46,10 +46,10 @@
         <input type="password" [class.is-invalid]="password.invalid && password.touched" id="password"
           formControlName="password" placeholder="Password">
         <div class="form__help text--small" *ngIf="password.invalid && password.touched">
-          <div *ngIf="password.errors?.required" class="invalid-feedback d-block">Password is required.</div>
-          <div *ngIf="password.errors?.minlength" class="invalid-feedback d-block">Password length must be at least
+          <div *ngIf="password.errors?.required">Password is required.</div>
+          <div *ngIf="password.errors?.minlength">Password length must be at least
             {{ password.errors?.minlength.requiredLength }} characters.</div>
-          <div *ngIf="password.errors?.notValidPassword" class="invalid-feedback d-block">Password must contain lower
+          <div *ngIf="password.errors?.notValidPassword">Password must contain lower
             and
             upper case letters, numbers and special characters.</div>
         </div>
@@ -61,9 +61,9 @@
           id="confirmPassword" formControlName="confirmPassword" placeholder="Confirm Password">
         <div class="form__help text--small"
           *ngIf="(confirmPassword.invalid && confirmPassword.touched) || signupForm.errors">
-          <div *ngIf="confirmPassword.errors?.required" class="invalid-feedback d-block">Confirm password is required.
+          <div *ngIf="confirmPassword.errors?.required">Confirm password is required.
           </div>
-          <div *ngIf="signupForm.errors?.passwordsNotMatching" class="invalid-feedback d-block">Passwords don't
+          <div *ngIf="signupForm.errors?.passwordsNotMatching">Passwords don't
             match.
           </div>
         </div>

@@ -111,7 +111,7 @@ export class AuthenticationService {
 
   public logout(): void {
     this.token = '';
-    window.localStorage.removeItem('mean-token');
+    localStorage.removeItem('avika-token');
     this.router.navigateByUrl('/');
   }
 

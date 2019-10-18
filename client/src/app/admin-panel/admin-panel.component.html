@@ -1,0 +1,64 @@
+<div class="container">
+  <section class="admin-panel">
+    <h1>Admin Panel</h1>
+    <div class="admin-panel__create-lectures">
+      <div class="admin-panel__create-lectures__section">
+        <div class="admin-panel__create-lectures__header flex flex--between flex--center">
+            <span class="h4">Courses</span>
+            <i class="fa fa-plus add-button"></i>
+        </div>
+        <ul class="admin-panel__create-lectures__list">
+          <li [ngClass]="{'active': activeCourse === i}" *ngFor="let course of courses; let i = index">
+            <div (click)="changeSelectedCourse(i)" class="admin-panel__create-lectures__item__header flex flex--between">
+                <span>{{ course.title }}</span>
+                <i [ngClass]="{'fa-angle-left': activeCourse === i, 'fa-angle-down': activeCourse !== i}" class="fa"></i>
+            </div>
+            <div *ngIf="activeCourse === i" class="admin-panel__create-lectures__item-content">
+              <h4>Hello</h4>
+              <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Soluta, quos nihil, provident odit repudiandae accusamus, eum est deleniti inventore adipisci debitis. Dolor corporis, quasi unde a commodi nostrum quae voluptatibus?</p>
+            </div>
+          </li>
+          <p *ngIf="courses.length < 1" class="no-content text-center"><i class="fa fa-frown-o"></i>No courses here</p>
+        </ul>
+      </div>
+      <div class="admin-panel__create-lectures__section">
+          <div class="admin-panel__create-lectures__header flex flex--between flex--center">
+              <span class="h4">Modules</span>
+              <i class="fa fa-plus add-button"></i>
+          </div>
+          <ul class="admin-panel__create-lectures__list">
+              <li [ngClass]="{'active': activeModule === i}" *ngFor="let module of courses[selectedCourse]?.modules; let i = index">
+                <div (click)="changeSelectedModule(i)" class="admin-panel__create-lectures__item__header flex flex--between">
+                    <span>{{ module.title }}</span>
+                    <i [ngClass]="{'fa-angle-left': activeModule === i, 'fa-angle-down': activeModule !== i}" class="fa"></i>
+                </div>
+                <div *ngIf="activeModule === i" class="admin-panel__create-lectures__item-content">
+                  <h4>Hello</h4>
+                  <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Soluta, quos nihil, provident odit repudiandae accusamus, eum est deleniti inventore adipisci debitis. Dolor corporis, quasi unde a commodi nostrum quae voluptatibus?</p>
+                </div>
+              </li>
+              <p *ngIf="courses[selectedCourse]?.modules.length < 1" class="no-content text-center"><i class="fa fa-frown-o"></i>No modules here</p>
+            </ul>
+        </div>
+        <div class="admin-panel__create-lectures__section">
+            <div class="admin-panel__create-lectures__header flex flex--between flex--center">
+                <span class="h4">Lectures</span>
+                <i class="fa fa-plus add-button"></i>
+            </div>
+            <ul class="admin-panel__create-lectures__list">
+                <li [ngClass]="{'active': activeLecture === i}" *ngFor="let lecture of courses[selectedCourse]?.modules[selectedModule]?.lectures; let i = index">
+                  <div (click)="changeSelectedLecture(i)" class="admin-panel__create-lectures__item__header flex flex--between">
+                      <span>{{ lecture.title }}</span>
+                      <i [ngClass]="{'fa-angle-left': activeLecture === i, 'fa-angle-down': activeLecture !== i}" class="fa"></i>
+                  </div>
+                  <div *ngIf="activeLecture === i" class="admin-panel__create-lectures__item-content">
+                    <h4>Hello</h4>
+                    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Soluta, quos nihil, provident odit repudiandae accusamus, eum est deleniti inventore adipisci debitis. Dolor corporis, quasi unde a commodi nostrum quae voluptatibus?</p>
+                  </div>
+                </li>
+                <p *ngIf="courses[selectedCourse]?.modules[selectedModule]?.lectures.length < 1" class="no-content text-center"><i class="fa fa-frown-o"></i>No lectures here</p>
+              </ul>
+          </div>
+    </div>
+  </section>
+</div>

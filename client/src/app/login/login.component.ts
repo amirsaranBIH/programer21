@@ -8,7 +8,8 @@ import { ValidatorService } from '../validator.service';
   templateUrl: './login.component.html'
 })
 export class LoginComponent implements OnInit {
-  loginForm: any;
+  public loginForm: any;
+  public submitted = false;
 
   constructor(private authService: AuthenticationService, private router: Router, private fb: FormBuilder, private validators: ValidatorService) {}
 
@@ -25,11 +26,16 @@ export class LoginComponent implements OnInit {
     });
   }
 
-  getControl(control) {
-    return this.loginForm.controls[control];
+  get email() {
+    return this.loginForm.get('email');
+  }
+
+  get password() {
+    return this.loginForm.get('password');
   }
 
   onSubmit(credentials: TokenPayload) {
+    this.submitted = true;
     this.authService.login(credentials).subscribe(() => {
       this.router.navigateByUrl('/dashboard');
     }, (err) => {

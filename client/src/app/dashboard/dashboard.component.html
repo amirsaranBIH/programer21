@@ -1,24 +1,65 @@
 <div class="container">
-  <div class="row">
-    
-     <div class="col-md-6">
-
-      <h1 class="form-signin-heading">Your dashboard</h1>
-
-      <div class="form-horizontal">
-        <div class="form-group">
-          <label class="col-sm-3 control-label">Name</label>
-          <p class="form-control-static">{{ details?.first_name + ' ' + details?.last_name }}</p>
-        </div>
-        <div class="form-group">
-          <label class="col-sm-3 control-label">Email</label>
-          <p class="form-control-static">{{ details?.email }}</p>
-        </div>
+  <div class="dashboard">
+    <div class="dashboard__section dashboard__user">
+      <div class="dashboard__user__content">
+        <img src="https://syntaxxx.com/wp-content/uploads/2014/08/html5-logo-600-580x580.jpg" alt="html">
+        <h3 class="dashboard__user__content__name">Amir Saran</h3>
+        <p class="dashboard__user__content__role">User</p>
+        <p class="dashboard__user__content__email">amir.saranbih@gmail.com</p>
       </div>
-
-      {{details|json}}
-
     </div>
-
+    <div class="dashboard__section dashboard__pick">
+      <ul class="dashboard__pick__list">
+        <li class="dashboard__pick__list-item" *ngFor="let course of courses; let i = index"
+          [ngStyle]="{'flex': activeCoursePicked === i ? '1' : 'unset'}">
+          <div class="dashboard__pick__list-item__content">
+            <h3 class="dashboard__pick__list-item__heading">{{course.title}}</h3>
+            <p class="dashboard__pick__list-item__complete-percentage">{{activeCoursePicked}}% Complete</p>
+          </div>
+        </li>
+      </ul>
+      <i class="fa fa-angle-left dashboard__pick__list__arrow-previous" (click)="previousCoursePicked()"></i>
+      <i class="fa fa-angle-right dashboard__pick__list__arrow-next" (click)="nextCoursePicked()"></i>
+    </div>
+    <div class="dashboard__section dashboard__list">
+      <ul class="dashboard__list--modules">
+        <li [ngClass]="{'active': activeModule === i}"
+          *ngFor="let module of courses[activeCoursePicked]?.modules; let i = index">
+          <div (click)="changeActiveModulePicked(i)" class="dashboard__list__item__header flex flex--between">
+            <span>{{ module.title }}</span>
+            <i [ngClass]="{'fa-angle-left': activeModule === i, 'fa-angle-down': activeModule !== i}" class="fa"></i>
+          </div>
+          <div *ngIf="activeModule === i" class="dashboard__list__item-content">
+            <div class="dashboard__list__module-content">
+                <h4>Hello</h4>
+                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Soluta, quos nihil, provident odit repudiandae
+                  accusamus, eum est deleniti inventore adipisci debitis. Dolor corporis, quasi unde a commodi nostrum quae
+                  voluptatibus?</p>
+            </div>
+            <ul class="dashboard__list dashboard__list--lectures">
+              <li [ngClass]="{'active': activeLecture === i}"
+                *ngFor="let lecture of courses[activeCoursePicked]?.modules[activeModule]?.lectures; let i = index">
+                <div (click)="changeActiveLecturePicked(i)"
+                  class="dashboard__list--lectures__item__header flex flex--between">
+                  <span>{{ lecture.title }}</span>
+                  <i [ngClass]="{'fa-angle-left': activeLecture === i, 'fa-angle-down': activeLecture !== i}"
+                    class="fa"></i>
+                </div>
+                <div *ngIf="activeLecture === i" class="dashboard__list__item-content">
+                  <div class="dashboard__list__module-content">
+                      <h4>Hello 2</h4>
+                      <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Soluta, quos nihil, provident odit
+                        repudiandae accusamus.</p>
+                  </div>
+                </div>
+              </li>
+              <p *ngIf="courses[activeCoursePicked]?.modules[activeModule]?.lectures.length < 1"
+                class="no-content text-center"><i class="fa fa-frown-o"></i>No lectures here</p>
+            </ul>
+          </div>
+        </li>
+        <p *ngIf="courses[activeCoursePicked]?.modules.length < 1" class="no-content text-center"><i class="fa fa-frown-o"></i>No modules here</p>
+      </ul>
+    </div>
   </div>
 </div>

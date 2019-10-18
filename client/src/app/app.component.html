@@ -2,12 +2,12 @@
   <span class="brand sans-serif"><a routerLink="/">Avika</a></span>
   <nav>
     <ul class="flex flex--center">
+      <li><a href="/admin-panel">Admin Panel</a></li>
       <li><a href="/learn">Learn</a></li>
       <li><a href="/games">Educational Games</a></li>
-      <li><a href="/live-chat">Live Chat</a></li>
       <li *ngIf="!auth.isLoggedIn()"><a href="/login">Login</a></li>
       <li *ngIf="!auth.isLoggedIn()"><a href="/signup" class="button">Sign Up</a></li>
-      <li *ngIf="auth.isLoggedIn()"><a href="/logout">Logout</a></li>
+      <li *ngIf="auth.isLoggedIn()"><a (click)="auth.logout()">Logout</a></li>
     </ul>
   </nav>
 </section>

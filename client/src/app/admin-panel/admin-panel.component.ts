@@ -1,26 +1,21 @@
 import { Component, OnInit } from '@angular/core';
-import { AuthenticationService, UserDetails } from '../authentication.service';
 
 @Component({
-  templateUrl: './dashboard.component.html'
+  templateUrl: './admin-panel.component.html'
 })
-export class DashboardComponent implements OnInit {
-  public details: UserDetails;
-  public activeCoursePicked = 0;
+export class AdminPanelComponent implements OnInit {
   public courses = [];
+  public selectedCourse = 0;
+  public selectedModule = 0;
+  public selectedLecture = 0;
+
+  public activeCourse = -1;
   public activeModule = -1;
   public activeLecture = -1;
-  public selectedCourse = 0;
 
-  constructor(private auth: AuthenticationService) {}
+  constructor() {}
 
   ngOnInit() {
-    this.auth.dashboard().subscribe(user => {
-      this.details = user;
-    }, (err) => {
-      console.error(err);
-    });
-
     this.courses = [
       {
         title: 'Course 1',
@@ -144,27 +139,24 @@ export class DashboardComponent implements OnInit {
     ]
   }
 
-  nextCoursePicked() {
-    if (this.activeCoursePicked === this.courses.length - 1) {
-      this.activeCoursePicked = 0;
-    } else {
-      this.activeCoursePicked++;
-    }
+  changeSelectedCourse(newIndex) {
+    this.selectedCourse = newIndex;
+    this.selectedModule = 0;
+    this.selectedLecture = 0;
+    this.activeCourse = this.activeCourse === newIndex ? -1 : newIndex;
+    this.activeModule = -1;
+    this.activeLecture = -1;
   }
 
-  previousCoursePicked() {
-    if (this.activeCoursePicked === 0) {
-      this.activeCoursePicked = this.courses.length - 1;
-    } else {
-      this.activeCoursePicked--;
-    }
-  }
-
-  changeActiveModulePicked(newIndex) {
+  changeSelectedModule(newIndex) {
+    this.selectedModule = newIndex;
+    this.selectedLecture = 0;
     this.activeModule = this.activeModule === newIndex ? -1 : newIndex;
+    this.activeLecture = -1;
   }
 
-  changeActiveLecturePicked(newIndex) {
+  changeSelectedLecture(newIndex) {
+    this.selectedLecture = newIndex;
     this.activeLecture = this.activeLecture === newIndex ? -1 : newIndex;
   }
 }
