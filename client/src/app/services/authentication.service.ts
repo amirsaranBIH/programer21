@@ -48,7 +48,7 @@ export class AuthenticationService {
     this.token = token;
   }
 
-  private getToken(): string {
+  public get getToken(): string {
     if (!this.token) {
       this.token = localStorage.getItem('avika-token');
     }
@@ -56,7 +56,7 @@ export class AuthenticationService {
   }
 
   public get getUserDetails(): UserDetails {
-    const token = this.getToken();
+    const token = this.getToken;
     let payload;
     if (token) {
       payload = token.split('.')[1];
@@ -82,7 +82,7 @@ export class AuthenticationService {
     if (method === 'post') {
       base = this.http.post(`/api/${type}`, user);
     } else {
-      base = this.http.get(`/api/${type}`, { headers: { Authorization: `Bearer ${this.getToken()}` }});
+      base = this.http.get(`/api/${type}`, { headers: { Authorization: `Bearer ${this.getToken}` }});
     }
 
     const request = base.pipe(

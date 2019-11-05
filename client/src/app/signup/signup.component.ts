@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { AuthenticationService, TokenPayload } from '../authentication.service';
+import { AuthenticationService, TokenPayload } from '../services/authentication.service';
 import { Router } from '@angular/router';
 import { FormBuilder, Validators, FormGroup } from '@angular/forms';
-import { ValidatorService } from '../validator.service';
+import { ValidatorService } from '../services/validator.service';
 
 @Component({
   templateUrl: './signup.component.html'

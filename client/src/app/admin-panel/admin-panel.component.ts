@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { CourseService } from '../services/course.service';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   templateUrl: './admin-panel.component.html',
@@ -14,9 +16,11 @@ export class AdminPanelComponent implements OnInit {
   public activeModule = -1;
   public activeLecture = -1;
 
-  constructor() {}
+  constructor(private courseService: CourseService, private route: ActivatedRoute) {}
 
   ngOnInit() {
+    console.log(this.route.snapshot.data.courses);
+
     this.courses = [
       {
         title: 'Course 1',

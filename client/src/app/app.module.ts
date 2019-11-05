@@ -10,12 +10,13 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 import { LoginComponent } from './login/login.component';
 import { SignupComponent } from './signup/signup.component';
 import { HomeComponent } from './home/home.component';
-import { AuthenticationService } from './authentication.service';
-import { AuthGuardService } from './auth-guard.service';
+import { AuthenticationService } from './services/authentication.service';
+import { AuthGuardService } from './services/auth-guard.service';
 import { AdminPanelComponent } from './admin-panel/admin-panel.component';
 import { NewModuleComponent } from './admin-panel/new-module/new-module.component';
 import { NewLectureComponent } from './admin-panel/new-lecture/new-lecture.component';
 import { NewCourseComponent } from './admin-panel/new-course/new-course.component';
+import { AllCoursesResolverService } from './resolvers/all-courses-resolver.service';
 
 const routes: Routes = [
   {
@@ -32,6 +33,9 @@ const routes: Routes = [
   },
   {
     path: 'admin-panel',
+    resolve: {
+      courses: AllCoursesResolverService
+    },
     canActivate: [AuthGuardService],
     children: [
       { path: '', component: AdminPanelComponent },
@@ -69,7 +73,8 @@ const routes: Routes = [
   ],
   providers: [
     AuthenticationService,
-    AuthGuardService
+    AuthGuardService,
+    AllCoursesResolverService
   ],
   bootstrap: [AppComponent]
 })
