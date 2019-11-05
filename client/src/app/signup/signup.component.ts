@@ -1,14 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthenticationService, TokenPayload } from '../authentication.service';
 import { Router } from '@angular/router';
-import { FormBuilder, Validators } from '@angular/forms';
+import { FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { ValidatorService } from '../validator.service';
 
 @Component({
   templateUrl: './signup.component.html'
 })
 export class SignupComponent implements OnInit {
-  signupForm: any;
+  public signupForm: FormGroup;
 
   constructor(private authService: AuthenticationService, private router: Router, private fb: FormBuilder, private validators: ValidatorService) {}
 

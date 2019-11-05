@@ -13,13 +13,38 @@ import { HomeComponent } from './home/home.component';
 import { AuthenticationService } from './authentication.service';
 import { AuthGuardService } from './auth-guard.service';
 import { AdminPanelComponent } from './admin-panel/admin-panel.component';
+import { NewModuleComponent } from './admin-panel/new-module/new-module.component';
+import { NewLectureComponent } from './admin-panel/new-lecture/new-lecture.component';
+import { NewCourseComponent } from './admin-panel/new-course/new-course.component';
 
 const routes: Routes = [
-  { path: '', component: HomeComponent },
-  { path: 'login', component: LoginComponent },
-  { path: 'signup', component: SignupComponent },
-  { path: 'admin-panel', component: AdminPanelComponent, canActivate: [AuthGuardService] },
-  { path: 'dashboard', component: DashboardComponent, canActivate: [AuthGuardService] },
+  {
+    path: '',
+    component: HomeComponent
+  },
+  {
+    path: 'login',
+    component: LoginComponent
+  },
+  {
+    path: 'signup',
+    component: SignupComponent
+  },
+  {
+    path: 'admin-panel',
+    canActivate: [AuthGuardService],
+    children: [
+      { path: '', component: AdminPanelComponent },
+      { path: 'new-course', component: NewCourseComponent },
+      { path: 'new-module/:course_id', component: NewModuleComponent },
+      { path: 'new-lecture/:course_id/:module_id', component: NewLectureComponent },
+    ]
+   },
+  {
+    path: 'dashboard',
+    component: DashboardComponent,
+    canActivate: [AuthGuardService]
+  },
 ];
 
 @NgModule({
@@ -29,7 +54,10 @@ const routes: Routes = [
     DashboardComponent,
     LoginComponent,
     SignupComponent,
-    HomeComponent
+    HomeComponent,
+    NewModuleComponent,
+    NewLectureComponent,
+    NewCourseComponent
   ],
   imports: [
     BrowserAnimationsModule,

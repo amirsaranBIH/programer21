@@ -5,7 +5,7 @@
       <div class="admin-panel__create-lectures__section">
         <div class="admin-panel__create-lectures__header flex flex--between flex--center">
             <span class="h4">Courses</span>
-            <i class="fa fa-plus add-button"></i>
+            <i routerLink="/admin-panel/new-course" class="fa fa-plus add-button"></i>
         </div>
         <ul class="admin-panel__create-lectures__list">
           <li [ngClass]="{'active': activeCourse === i}" *ngFor="let course of courses; let i = index">
@@ -24,7 +24,7 @@
       <div class="admin-panel__create-lectures__section">
           <div class="admin-panel__create-lectures__header flex flex--between flex--center">
               <span class="h4">Modules</span>
-              <i class="fa fa-plus add-button"></i>
+              <i [routerLink]="['/admin-panel/new-module', selectedCourse]" class="fa fa-plus add-button"></i>
           </div>
           <ul class="admin-panel__create-lectures__list">
               <li [ngClass]="{'active': activeModule === i}" *ngFor="let module of courses[selectedCourse]?.modules; let i = index">
@@ -43,7 +43,7 @@
         <div class="admin-panel__create-lectures__section">
             <div class="admin-panel__create-lectures__header flex flex--between flex--center">
                 <span class="h4">Lectures</span>
-                <i class="fa fa-plus add-button"></i>
+                <i [routerLink]="['/admin-panel/new-lecture', selectedCourse, selectedModule]" class="fa fa-plus add-button"></i>
             </div>
             <ul class="admin-panel__create-lectures__list">
                 <li [ngClass]="{'active': activeLecture === i}" *ngFor="let lecture of courses[selectedCourse]?.modules[selectedModule]?.lectures; let i = index">

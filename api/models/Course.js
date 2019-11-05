@@ -20,6 +20,12 @@ const CourseSchema = new mongoose.Schema({
         },
         required: true
     },
+    status: {
+        type: String,
+        enum: ['public', 'private'],
+        default: 'private',
+        required: true
+    },
     createdAt: {
         type: Date,
         default: Date.now,

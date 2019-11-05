@@ -50,7 +50,7 @@ var UserSchema = new mongoose.Schema({
   },
   categoriesEnrolledIn: [{
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Category',
+    ref: 'Course',
     modulesEnrolledIn: [{
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Module',
@@ -62,7 +62,7 @@ var UserSchema = new mongoose.Schema({
   }],
   categoriesFinished: [{
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Category',
+    ref: 'Course',
     modulesFinished: [{
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Module',

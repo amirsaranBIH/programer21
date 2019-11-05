@@ -1,28 +1,30 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthenticationService, TokenPayload } from '../authentication.service';
 import { Router } from '@angular/router';
-import { FormBuilder, Validators } from '@angular/forms';
+import { FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { ValidatorService } from '../validator.service';
 
 @Component({
   templateUrl: './login.component.html'
 })
 export class LoginComponent implements OnInit {
-  public loginForm: any;
+  public loginForm: FormGroup;
   public submitted = false;
 
-  constructor(private authService: AuthenticationService, private router: Router, private fb: FormBuilder, private validators: ValidatorService) {}
+  constructor(
+    private authService: AuthenticationService,
+    private router: Router,
+    private fb: FormBuilder,
+    private validators: ValidatorService
+  ) {}
 
   ngOnInit() {
     this.loginForm = this.fb.group({
       email: ['', [
         Validators.required,
         this.validators.EmailValidator
-      ], [this.validators.IsEmailTakenValidator.bind(this)]],
-      password: ['', [
-        Validators.required,
-        Validators.minLength(8)
-      ]]
+      ], [this.validators.IsEmailInUseValidator.bind(this)]],
+      password: ['', [ Validators.required ]]
     });
   }
 
@@ -36,10 +38,16 @@ export class LoginComponent implements OnInit {
 
   onSubmit(credentials: TokenPayload) {
     this.submitted = true;
-    this.authService.login(credentials).subscribe(() => {
+    this.authService.login(credentials).subscribe(res => {
       this.router.navigateByUrl('/dashboard');
     }, (err) => {
       console.error(err);
+      if (err.status === 401  &&
+          !this.email.hasError('required') &&
+          !this.email.hasError('notValidEmail') &&
+          !this.email.hasError('emailNotInUse')) {
+        this.password.setErrors({ wrongPassword: true });
+      }
     });
   }
 }

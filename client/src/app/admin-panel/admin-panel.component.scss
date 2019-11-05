@@ -1,0 +1,72 @@
+@import '../../styles';
+
+.admin-panel {
+    &__create-lectures {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(400px, 1fr));
+        grid-gap: 1em;
+        margin-top: 2em;
+
+        &__header {
+            margin-bottom: .5em;
+        }
+        
+        &__list {
+            display: flex;
+            flex-direction: column;
+            height: 700px;
+            background-color: $lighter_green;
+            overflow: auto;
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        &__list::-webkit-scrollbar {
+            display: none;
+        }
+        
+        &__list li {
+            background-color: $green;
+            border-bottom: 2px solid $darker_green;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        &__list li.active {
+            background-color: $dark_green;
+            flex: 1;
+        }
+        
+        &__list li.active &__item__header {
+            color: white;
+        }
+
+        &__list li.active &__item-content {
+            background-color: white;
+            flex: 1;
+            padding: 1em;
+        }
+        
+        &__item__header {
+            padding: .75em;
+            cursor: pointer;
+        }
+
+        .no-content {
+            color: $dark_green;
+            font-size: 1.25em;
+            margin: auto;
+
+            i {
+                display: block;
+                font-size: 3em;
+            }
+        }
+
+        .add-button {
+            cursor: pointer;
+            font-size: 1.25em;
+            color: $dark_green;
+        }
+    }
+}

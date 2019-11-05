@@ -25,9 +25,9 @@ const ModuleSchema = new mongoose.Schema({
         },
         required: true
     },
-    category: {
+    course: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Category',
+        ref: 'Course',
         required: true
     },
     createdAt: {

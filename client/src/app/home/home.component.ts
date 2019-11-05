@@ -5,7 +5,8 @@ import { TokenPayload, AuthenticationService } from '../authentication.service';
 import { Router } from '@angular/router';
 
 @Component({
-  templateUrl: './home.component.html'
+  templateUrl: './home.component.html',
+  styleUrls: ['./home.component.scss']
 })
 export class HomeComponent implements OnInit {
   public selectedQuestion = 0;

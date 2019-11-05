@@ -9,7 +9,7 @@
           <div class="form__help text--small" *ngIf="email.invalid && email.touched && submitted">
             <div *ngIf="email.errors?.required">Email is required.</div>
             <div *ngIf="email.errors?.notValidEmail">Email is not valid.</div>
-            <div *ngIf="!email.errors?.emailTaken">No user is signed up with this email address.</div>
+            <div *ngIf="email.errors?.emailNotInUse">No user is signed up with this email address.</div>
           </div>
         </div>
         <div class="form__group">
@@ -18,11 +18,7 @@
             formControlName="password" placeholder="Password">
           <div class="form__help text--small" *ngIf="password.invalid && password.touched && submitted">
             <div *ngIf="password.errors?.required">Password is required.</div>
-            <div *ngIf="password.errors?.minlength">Password length must be at least
-              {{ password.errors?.minlength.requiredLength }} characters.</div>
-            <div *ngIf="password.errors?.notValidPassword">Password must contain lower
-              and
-              upper case letters, numbers and special characters.</div>
+            <div *ngIf="password.errors?.wrongPassword">Password is wrong.</div>
           </div>
         </div>
         <button type="submit" class="button button--large" [disabled]="this.loginForm.invalid && submitted">Login</button>
