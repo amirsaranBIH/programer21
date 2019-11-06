@@ -12,11 +12,6 @@ const LectureSchema = new mongoose.Schema({
         trim: true,
         required: true
     },
-    module: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Module',
-        required: true
-    },
     createdAt: {
         type: Date,
         default: Date.now,

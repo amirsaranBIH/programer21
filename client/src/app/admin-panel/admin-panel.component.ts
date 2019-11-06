@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { CourseService } from '../services/course.service';
 import { ActivatedRoute } from '@angular/router';
 
 @Component({
@@ -16,132 +15,11 @@ export class AdminPanelComponent implements OnInit {
   public activeModule = -1;
   public activeLecture = -1;
 
-  constructor(private courseService: CourseService, private route: ActivatedRoute) {}
+  constructor(private route: ActivatedRoute) {}
 
   ngOnInit() {
-    console.log(this.route.snapshot.data.courses);
-
-    this.courses = [
-      {
-        title: 'Course 1',
-        modules: [
-          {
-            title: 'Module 1',
-            lectures: [
-              {
-                title: 'Lecture 1'
-              },
-              {
-                title: 'Lecture 2'
-              },
-              {
-                title: 'Lecture 3'
-              },
-              {
-                title: 'Lecture 3'
-              },
-              {
-                title: 'Lecture 3'
-              },
-              {
-                title: 'Lecture 3'
-              },
-              {
-                title: 'Lecture 3'
-              },
-              {
-                title: 'Lecture 3'
-              },
-              {
-                title: 'Lecture 3'
-              },
-              {
-                title: 'Lecture 3'
-              },
-              {
-                title: 'Lecture 3'
-              },
-              {
-                title: 'Lecture 3'
-              },
-              {
-                title: 'Lecture 3'
-              },
-              {
-                title: 'Lecture 3'
-              },
-              {
-                title: 'Lecture 3'
-              },
-              {
-                title: 'Lecture 3'
-              },
-              {
-                title: 'Lecture 3'
-              },
-              {
-                title: 'Lecture 3'
-              },
-              {
-                title: 'Lecture 3'
-              },
-            ]
-          },
-          {
-            title: 'Module 2',
-            lectures: []
-          },
-          {
-            title: 'Module 3',
-            lectures: [
-              {
-                title: 'Lecture 2'
-              },
-              {
-                title: 'Lecture 3'
-              },
-              {
-                title: 'Lecture 4'
-              },
-            ]
-          },
-        ]
-      },
-      {
-        title: 'Course 2',
-        modules: []
-      },
-      {
-        title: 'Course 3',
-        modules: [
-          {
-            title: 'Module 1',
-            lectures: [
-              {
-                title: 'Lecture 1'
-              },
-              {
-                title: 'Lecture 2'
-              }
-            ]
-          },
-          {
-            title: 'Module 2',
-            lectures: [
-              {
-                title: 'Lecture 1'
-              },
-              {
-                title: 'Lecture 2'
-              },
-              {
-                title: 'Lecture 4'
-              },
-            ]
-          },
-        ]
-      },
-    ]
+    this.courses = this.route.snapshot.data.courses;
+    console.log(this.courses);
   }
 
   changeSelectedCourse(newIndex) {

@@ -15,6 +15,7 @@ const ModuleSchema = new mongoose.Schema({
     difficulty: {
         type: String,
         enum: ['beginner', 'intermediate', 'advanced'],
+        default: 'beginner',
         required: true
     },
     thumbnail: {
@@ -25,11 +26,13 @@ const ModuleSchema = new mongoose.Schema({
         },
         required: true
     },
-    course: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Course',
-        required: true
-    },
+    lectures: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Lecture',
+            required: true
+        }
+    ],
     createdAt: {
         type: Date,
         default: Date.now,
@@ -46,7 +49,7 @@ const ModuleSchema = new mongoose.Schema({
         required: true
     },
     estimatedTimeToFinish: {
-        type: String,
+        type: Number,
         get: time => {
             const hrs = Math.floor(time / 3600);
             const mins = Math.floor((time % 3600) / 60);
@@ -60,6 +63,7 @@ const ModuleSchema = new mongoose.Schema({
             ret += secs;
             return ret;
         },
+        default: 3600,
         required: true
     },
     skippable: {

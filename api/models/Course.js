@@ -36,6 +36,13 @@ const CourseSchema = new mongoose.Schema({
         default: Date.now,
         required: true
     },
+    modules: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Module',
+            required: true
+        }
+    ],
     creator: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',

@@ -46,3 +46,5 @@ process.on('SIGTERM', function() {
 // BRING IN YOUR SCHEMAS & MODELS
 require('../models/User');
 require('../models/Course');
+require('../models/Module');
+require('../models/Lecture');

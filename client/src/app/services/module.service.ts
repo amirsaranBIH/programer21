@@ -5,15 +5,15 @@ import { AuthenticationService } from './authentication.service';
 @Injectable({
   providedIn: 'root'
 })
-export class CourseService {
+export class ModuleService {
 
   constructor(private http: HttpClient, private authService: AuthenticationService) { }
 
-  getAllCourses() {
-    return this.http.get('/api/course/get-all-courses');
+  getAllModules() {
+    return this.http.get('/api/module/get-all-modules');
   }
 
-  createCourse(data) {
-    return this.http.post('/api/course/new', data, { headers: { Authorization: `Bearer ${this.authService.getToken}` }});
+  createModule(courseId, data) {
+    return this.http.post('/api/module/new/' + courseId, data, { headers: { Authorization: `Bearer ${this.authService.getToken}` }});
   }
 }

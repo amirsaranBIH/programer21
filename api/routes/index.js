@@ -10,6 +10,7 @@ var auth = jwt({
 var ctrlDashboard = require('../controllers/dashboard');
 var ctrlAuth = require('../controllers/authentication');
 var ctrlCourse = require('../controllers/course');
+var ctrlModule = require('../controllers/module');
 
 // dashboard
 router.get('/dashboard', auth, ctrlDashboard.dashboardRead);
@@ -21,7 +22,11 @@ router.get('/verifyEmail/:user_id/:verify_token', ctrlAuth.verifyEmail);
 router.post('/isEmailTaken', ctrlAuth.isEmailTaken);
 
 // course
-router.get('/course/get-all-courses', auth, ctrlCourse.getAllCourses);
+router.get('/course/get-all-courses', ctrlCourse.getAllCourses);
 router.post('/course/new', auth, ctrlCourse.createCourse);
+
+// module
+router.get('/module/get-all-modules', ctrlModule.getAllModules);
+router.post('/module/new/:course_id', auth, ctrlModule.createModule);
 
 module.exports = router;
