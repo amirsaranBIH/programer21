@@ -155,6 +155,10 @@ img {
     }
 }
 
+.container--infinite-height {
+    min-height: auto;
+}
+
 .container--full {
     grid-column: full;
     background-color: white;

@@ -19,11 +19,6 @@ module.exports.createModule = function(req, res) {
             if (err) {
                 console.error(err);
             }
-            console.log('=============================');
-            console.log('=============================');
-            console.log('=============================');
-            console.log('=============================');
-            console.log(createdModule);
             Course.findByIdAndUpdate(req.params.course_id, { "$push": { "modules": createdModule._id } }, (err) => {
                     if (err) {
                         console.error(err);

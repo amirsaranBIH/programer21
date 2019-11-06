@@ -1,1 +1,24 @@
-<p>new-lecture works!</p>
+
+<div class="container container--infinite-height">
+
+    <form class="form" [formGroup]="lectureForm" (ngSubmit)="onSubmit(lectureForm.value)">
+        <div class="form__group">
+            <label for="title">Title</label>
+            <input type="title" [class.is-invalid]="title.invalid && title.touched" id="title"
+                formControlName="title" placeholder="Enter title">
+            <div class="form__help text--small" *ngIf="title.invalid && title.touched">
+                <div *ngIf="title.errors?.required">Title is required.</div>
+            </div>
+        </div>
+        <div class="form__group">
+            <label for="description">Description</label>
+            <textarea type="description" [class.is-invalid]="description.invalid && description.touched"
+                id="description" formControlName="description" placeholder="Enter description" rows="5"></textarea>
+            <div class="form__help text--small" *ngIf="description.invalid && description.touched">
+                <div *ngIf="description.errors?.required">Description is required.</div>
+            </div>
+        </div>
+        <quill-editor formControlName="body" [sanitize]="true" [styles]="{height: '800px'}"></quill-editor>
+        <button class="button button--large" [disabled]="lectureForm.invalid">Create Lecture</button>
+    </form>
+</div>

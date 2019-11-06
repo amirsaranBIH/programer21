@@ -43,7 +43,7 @@
         <div class="admin-panel__create-lectures__section">
             <div class="admin-panel__create-lectures__header flex flex--between flex--center">
                 <span class="h4">Lectures</span>
-                <i [routerLink]="['/admin-panel/new-lecture', selectedCourse, selectedModule]" class="fa fa-plus add-button"></i>
+                <i [routerLink]="['/admin-panel/new-lecture', courses[selectedCourse]?._id, courses[selectedCourse]?.modules[selectedModule]?._id]" class="fa fa-plus add-button"></i>
             </div>
             <ul class="admin-panel__create-lectures__list">
                 <li [ngClass]="{'active': activeLecture === i}" *ngFor="let lecture of courses[selectedCourse]?.modules[selectedModule]?.lectures; let i = index">
