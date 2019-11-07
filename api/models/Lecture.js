@@ -22,6 +22,12 @@ const LectureSchema = new mongoose.Schema({
         default: Date.now,
         required: true
     },
+    difficulty: {
+        type: String,
+        enum: ['beginner', 'intermediate', 'advanced'],
+        default: 'beginner',
+        required: true
+    },
     creator: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
@@ -47,6 +53,7 @@ const LectureSchema = new mongoose.Schema({
             ret += secs;
             return ret;
         },
+        default: 3600,
         required: true
     },
     skippable: {

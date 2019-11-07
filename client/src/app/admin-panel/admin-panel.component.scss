@@ -45,6 +45,18 @@
             background-color: white;
             flex: 1;
             padding: 1em;
+            
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .item-content__actions i {
+            font-size: 1.75em;
+        }
+
+        .item-content__actions i + i {
+            margin-left: .5em;
         }
         
         &__item__header {
@@ -67,6 +79,18 @@
             cursor: pointer;
             font-size: 1.25em;
             color: $dark_green;
+        }
+
+        .edit-button {
+            cursor: pointer;
+            font-size: 1.25em;
+            color: $yellow;
+        }
+
+        .delete-button {
+            cursor: pointer;
+            font-size: 1.25em;
+            color: $red;
         }
     }
 }

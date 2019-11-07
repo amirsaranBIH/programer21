@@ -11,6 +11,7 @@ var ctrlDashboard = require('../controllers/dashboard');
 var ctrlAuth = require('../controllers/authentication');
 var ctrlCourse = require('../controllers/course');
 var ctrlModule = require('../controllers/module');
+var ctrlLecture = require('../controllers/lecture');
 
 // dashboard
 router.get('/dashboard', auth, ctrlDashboard.dashboardRead);
@@ -28,5 +29,10 @@ router.post('/course/new', auth, ctrlCourse.createCourse);
 // module
 router.get('/module/get-all-modules', ctrlModule.getAllModules);
 router.post('/module/new/:course_id', auth, ctrlModule.createModule);
+
+// lecture
+router.get('/lecture/get-all-lectures', ctrlLecture.getAllLectures);
+router.get('/lecture/get-lecture/:lecture_id', ctrlLecture.getLectureById);
+router.post('/lecture/new/:module_id', auth, ctrlLecture.createLecture);
 
 module.exports = router;

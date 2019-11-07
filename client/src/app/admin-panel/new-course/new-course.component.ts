@@ -30,10 +30,9 @@ export class NewCourseComponent implements OnInit {
   }
 
   onSubmit(value) {
-    this.courseService.createCourse(value).subscribe(res => {
-      this.router.navigate(['admin-panel']);
-    }, err => {
-      console.log(err);
+    this.courseService.createCourse(value).subscribe({
+      error: (err) => console.log(err),
+      complete: () => this.router.navigate(['admin-panel'])
     });
   }
 }

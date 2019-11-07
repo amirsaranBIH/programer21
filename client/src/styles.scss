@@ -4,6 +4,7 @@ $green: rgba(177, 207, 95, 1);
 $dark_green: rgba(28, 124, 84, 1);
 $darker_green: rgba(27, 81, 45, 1);
 $red: rgba(245, 39, 39, 1);
+$yellow: rgba(255, 221, 0, 1);
 
 body {
     font-family: Georgia, 'Times New Roman', Times, serif;
@@ -55,6 +56,14 @@ img {
     max-width: 100%;
 }
 
+.margin-top {
+    margin-top: 1em;
+}
+
+.margin-bottom {
+    margin-bottom: 1em;
+}
+
 .form {
     label {
         display: inline-block;
@@ -67,7 +76,10 @@ img {
         color: $red;
     }
     
-    input,
+    input[type=text],
+    input[type=number],
+    input[type=email],
+    input[type=password],
     select,
     textarea {
         display: block;
@@ -78,6 +90,10 @@ img {
         border: 1px solid #eee;
         outline: none;
         margin-bottom: .25em;
+    }
+
+    input[type=checkbox] {
+        margin-right: .5em;
     }
     
     button {
@@ -103,13 +119,19 @@ img {
         opacity: .75;
     }
     
-    input.is-invalid:focus,
+    input[type=text].is-invalid:focus,
+    input[type=number].is-invalid:focus,
+    input[type=email].is-invalid:focus,
+    input[type=password].is-invalid:focus,
     select.is-invalid:focus,
     textarea.is-invalid:focus {
         box-shadow: 0 0 3px 2px rgba(245, 39, 39, .75);
     }
     
-    input:focus,
+    input[type=text]:focus,
+    input[type=number]:focus,
+    input[type=email]:focus,
+    input[type=password]:focus,
     select:focus,
     textarea:focus {
         box-shadow: 0 0 3px 2px $light_green;
@@ -170,6 +192,10 @@ img {
 
 .flex--between {
     justify-content: space-between;
+}
+
+.flex--end {
+    justify-content: flex-end;
 }
 
 .flex--center {

@@ -18,6 +18,8 @@ import { NewModuleComponent } from './admin-panel/new-module/new-module.componen
 import { NewLectureComponent } from './admin-panel/new-lecture/new-lecture.component';
 import { NewCourseComponent } from './admin-panel/new-course/new-course.component';
 import { AllCoursesResolverService } from './resolvers/all-courses-resolver.service';
+import { EditLectureComponent } from './admin-panel/edit-lecture/edit-lecture.component';
+import { OneLectureResolverService } from './resolvers/one-lecture-resolver.service';
 
 const routes: Routes = [
   {
@@ -42,7 +44,13 @@ const routes: Routes = [
       { path: '', component: AdminPanelComponent },
       { path: 'new-course', component: NewCourseComponent },
       { path: 'new-module/:course_id', component: NewModuleComponent },
-      { path: 'new-lecture/:course_id/:module_id', component: NewLectureComponent },
+      { path: 'new-lecture/:module_id', component: NewLectureComponent },
+      { path: 'edit-lecture/:lecture_id',
+        component: EditLectureComponent,
+        resolve: {
+          lecture: OneLectureResolverService
+        }
+      },
     ]
    },
   {
@@ -62,7 +70,8 @@ const routes: Routes = [
     HomeComponent,
     NewModuleComponent,
     NewLectureComponent,
-    NewCourseComponent
+    NewCourseComponent,
+    EditLectureComponent
   ],
   imports: [
     BrowserAnimationsModule,
@@ -76,7 +85,8 @@ const routes: Routes = [
   providers: [
     AuthenticationService,
     AuthGuardService,
-    AllCoursesResolverService
+    AllCoursesResolverService,
+    OneLectureResolverService
   ],
   bootstrap: [AppComponent]
 })

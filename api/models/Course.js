@@ -36,6 +36,12 @@ const CourseSchema = new mongoose.Schema({
         default: Date.now,
         required: true
     },
+    difficulty: {
+        type: String,
+        enum: ['beginner', 'intermediate', 'advanced'],
+        default: 'beginner',
+        required: true
+    },
     modules: [
         {
             type: mongoose.Schema.Types.ObjectId,
