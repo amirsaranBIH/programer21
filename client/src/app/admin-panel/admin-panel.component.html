@@ -30,7 +30,7 @@
       <div class="admin-panel__create-lectures__section">
           <div class="admin-panel__create-lectures__header flex flex--between flex--center">
               <span class="h4">Modules</span>
-              <i [routerLink]="['/admin-panel/new-module', courses[selectedCourse]?._id]" class="fa fa-plus add-button"></i>
+              <i *ngIf="courses[activeCourse]?._id" [routerLink]="['/admin-panel/new-module', courses[activeCourse]?._id]" class="fa fa-plus add-button"></i>
           </div>
           <ul class="admin-panel__create-lectures__list">
               <li [ngClass]="{'active': activeModule === i}" *ngFor="let module of courses[selectedCourse]?.modules; let i = index">
@@ -55,7 +55,7 @@
         <div class="admin-panel__create-lectures__section">
             <div class="admin-panel__create-lectures__header flex flex--between flex--center">
                 <span class="h4">Lectures</span>
-                <i [routerLink]="['/admin-panel/new-lecture', courses[selectedCourse]?.modules[selectedModule]?._id]" class="fa fa-plus add-button"></i>
+                <i *ngIf="courses[activeCourse]?.modules[activeModule]?._id" [routerLink]="['/admin-panel/new-lecture', courses[activeCourse]?.modules[activeModule]?._id]" class="fa fa-plus add-button"></i>
             </div>
             <ul class="admin-panel__create-lectures__list">
                 <li [ngClass]="{'active': activeLecture === i}" *ngFor="let lecture of courses[selectedCourse]?.modules[selectedModule]?.lectures; let i = index">

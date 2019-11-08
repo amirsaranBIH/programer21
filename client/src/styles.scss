@@ -23,19 +23,19 @@ h1, .h1, h2, .h2, h3, .h3, h4, .h4 {
 }
 
 h1, .h1 {
-    font-size: 3em;
-}
-
-h2, .h2 {
     font-size: 2.5em;
 }
 
-h3, .h3 {
+h2, .h2 {
     font-size: 2em;
 }
 
+h3, .h3 {
+    font-size: 1.5em;
+}
+
 h4, .h4 {
-    font-size: 1.25em;
+    font-size: 1.2em;
 }
 
 a {
@@ -105,16 +105,12 @@ img {
         opacity: .75;
     }
     
-    input.is-invalid,
-    select.is-invalid,
-    textarea.is-invalid {
+    .is-invalid {
         border-color: $red;
         color: $red;
     }
 
-    input.is-invalid::placeholder,
-    select.is-invalid::placeholder,
-    textarea.is-invalid::placeholder {
+    .is-invalid::placeholder {
         color: $red;
         opacity: .75;
     }
@@ -175,10 +171,6 @@ img {
         background-color: white;
         padding: 1em; 
     }
-}
-
-.container--infinite-height {
-    min-height: auto;
 }
 
 .container--full {

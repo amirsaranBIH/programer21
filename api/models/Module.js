@@ -26,6 +26,12 @@ const ModuleSchema = new mongoose.Schema({
         },
         required: true
     },
+    status: {
+        type: String,
+        enum: ['public', 'private'],
+        default: 'private',
+        required: true
+    },
     lectures: [
         {
             type: mongoose.Schema.Types.ObjectId,
@@ -46,24 +52,6 @@ const ModuleSchema = new mongoose.Schema({
     creator: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
-        required: true
-    },
-    estimatedTimeToFinish: {
-        type: Number,
-        get: time => {
-            const hrs = Math.floor(time / 3600);
-            const mins = Math.floor((time % 3600) / 60);
-            const secs = Math.floor(time % 60);
-
-            let ret = '';
-
-            if (hrs > 0) ret += `${hrs}:${mins < 10 ? '0' : ''}`;
-
-            ret += `${mins}:${secs < 10 ? '0' : ''}`;
-            ret += secs;
-            return ret;
-        },
-        default: 3600,
         required: true
     },
     skippable: {

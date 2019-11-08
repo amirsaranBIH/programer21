@@ -17,9 +17,10 @@ export class NewLectureComponent implements OnInit {
     this.lectureForm = this.fb.group({
       title: ['', [Validators.required]],
       description: ['', [Validators.required]],
-      difficulty: ['', [Validators.required]],
+      difficulty: ['beginner', [Validators.required]],
+      status: ['private', [Validators.required]],
       thumbnail: [''],
-      body: ['<p>Start writing...</p>'],
+      body: ['<p>Start writing...</p>', [Validators.required]],
       skippable: [false]
     });
   }
@@ -34,6 +35,10 @@ export class NewLectureComponent implements OnInit {
 
   get difficulty() {
     return this.lectureForm.get('difficulty');
+  }
+
+  get status() {
+    return this.lectureForm.get('status');
   }
 
   onSubmit(value) {

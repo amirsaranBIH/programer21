@@ -13,7 +13,16 @@ export class ModuleService {
     return this.http.get('/api/module/get-all-modules');
   }
 
+  getModuleById(moduleId) {
+    return this.http.get(`/api/module/get-module/${moduleId}`);
+  }
+
   createModule(courseId, data) {
     return this.http.post('/api/module/new/' + courseId, data, { headers: { Authorization: `Bearer ${this.authService.getToken}` }});
+  }
+
+  editModule(moduleId, data) {
+    return this.http.post(`/api/module/edit/${moduleId}`, data,
+      { headers: { Authorization: `Bearer ${this.authService.getToken}` }});
   }
 }

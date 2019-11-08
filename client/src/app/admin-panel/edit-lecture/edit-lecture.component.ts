@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, Validators, FormBuilder } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
+import { LectureService } from 'src/app/services/lecture.service';
 
 @Component({
   selector: 'app-edit-lecture',
@@ -11,18 +12,18 @@ export class EditLectureComponent implements OnInit {
   public editLectureForm: FormGroup;
   public lecture;
 
-  constructor(private fb: FormBuilder, private route: ActivatedRoute) { }
+  constructor(private fb: FormBuilder, private route: ActivatedRoute, private lectureService: LectureService, private router: Router) { }
 
   ngOnInit() {
     this.lecture = this.route.snapshot.data.lecture;
-    console.log(this.lecture);
 
     this.editLectureForm = this.fb.group({
       title: [this.lecture.title, [Validators.required]],
       description: [this.lecture.description, [Validators.required]],
       difficulty: [this.lecture.difficulty, [Validators.required]],
+      status: [this.lecture.status, [Validators.required]],
       thumbnail: [this.lecture.thumbnail],
-      body: [this.lecture.body],
+      body: [this.lecture.body, [Validators.required]],
       skippable: [this.lecture.skippable]
     });
   }
@@ -39,8 +40,19 @@ export class EditLectureComponent implements OnInit {
     return this.editLectureForm.get('difficulty');
   }
 
+  get status() {
+    return this.editLectureForm.get('status');
+  }
+
+  get body() {
+    return this.editLectureForm.get('body');
+  }
+
   onSubmit(value) {
-    console.log(value);
+    this.lectureService.editLecture(this.route.snapshot.params.lecture_id, value).subscribe({
+      error: (err) => console.log(err),
+      complete: () => this.router.navigate(['/admin-panel'])
+    });
   }
 
 }

@@ -24,15 +24,20 @@ router.post('/isEmailTaken', ctrlAuth.isEmailTaken);
 
 // course
 router.get('/course/get-all-courses', ctrlCourse.getAllCourses);
+router.get('/course/get-course/:course_id', ctrlCourse.getCourseById);
 router.post('/course/new', auth, ctrlCourse.createCourse);
+router.post('/course/edit/:course_id', auth, ctrlCourse.editCourse);
 
 // module
 router.get('/module/get-all-modules', ctrlModule.getAllModules);
+router.get('/module/get-module/:module_id', ctrlModule.getModuleById);
 router.post('/module/new/:course_id', auth, ctrlModule.createModule);
+router.post('/module/edit/:module_id', auth, ctrlModule.editModule);
 
 // lecture
 router.get('/lecture/get-all-lectures', ctrlLecture.getAllLectures);
 router.get('/lecture/get-lecture/:lecture_id', ctrlLecture.getLectureById);
 router.post('/lecture/new/:module_id', auth, ctrlLecture.createLecture);
+router.post('/lecture/edit/:lecture_id', auth, ctrlLecture.editLecture);
 
 module.exports = router;

@@ -18,8 +18,13 @@ import { NewModuleComponent } from './admin-panel/new-module/new-module.componen
 import { NewLectureComponent } from './admin-panel/new-lecture/new-lecture.component';
 import { NewCourseComponent } from './admin-panel/new-course/new-course.component';
 import { AllCoursesResolverService } from './resolvers/all-courses-resolver.service';
-import { EditLectureComponent } from './admin-panel/edit-lecture/edit-lecture.component';
 import { OneLectureResolverService } from './resolvers/one-lecture-resolver.service';
+import { BackButtonComponent } from './includes/back-button/back-button.component';
+import { EditLectureComponent } from './admin-panel/edit-lecture/edit-lecture.component';
+import { EditModuleComponent } from './admin-panel/edit-module/edit-module.component';
+import { EditCourseComponent } from './admin-panel/edit-course/edit-course.component';
+import { OneCourseResolverService } from './resolvers/one-course-resolver.service';
+import { OneModuleResolverService } from './resolvers/one-module-resolver.service';
 
 const routes: Routes = [
   {
@@ -36,15 +41,30 @@ const routes: Routes = [
   },
   {
     path: 'admin-panel',
-    resolve: {
-      courses: AllCoursesResolverService
-    },
     canActivate: [AuthGuardService],
     children: [
-      { path: '', component: AdminPanelComponent },
+      {
+        path: '',
+        component: AdminPanelComponent,
+        resolve: {
+          courses: AllCoursesResolverService
+        }
+      },
       { path: 'new-course', component: NewCourseComponent },
       { path: 'new-module/:course_id', component: NewModuleComponent },
       { path: 'new-lecture/:module_id', component: NewLectureComponent },
+      { path: 'edit-course/:course_id',
+        component: EditCourseComponent,
+        resolve: {
+          course: OneCourseResolverService
+        }
+      },
+      { path: 'edit-module/:module_id',
+        component: EditModuleComponent,
+        resolve: {
+          module: OneModuleResolverService
+        }
+      },
       { path: 'edit-lecture/:lecture_id',
         component: EditLectureComponent,
         resolve: {
@@ -71,7 +91,10 @@ const routes: Routes = [
     NewModuleComponent,
     NewLectureComponent,
     NewCourseComponent,
-    EditLectureComponent
+    EditLectureComponent,
+    BackButtonComponent,
+    EditModuleComponent,
+    EditCourseComponent
   ],
   imports: [
     BrowserAnimationsModule,
@@ -86,7 +109,9 @@ const routes: Routes = [
     AuthenticationService,
     AuthGuardService,
     AllCoursesResolverService,
-    OneLectureResolverService
+    OneLectureResolverService,
+    OneModuleResolverService,
+    OneCourseResolverService
   ],
   bootstrap: [AppComponent]
 })

@@ -28,6 +28,12 @@ const LectureSchema = new mongoose.Schema({
         default: 'beginner',
         required: true
     },
+    status: {
+        type: String,
+        enum: ['public', 'private'],
+        default: 'private',
+        required: true
+    },
     creator: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
@@ -36,24 +42,6 @@ const LectureSchema = new mongoose.Schema({
     body: {
         type: String,
         trim: true,
-        required: true
-    },
-    estimatedTimeToFinish: {
-        type: String,
-        get: time => {
-            const hrs = Math.floor(time / 3600);
-            const mins = Math.floor((time % 3600) / 60);
-            const secs = Math.floor(time % 60);
-
-            let ret = '';
-
-            if (hrs > 0) ret += `${hrs}:${mins < 10 ? '0' : ''}`;
-
-            ret += `${mins}:${secs < 10 ? '0' : ''}`;
-            ret += secs;
-            return ret;
-        },
-        default: 3600,
         required: true
     },
     skippable: {

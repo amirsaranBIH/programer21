@@ -30,7 +30,7 @@ module.exports.signup = function(req, res) {
       "token" : token
     });
     
-    sendMail(user, 'Verify user creadentials for Avika');
+    sendMail(user, 'Verify user credentials for Avika');
   });
 
 };
@@ -64,9 +64,7 @@ module.exports.verifyEmail = function(req, res) {
   User.findById(req.params.user_id, (err, user) => {
     if (err) return res.send(false);
 
-    console.log('it is good 1');
     if (user.verifyToken === req.params.verify_token) {
-      console.log('it is good');
       user.verifiedEmail = true;
         user.save();
         return res.send(true);

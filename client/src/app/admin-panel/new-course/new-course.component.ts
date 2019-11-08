@@ -17,6 +17,8 @@ export class NewCourseComponent implements OnInit {
     this.courseForm = this.fb.group({
       title: ['', [Validators.required]],
       description: ['', [Validators.required]],
+      difficulty: ['beginner', [Validators.required]],
+      status: ['private', [Validators.required]],
       thumbnail: ['']
     });
   }
@@ -29,10 +31,18 @@ export class NewCourseComponent implements OnInit {
     return this.courseForm.get('description');
   }
 
+  get difficulty() {
+    return this.courseForm.get('difficulty');
+  }
+
+  get status() {
+    return this.courseForm.get('status');
+  }
+
   onSubmit(value) {
     this.courseService.createCourse(value).subscribe({
       error: (err) => console.log(err),
-      complete: () => this.router.navigate(['admin-panel'])
+      complete: () => this.router.navigate(['/admin-panel'])
     });
   }
 }

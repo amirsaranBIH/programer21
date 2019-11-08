@@ -1,24 +1,16 @@
 <div class="container">
-    <div class="new-module">
-        <form class="form form--max-width" [formGroup]="moduleForm" (ngSubmit)="onSubmit(moduleForm.value)">
-                <div class="flex flex--between flex--center">
-                    <h1>New Module</h1>
-                    <back-button [backRoute]="['/admin-panel']"></back-button>
-                </div>
-            <div class="form__group">
+    <div class="edit-module">
+        <form class="form" [formGroup]="editModuleForm" (ngSubmit)="onSubmit(editModuleForm.value)">
+            <div class="flex flex--between flex--center">
+                <h1>Edit Module</h1>
+                <back-button [backRoute]="['/admin-panel']"></back-button>
+            </div>
+            <div class="form__section">
                 <label for="title">Title</label>
                 <input type="text" [class.is-invalid]="title.invalid && title.touched" id="title"
                     formControlName="title" placeholder="Enter title">
                 <div class="form__help text--small" *ngIf="title.invalid && title.touched">
                     <div *ngIf="title.errors?.required">Title is required.</div>
-                </div>
-            </div>
-            <div class="form__group">
-                <label for="description">Description</label>
-                <textarea type="description" [class.is-invalid]="description.invalid && description.touched"
-                    id="description" formControlName="description" placeholder="Enter description" rows="5"></textarea>
-                <div class="form__help text--small" *ngIf="description.invalid && description.touched">
-                    <div *ngIf="description.errors?.required">Description is required.</div>
                 </div>
             </div>
             <div class="form__group--flex">
@@ -44,12 +36,19 @@
                     </div>
                 </div>
             </div>
+            <div class="form__group">
+                <label for="description">Description</label>
+                <textarea type="description" [class.is-invalid]="description.invalid && description.touched"
+                    id="description" formControlName="description" placeholder="Enter description" rows="5"></textarea>
+                <div class="form__help text--small" *ngIf="description.invalid && description.touched">
+                    <div *ngIf="description.errors?.required">Description is required.</div>
+                </div>
+            </div>
             <div class="form__group margin-bottom">
                 <input type="checkbox" formControlName="skippable" id="skippable">
                 <label for="skippable">Skippable</label>
             </div>
-            <button type="submit" class="button button--large"
-                [disabled]="moduleForm.invalid">Create Module</button>
+            <button class="button button--large" [disabled]="editModuleForm.invalid">Update Module</button>
         </form>
     </div>
 </div>

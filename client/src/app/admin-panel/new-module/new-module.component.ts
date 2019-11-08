@@ -17,7 +17,10 @@ export class NewModuleComponent implements OnInit {
     this.moduleForm = this.fb.group({
       title: ['', [Validators.required]],
       description: ['', [Validators.required]],
-      thumbnail: ['']
+      difficulty: ['beginner', [Validators.required]],
+      status: ['private', [Validators.required]],
+      thumbnail: [''],
+      skippable: [false]
     });
   }
 
@@ -29,9 +32,17 @@ export class NewModuleComponent implements OnInit {
     return this.moduleForm.get('description');
   }
 
+  get difficulty() {
+    return this.moduleForm.get('difficulty');
+  }
+
+  get status() {
+    return this.moduleForm.get('status');
+  }
+
   onSubmit(value) {
     this.moduleService.createModule(this.route.snapshot.params.course_id, value).subscribe(res => {
-      this.router.navigate(['admin-panel']);
+      this.router.navigate(['/admin-panel']);
     }, err => {
       console.log(err);
     });

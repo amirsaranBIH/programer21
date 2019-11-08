@@ -21,4 +21,9 @@ export class LectureService {
     return this.http.post(`/api/lecture/new/${moduleId}`, data,
       { headers: { Authorization: `Bearer ${this.authService.getToken}` }});
   }
+
+  editLecture(lectureId, data) {
+    return this.http.post(`/api/lecture/edit/${lectureId}`, data,
+      { headers: { Authorization: `Bearer ${this.authService.getToken}` }});
+  }
 }
