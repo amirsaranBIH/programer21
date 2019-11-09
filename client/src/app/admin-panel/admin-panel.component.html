@@ -16,6 +16,7 @@
             <div *ngIf="activeCourse === i" class="admin-panel__create-lectures__item-content">
               <div class="item-content__main">
                 <h4>{{ course.title }}</h4>
+                <small>{{ course.status }}</small>
                 <p>{{ course.description }}</p>
               </div>
               <div class="item-content__actions flex flex--end">
@@ -40,7 +41,9 @@
                 </div>
                 <div *ngIf="activeModule === i" class="admin-panel__create-lectures__item-content">
                   <div class="item-content__main">
-                      <h4>{{ module.title }}</h4>
+                    <h4>{{ module.title }}</h4>
+                    <small *ngIf="module.skippable">{{'Skippable'}}</small>
+                    <small>{{ module.status }}</small>
                     <p>{{ module.description }}</p>
                   </div>
                   <div class="item-content__actions flex flex--end">
@@ -66,6 +69,8 @@
                   <div *ngIf="activeLecture === i" class="admin-panel__create-lectures__item-content">
                     <div class="item-content__main">
                         <h4>{{ lecture.title }}</h4>
+                        <small *ngIf="lecture.skippable">{{'Skippable'}}</small>
+                        <small>{{ lecture.status }}</small>
                         <p>{{ lecture.description }}</p>
                     </div>
                     <div class="item-content__actions flex flex--end">

@@ -1,6 +1,6 @@
 <div class="container">
     <div class="new-course">
-        <form class="form form--max-width" [formGroup]="courseForm" (ngSubmit)="onSubmit(courseForm.value)">
+        <form class="form form--max-width" [formGroup]="courseForm" (ngSubmit)="onSubmit()" enctype="multipart/form-data">
             <div class="flex flex--between flex--center">
                 <h1>New Course</h1>
                 <back-button [backRoute]="['/admin-panel']"></back-button>
@@ -13,6 +13,29 @@
                     <div *ngIf="title.errors?.required">Title is required.</div>
                 </div>
             </div>
+            <div class="form__group--flex">
+                <div class="form__section">
+                    <label for="difficulty">Difficulty</label>
+                    <select formControlName="difficulty" id="difficulty">
+                        <option value="beginner">Beginner</option>
+                        <option value="intermediate">Intermediate</option>
+                        <option value="advanced">Advanced</option>
+                    </select>
+                    <div class="form__help text--small" *ngIf="difficulty.invalid && difficulty.touched">
+                        <div *ngIf="difficulty.errors?.required">Difficulty is required.</div>
+                    </div>
+                </div>
+                <div class="form__section">
+                    <label for="status">Status</label>
+                    <select formControlName="status" id="status">
+                        <option value="private">Private</option>
+                        <option value="public">Public</option>
+                    </select>
+                    <div class="form__help text--small" *ngIf="status.invalid && status.touched">
+                        <div *ngIf="status.errors?.required">Status is required.</div>
+                    </div>
+                </div>
+            </div>
             <div class="form__group">
                 <label for="description">Description</label>
                 <textarea type="description" [class.is-invalid]="description.invalid && description.touched"
@@ -22,25 +45,7 @@
                 </div>
             </div>
             <div class="form__group">
-                <label for="difficulty">Difficulty</label>
-                <select formControlName="difficulty" id="difficulty">
-                    <option value="beginner">Beginner</option>
-                    <option value="intermediate">Intermediate</option>
-                    <option value="advanced">Advanced</option>
-                </select>
-                <div class="form__help text--small" *ngIf="difficulty.invalid && difficulty.touched">
-                    <div *ngIf="difficulty.errors?.required">Difficulty is required.</div>
-                </div>
-            </div>
-            <div class="form__group">
-                <label for="status">Status</label>
-                <select formControlName="status" id="status">
-                    <option value="private">Private</option>
-                    <option value="public">Public</option>
-                </select>
-                <div class="form__help text--small" *ngIf="status.invalid && status.touched">
-                    <div *ngIf="status.errors?.required">Status is required.</div>
-                </div>
+                <file-upload (onFileUpload)="onFileUpload($event)"></file-upload>
             </div>
             <button type="submit" class="button button--large"
                 [disabled]="courseForm.invalid">Create Course</button>

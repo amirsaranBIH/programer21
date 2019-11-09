@@ -10,6 +10,7 @@ import { ModuleService } from 'src/app/services/module.service';
 })
 export class EditModuleComponent implements OnInit {
   public module;
+  public thumbnail: File;
   public editModuleForm: FormGroup;
 
   constructor(private route: ActivatedRoute, private fb: FormBuilder, private moduleService: ModuleService, private router: Router) { }
@@ -22,7 +23,6 @@ export class EditModuleComponent implements OnInit {
       description: [this.module.description, [Validators.required]],
       difficulty: [this.module.difficulty, [Validators.required]],
       status: [this.module.status, [Validators.required]],
-      thumbnail: [this.module.thumbnail],
       skippable: [this.module.skippable]
     });
   }
@@ -43,10 +43,21 @@ export class EditModuleComponent implements OnInit {
     return this.editModuleForm.get('status');
   }
 
-  onSubmit(value) {
-    this.moduleService.editModule(this.route.snapshot.params.module_id, value).subscribe({
+  onSubmit() {
+    const fd = new FormData();
+    fd.append('thumbnail', this.thumbnail);
+    // tslint:disable-next-line: forin
+    for (const key in this.editModuleForm.value) {
+      fd.append(key, this.editModuleForm.value[key]);
+    }
+
+    this.moduleService.editModule(this.route.snapshot.params.module_id, fd).subscribe({
       error: (err) => console.log(err),
       complete: () => this.router.navigate(['/admin-panel'])
     });
+  }
+
+  onFileUpload(file) {
+    this.thumbnail = file;
   }
 }

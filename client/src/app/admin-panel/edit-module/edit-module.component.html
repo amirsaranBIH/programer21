@@ -48,6 +48,9 @@
                 <input type="checkbox" formControlName="skippable" id="skippable">
                 <label for="skippable">Skippable</label>
             </div>
+            <div class="form__group">
+                <file-upload (onFileUpload)="onFileUpload($event)"></file-upload>
+            </div>
             <button class="button button--large" [disabled]="editModuleForm.invalid">Update Module</button>
         </form>
     </div>

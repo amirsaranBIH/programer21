@@ -10,6 +10,7 @@ import { Router } from '@angular/router';
 })
 export class NewCourseComponent implements OnInit {
   public courseForm: FormGroup;
+  public thumbnail: File;
 
   constructor(private fb: FormBuilder, private courseService: CourseService, private router: Router) { }
 
@@ -18,8 +19,7 @@ export class NewCourseComponent implements OnInit {
       title: ['', [Validators.required]],
       description: ['', [Validators.required]],
       difficulty: ['beginner', [Validators.required]],
-      status: ['private', [Validators.required]],
-      thumbnail: ['']
+      status: ['private', [Validators.required]]
     });
   }
 
@@ -39,10 +39,23 @@ export class NewCourseComponent implements OnInit {
     return this.courseForm.get('status');
   }
 
-  onSubmit(value) {
-    this.courseService.createCourse(value).subscribe({
+  onSubmit() {
+    const fd = new FormData();
+    if (this.thumbnail) {
+      fd.append('thumbnail', this.thumbnail);
+    }
+    // tslint:disable-next-line: forin
+    for (const key in this.courseForm.value) {
+      fd.append(key, this.courseForm.value[key]);
+    }
+
+    this.courseService.createCourse(fd).subscribe({
       error: (err) => console.log(err),
       complete: () => this.router.navigate(['/admin-panel'])
     });
+  }
+
+  onFileUpload(file) {
+    this.thumbnail = file;
   }
 }

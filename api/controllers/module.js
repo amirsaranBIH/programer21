@@ -1,6 +1,7 @@
 var mongoose = require('mongoose');
 var Course = mongoose.model('Course');
 var Module = mongoose.model('Module');
+const config = require('config');
 
 module.exports.createModule = function(req, res) {
     if (!req.payload._id) {
@@ -14,9 +15,8 @@ module.exports.createModule = function(req, res) {
             skippable: req.body.skippable,
             creator: req.payload._id
         });
-
-        if (req.body.thumbnail.trim()) {
-            newModule.thumbnail = req.body.thumbnail;
+        if (req.file) {
+            newModule.thumbnail = config.get('HOST') + req.file.destination + '/' + req.file.filename;
         }
     
         newModule.save((err, createdModule) => {

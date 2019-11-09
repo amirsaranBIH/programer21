@@ -1,6 +1,6 @@
 <div class="container">
         <div class="edit-course">
-            <form class="form" [formGroup]="editCourseForm" (ngSubmit)="onSubmit(editCourseForm.value)">
+            <form class="form" [formGroup]="editCourseForm" (ngSubmit)="onSubmit()">
                 <div class="flex flex--between flex--center">
                     <h1>Edit Course</h1>
                     <back-button [backRoute]="['/admin-panel']"></back-button>
@@ -43,6 +43,9 @@
                     <div class="form__help text--small" *ngIf="description.invalid && description.touched">
                         <div *ngIf="description.errors?.required">Description is required.</div>
                     </div>
+                </div>
+                <div class="form__group">
+                    <file-upload (onFileUpload)="onFileUpload($event)"></file-upload>
                 </div>
                 <button class="button button--large" [disabled]="editCourseForm.invalid">Update Course</button>
             </form>

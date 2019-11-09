@@ -1,5 +1,6 @@
 var mongoose = require('mongoose');
 var Course = mongoose.model('Course');
+const config = require('config');
 
 module.exports.createCourse = function(req, res) {
   if (!req.payload._id) {
@@ -13,8 +14,8 @@ module.exports.createCourse = function(req, res) {
       creator: req.payload._id
     });
 
-    if (req.body.thumbnail.trim()) {
-      newCourse.thumbnail = req.body.thumbnail;
+    if (req.file) {
+      newCourse.thumbnail = config.get('HOST') + req.file.destination + '/' + req.file.filename;
     }
     
     newCourse.save(err => {

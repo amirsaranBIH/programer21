@@ -25,6 +25,7 @@ import { EditModuleComponent } from './admin-panel/edit-module/edit-module.compo
 import { EditCourseComponent } from './admin-panel/edit-course/edit-course.component';
 import { OneCourseResolverService } from './resolvers/one-course-resolver.service';
 import { OneModuleResolverService } from './resolvers/one-module-resolver.service';
+import { FileUploadComponent } from './includes/file-upload/file-upload.component';
 
 const routes: Routes = [
   {
@@ -94,7 +95,8 @@ const routes: Routes = [
     EditLectureComponent,
     BackButtonComponent,
     EditModuleComponent,
-    EditCourseComponent
+    EditCourseComponent,
+    FileUploadComponent
   ],
   imports: [
     BrowserAnimationsModule,

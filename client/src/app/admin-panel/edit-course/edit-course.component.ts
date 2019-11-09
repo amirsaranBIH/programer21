@@ -10,6 +10,7 @@ import { CourseService } from 'src/app/services/course.service';
 })
 export class EditCourseComponent implements OnInit {
   public course;
+  public thumbnail: File;
   public editCourseForm: FormGroup;
 
   constructor(private route: ActivatedRoute, private fb: FormBuilder, private courseService: CourseService, private router: Router) { }
@@ -42,8 +43,15 @@ export class EditCourseComponent implements OnInit {
     return this.editCourseForm.get('status');
   }
 
-  onSubmit(value) {
-    this.courseService.editCourse(this.route.snapshot.params.course_id, value).subscribe({
+  onSubmit() {
+    const fd = new FormData();
+    fd.append('thumbnail', this.thumbnail);
+    // tslint:disable-next-line: forin
+    for (const key in this.editCourseForm.value) {
+      fd.append(key, this.editCourseForm.value[key]);
+    }
+
+    this.courseService.editCourse(this.route.snapshot.params.course_id, fd).subscribe({
       error: (err) => console.log(err),
       complete: () => this.router.navigate(['/admin-panel'])
     });

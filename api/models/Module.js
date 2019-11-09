@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const config = require('config');
 
 const ModuleSchema = new mongoose.Schema({
     title: {
@@ -20,10 +21,7 @@ const ModuleSchema = new mongoose.Schema({
     },
     thumbnail: {
         type: String,
-        default: 'default_module_thumbnail.jpg',
-        get: image => {
-            return '/images/' + image;
-        },
+        default: config.get('UPLOAD_FOLDER') + 'module-images/default_module_thumbnail.jpg',
         required: true
     },
     status: {

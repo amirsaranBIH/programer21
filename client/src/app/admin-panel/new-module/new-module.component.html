@@ -1,6 +1,6 @@
 <div class="container">
     <div class="new-module">
-        <form class="form form--max-width" [formGroup]="moduleForm" (ngSubmit)="onSubmit(moduleForm.value)">
+        <form class="form form--max-width" [formGroup]="moduleForm" (ngSubmit)="onSubmit()">
                 <div class="flex flex--between flex--center">
                     <h1>New Module</h1>
                     <back-button [backRoute]="['/admin-panel']"></back-button>
@@ -47,6 +47,9 @@
             <div class="form__group margin-bottom">
                 <input type="checkbox" formControlName="skippable" id="skippable">
                 <label for="skippable">Skippable</label>
+            </div>
+            <div class="form__group">
+                <file-upload (onFileUpload)="onFileUpload($event)"></file-upload>
             </div>
             <button type="submit" class="button button--large"
                 [disabled]="moduleForm.invalid">Create Module</button>

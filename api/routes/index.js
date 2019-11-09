@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 var jwt = require('express-jwt');
 var config = require('config');
+var upload = require('../setup/file-upload');
 var auth = jwt({
   secret: config.get('PRIVATE_KEY'),
   userProperty: 'payload'
@@ -25,13 +26,13 @@ router.post('/isEmailTaken', ctrlAuth.isEmailTaken);
 // course
 router.get('/course/get-all-courses', ctrlCourse.getAllCourses);
 router.get('/course/get-course/:course_id', ctrlCourse.getCourseById);
-router.post('/course/new', auth, ctrlCourse.createCourse);
+router.post('/course/new', auth, upload('thumbnail', 'course-images'), ctrlCourse.createCourse);
 router.post('/course/edit/:course_id', auth, ctrlCourse.editCourse);
 
 // module
 router.get('/module/get-all-modules', ctrlModule.getAllModules);
 router.get('/module/get-module/:module_id', ctrlModule.getModuleById);
-router.post('/module/new/:course_id', auth, ctrlModule.createModule);
+router.post('/module/new/:course_id', auth, upload('thumbnail', 'module-images'), ctrlModule.createModule);
 router.post('/module/edit/:module_id', auth, ctrlModule.editModule);
 
 // lecture
