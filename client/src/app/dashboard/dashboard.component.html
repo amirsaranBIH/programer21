@@ -1,19 +1,19 @@
-<div class="container">
+ <div class="container">
   <div class="dashboard">
     <div class="dashboard__section dashboard__user">
       <div class="dashboard__user__content">
-        <img [src]="auth.getUserDetails.picture" alt="{{auth.getUserDetails.first_name}} {{auth.getUserDetails.last_name}}">
-        <h3 class="dashboard__user__content__name">{{auth.getUserDetails.first_name}} {{auth.getUserDetails.last_name}}</h3>
-        <p class="dashboard__user__content__role">{{auth.getUserDetails.role}}</p>
-        <p class="dashboard__user__content__email">{{auth.getUserDetails.email}}</p>
+        <img [src]="'assets/images/user_pictures/' + user.picture" alt="{{user.first_name}} {{user.last_name}}">
+        <h3 class="dashboard__user__content__name"><span>{{user.first_name}} {{user.last_name}}</span></h3>
+        <p class="dashboard__user__content__role">{{user.role}}</p>
+        <p class="dashboard__user__content__email">{{user.email}}</p>
       </div>
     </div>
     <div class="dashboard__section dashboard__pick">
       <ul class="dashboard__pick__list">
-        <li class="dashboard__pick__list-item" *ngFor="let course of courses; let i = index"
-          [ngStyle]="{'flex': activeCoursePicked === i ? '1' : 'unset'}">
+        <li class="dashboard__pick__list-item" *ngFor="let course of user.coursesEnrolledIn; let courseIndex = index"
+          [ngStyle]="{'flex': activeCoursePicked === courseIndex ? '1' : 'unset'}">
           <div class="dashboard__pick__list-item__content">
-            <h3 class="dashboard__pick__list-item__heading">{{course.title}}</h3>
+            <h3 class="dashboard__pick__list-item__heading">{{course.course.title}}</h3>
             <p class="dashboard__pick__list-item__complete-percentage">{{activeCoursePicked}}% Complete</p>
           </div>
         </li>
@@ -23,42 +23,54 @@
     </div>
     <div class="dashboard__section dashboard__list">
       <ul class="dashboard__list--modules">
-        <li [ngClass]="{'active': activeModule === i}"
-          *ngFor="let module of courses[activeCoursePicked]?.modules; let i = index">
-          <div (click)="changeActiveModulePicked(i)" class="dashboard__list__item__header flex flex--between">
-            <span>{{ module.title }}</span>
-            <i [ngClass]="{'fa-angle-left': activeModule === i, 'fa-angle-down': activeModule !== i}" class="fa"></i>
+        <li [ngClass]="{'active': activeModule === moduleIndex}"
+          *ngFor="let module of user.coursesEnrolledIn[activeCoursePicked]?.course?.modules; let moduleIndex = index">
+          <div (click)="changeActiveModulePicked(moduleIndex)" class="dashboard__list__item__header flex flex--between">
+            <span>
+              <i *ngIf="user.coursesEnrolledIn[activeCoursePicked]?.currentModuleIndex > moduleIndex" class="fa fa-check"></i>
+              <i *ngIf="user.coursesEnrolledIn[activeCoursePicked]?.currentModuleIndex === moduleIndex" class="fa fa-book"></i>
+              {{ module.title }}
+            </span>
+            <i [ngClass]="{'fa-angle-left': activeModule === moduleIndex, 'fa-angle-down': activeModule !== moduleIndex}" class="fa"></i>
           </div>
-          <div *ngIf="activeModule === i" class="dashboard__list__item-content">
+          <div *ngIf="activeModule === moduleIndex" class="dashboard__list__item-content">
             <div class="dashboard__list__module-content">
-                <h4>Hello</h4>
-                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Soluta, quos nihil, provident odit repudiandae
-                  accusamus, eum est deleniti inventore adipisci debitis. Dolor corporis, quasi unde a commodi nostrum quae
-                  voluptatibus?</p>
+                <h4>{{ module.title }}</h4>
+                <p>{{ module.description }}</p>
+                <div class="flex flex--end">
+                  <button class="button button--small margin-right" (click)="skipModule(module, i)" *ngIf="user.coursesEnrolledIn[activeCoursePicked]?.currentModuleIndex === moduleIndex" [disabled]="!module.skippable">{{module.skippable ? 'Skip module' : 'Not Skippable'}}</button>
+                </div>
             </div>
             <ul class="dashboard__list dashboard__list--lectures">
-              <li [ngClass]="{'active': activeLecture === i}"
-                *ngFor="let lecture of courses[activeCoursePicked]?.modules[activeModule]?.lectures; let i = index">
-                <div (click)="changeActiveLecturePicked(i)"
+              <li [ngClass]="{'active': activeLecture === lectureIndex}"
+                *ngFor="let lecture of user.coursesEnrolledIn[activeCoursePicked]?.course?.modules[activeModule]?.lectures; let lectureIndex = index">
+                <div (click)="changeActiveLecturePicked(lectureIndex)"
                   class="dashboard__list--lectures__item__header flex flex--between">
-                  <span>{{ lecture.title }}</span>
-                  <i [ngClass]="{'fa-angle-left': activeLecture === i, 'fa-angle-down': activeLecture !== i}"
+                  <span>
+                    <i *ngIf="user.coursesEnrolledIn[activeCoursePicked]?.currentModuleIndex > moduleIndex || user.coursesEnrolledIn[activeCoursePicked]?.currentLectureIndex > lectureIndex" class="fa fa-check"></i>
+                    <i *ngIf="user.coursesEnrolledIn[activeCoursePicked]?.currentModuleIndex === moduleIndex && user.coursesEnrolledIn[activeCoursePicked]?.currentLectureIndex === lectureIndex" class="fa fa-book"></i>
+                    {{ lecture.title }}
+                  </span>
+                  <i [ngClass]="{'fa-angle-left': activeLecture === lectureIndex, 'fa-angle-down': activeLecture !== lectureIndex}"
                     class="fa"></i>
                 </div>
-                <div *ngIf="activeLecture === i" class="dashboard__list__item-content">
+                <div *ngIf="activeLecture === lectureIndex" class="dashboard__list__item-content">
                   <div class="dashboard__list__module-content">
-                      <h4>Hello 2</h4>
-                      <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Soluta, quos nihil, provident odit
-                        repudiandae accusamus.</p>
+                      <h4>{{ lecture.title }}</h4>
+                      <p>{{ lecture.description }}</p>
+                      <div class="flex flex--end">
+                        <button class="button button--small margin-right" (click)="skipLecture()" *ngIf="user.coursesEnrolledIn[activeCoursePicked]?.currentModuleIndex === moduleIndex && user.coursesEnrolledIn[activeCoursePicked]?.currentLectureIndex === lectureIndex" [disabled]="!lecture.skippable">{{lecture.skippable ? 'Skip lecture' : 'Not Skippable'}}</button>
+                        <button class="button button--small" [routerLink]="['/lecture', lecture.slug]" *ngIf="user.coursesEnrolledIn[activeCoursePicked]?.currentLectureIndex === lectureIndex">Start lecture</button>
+                      </div>
                   </div>
                 </div>
               </li>
-              <p *ngIf="courses[activeCoursePicked]?.modules[activeModule]?.lectures.length < 1"
+              <p *ngIf="user.coursesEnrolledIn[activeCoursePicked]?.course?.modules[activeModule]?.lectures.length < 1"
                 class="no-content text-center"><i class="fa fa-frown-o"></i>No lectures here</p>
             </ul>
           </div>
         </li>
-        <p *ngIf="courses[activeCoursePicked]?.modules.length < 1" class="no-content text-center"><i class="fa fa-frown-o"></i>No modules here</p>
+        <p *ngIf="user.coursesEnrolledIn[activeCoursePicked]?.course?.modules.length < 1" class="no-content text-center"><i class="fa fa-frown-o"></i>No modules here</p>
       </ul>
     </div>
   </div>

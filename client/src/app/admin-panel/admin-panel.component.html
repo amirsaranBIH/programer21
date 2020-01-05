@@ -16,11 +16,12 @@
             <div *ngIf="activeCourse === i" class="admin-panel__create-lectures__item-content">
               <div class="item-content__main">
                 <h4>{{ course.title }}</h4>
-                <small>{{ course.status }}</small>
+                <p><small class="item-content__status">{{ course.status }}</small></p>
+                <p class="item-content__difficulty">{{ course.difficulty }}</p>
                 <p>{{ course.description }}</p>
               </div>
               <div class="item-content__actions flex flex--end">
-                  <i class="fa fa-trash delete-button"></i>
+                  <i (click)="deleteCourse(course._id, i)" class="fa fa-trash delete-button"></i>
                   <i [routerLink]="['/admin-panel/edit-course', course._id]" class="fa fa-pencil edit-button"></i>
               </div>
             </div>
@@ -42,12 +43,12 @@
                 <div *ngIf="activeModule === i" class="admin-panel__create-lectures__item-content">
                   <div class="item-content__main">
                     <h4>{{ module.title }}</h4>
-                    <small *ngIf="module.skippable">{{'Skippable'}}</small>
-                    <small>{{ module.status }}</small>
+                    <p><small class="item-content__status">{{ module.status }}</small> <i *ngIf="module.skippable" class="fa fa-fast-forward" title="Module skippable"></i></p>
+                    <p class="item-content__difficulty">{{ module.difficulty }}</p>
                     <p>{{ module.description }}</p>
                   </div>
                   <div class="item-content__actions flex flex--end">
-                      <i class="fa fa-trash delete-button"></i>
+                      <i (click)="deleteModule(module._id, selectedCourse, i)" class="fa fa-trash delete-button"></i>
                       <i [routerLink]="['/admin-panel/edit-module', module._id]" class="fa fa-pencil edit-button"></i>
                   </div>
                 </div>
@@ -69,12 +70,13 @@
                   <div *ngIf="activeLecture === i" class="admin-panel__create-lectures__item-content">
                     <div class="item-content__main">
                         <h4>{{ lecture.title }}</h4>
-                        <small *ngIf="lecture.skippable">{{'Skippable'}}</small>
-                        <small>{{ lecture.status }}</small>
+                        <p><small class="item-content__status">{{ lecture.status }}</small> <i *ngIf="lecture.skippable" class="fa fa-fast-forward" title="Lecture skippable"></i></p>
+                        <p class="item-content__difficulty">{{ lecture.difficulty }}</p>
                         <p>{{ lecture.description }}</p>
                     </div>
                     <div class="item-content__actions flex flex--end">
-                        <i class="fa fa-trash delete-button"></i>
+                        <i [routerLink]="['/lecture', lecture.slug]" class="fa fa-link link-button"></i>
+                        <i (click)="deleteLecture(lecture._id, selectedCourse, selectedModule, i)" class="fa fa-trash delete-button"></i>
                         <i [routerLink]="['/admin-panel/edit-lecture', lecture._id]" class="fa fa-pencil edit-button"></i>
                     </div>
                   </div>

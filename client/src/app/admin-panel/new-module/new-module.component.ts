@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 import { ModuleService } from 'src/app/services/module.service';
 import { Router, ActivatedRoute } from '@angular/router';
+import { TitleToSlugPipe } from 'src/app/pipes/title-to-slug.pipe';
 
 @Component({
   selector: 'app-new-module',
@@ -10,9 +11,15 @@ import { Router, ActivatedRoute } from '@angular/router';
 })
 export class NewModuleComponent implements OnInit {
   public moduleForm: FormGroup;
-  public thumbnail: File;
+  public image: File;
 
-  constructor(private fb: FormBuilder, private route: ActivatedRoute, private router: Router, private moduleService: ModuleService) { }
+  constructor(
+    private fb: FormBuilder,
+    private route: ActivatedRoute,
+    private router: Router,
+    private moduleService: ModuleService,
+    private titleToSlug: TitleToSlugPipe
+    ) { }
 
   ngOnInit() {
     this.moduleForm = this.fb.group({
@@ -42,13 +49,15 @@ export class NewModuleComponent implements OnInit {
 
   onSubmit() {
     const fd = new FormData();
-    if (this.thumbnail) {
-      fd.append('thumbnail', this.thumbnail);
+    if (this.image) {
+      fd.append('image', this.image);
     }
     // tslint:disable-next-line: forin
     for (const key in this.moduleForm.value) {
       fd.append(key, this.moduleForm.value[key]);
     }
+
+    fd.append('slug', this.titleToSlug.transform(this.moduleForm.value.title));
 
     this.moduleService.createModule(this.route.snapshot.params.course_id, fd).subscribe(res => {
       this.router.navigate(['/admin-panel']);
@@ -58,6 +67,6 @@ export class NewModuleComponent implements OnInit {
   }
 
   onFileUpload(file) {
-    this.thumbnail = file;
+    this.image = file;
   }
 }

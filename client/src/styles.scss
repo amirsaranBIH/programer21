@@ -60,8 +60,16 @@ img {
     margin-top: 1em;
 }
 
+.margin-right {
+    margin-right: 1em;
+}
+
 .margin-bottom {
     margin-bottom: 1em;
+}
+
+.margin-left {
+    margin-left: 1em;
 }
 
 .form {
@@ -90,6 +98,12 @@ img {
         border: 1px solid #eee;
         outline: none;
         margin-bottom: .25em;
+    }
+
+    textarea {
+        text-indent: 0 !important;
+        padding-left: .75em;
+        padding-right: .75em;
     }
 
     input[type=file] {
@@ -212,7 +226,7 @@ img {
         font-size: 2em;
     }
 
-    nav ul li + li {
+    & > nav > ul > li + li {
         margin-left: 2.5em;
     }
 
@@ -236,6 +250,8 @@ img {
     padding: .55em 1.75em;
     background-color: $dark_green;
     color: white;
+    cursor: pointer;
+    border: 0;
     @extend .sans-serif;
 
     &--small {
@@ -248,3 +264,38 @@ img {
         font-size: 1.05em;
     }
 }
+
+.button:disabled {
+    opacity: .75;
+    cursor: default;
+}
+
+.account-link {
+    position: relative;
+
+    .account-dropdown {
+        position: absolute;
+        top: 110%;
+        right: 0;
+        width: 150px;
+        z-index: 10;
+        
+        ul li a {
+            display: block;
+            background-color: $green;
+            padding: 1em;
+        }
+
+        ul li a:hover {
+            border-left: 10px solid $dark_green;
+            background-color: $light_green;
+        }
+    }
+}
+
+.title-slug {
+    display: inline-block;
+    margin-bottom: .25em;
+    color: #555;
+}
+

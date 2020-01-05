@@ -1,5 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { CourseService } from '../services/course.service';
+import { ModuleService } from '../services/module.service';
+import { LectureService } from '../services/lecture.service';
 
 @Component({
   selector: 'app-admin-panel',
@@ -16,7 +19,12 @@ export class AdminPanelComponent implements OnInit {
   public activeModule = -1;
   public activeLecture = -1;
 
-  constructor(private route: ActivatedRoute) {}
+  constructor(
+    private route: ActivatedRoute,
+    private courseService: CourseService,
+    private moduleService: ModuleService,
+    private lectureService: LectureService
+  ) {}
 
   ngOnInit() {
     this.courses = this.route.snapshot.data.courses;
@@ -42,5 +50,41 @@ export class AdminPanelComponent implements OnInit {
   changeSelectedLecture(newIndex) {
     this.selectedLecture = newIndex;
     this.activeLecture = this.activeLecture === newIndex ? -1 : newIndex;
+  }
+
+  deleteCourse(courseId, courseIndex) {
+    if (confirm('Are you sure?')) {
+      this.courseService.deleteCourse(courseId).subscribe({
+        error: (err) => console.log(err),
+        complete: () => {
+          this.courses.splice(courseIndex, 1);
+          this.activeCourse = -1;
+        }
+      });
+    }
+  }
+
+  deleteModule(moduleId, courseIndex, moduleIndex) {
+    if (confirm('Are you sure?')) {
+      this.moduleService.deleteModule(moduleId).subscribe({
+        error: (err) => console.log(err),
+        complete: () => {
+          this.courses[courseIndex].modules.splice(moduleIndex, 1);
+          this.activeModule = -1;
+        }
+      });
+    }
+  }
+
+  deleteLecture(lectureId, courseIndex, moduleIndex, lectureIndex) {
+    if (confirm('Are you sure?')) {
+      this.lectureService.deleteLecture(lectureId).subscribe({
+        error: (err) => console.log(err),
+        complete: () => {
+          this.courses[courseIndex].modules[moduleIndex].lectures.splice(lectureIndex, 1);
+          this.activeLecture = -1;
+        }
+      });
+    }
   }
 }

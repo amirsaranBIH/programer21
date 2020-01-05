@@ -5,23 +5,16 @@ import { map } from 'rxjs/operators';
 import { Router } from '@angular/router';
 
 export interface UserDetails {
-  _id: string;
+  user_id: string;
   first_name?: string;
   last_name?: string;
   email?: string;
-  verifiedEmail: boolean;
-  verifyToken?: string;
+  verified_email: boolean;
+  verify_token?: string;
   role: string;
   picture?: string;
-  createdAt?: Date;
-  updatedAt?: Date;
-  categoriesEnrolledIn?: object[];
-  categoriesFinished?: object[];
-  modulesSkipped?: object[];
-  lecturesSkipped?: object[];
-  numberOfModulesSkipped?: number;
-  numberOfLecturesSkipped?: number;
-  lastTimeLoggedIn?: Date;
+  updated_at?: Date;
+  coursesEnrolledIn?: any[];
   exp: number;
   iat: number;
 }
@@ -44,13 +37,13 @@ export class AuthenticationService {
   constructor(private http: HttpClient, private router: Router) {}
 
   private saveToken(token: string): void {
-    localStorage.setItem('avika-token', token);
+    localStorage.setItem('programer21-token', token);
     this.token = token;
   }
 
   public get getToken(): string {
     if (!this.token) {
-      this.token = localStorage.getItem('avika-token');
+      this.token = localStorage.getItem('programer21-token');
     }
     return this.token;
   }
@@ -60,7 +53,13 @@ export class AuthenticationService {
     let payload;
     if (token) {
       payload = token.split('.')[1];
-      payload = window.atob(payload);
+
+      const base64 = payload.replace(/-/g, '+').replace(/_/g, '/');
+      payload = decodeURIComponent(atob(base64).split('').map(c => {
+        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+      }).join(''));
+
+      // payload = window.atob(payload);
       return JSON.parse(payload);
     } else {
       return null;
@@ -111,7 +110,7 @@ export class AuthenticationService {
 
   public logout(): void {
     this.token = '';
-    localStorage.removeItem('avika-token');
+    localStorage.removeItem('programer21-token');
     this.router.navigateByUrl('/');
   }
 

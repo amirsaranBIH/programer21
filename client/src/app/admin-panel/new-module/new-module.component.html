@@ -12,6 +12,7 @@
                 <div class="form__help text--small" *ngIf="title.invalid && title.touched">
                     <div *ngIf="title.errors?.required">Title is required.</div>
                 </div>
+                <small class="title-slug">Slug: {{ title.value | titleToSlug }}</small>
             </div>
             <div class="form__group">
                 <label for="description">Description</label>

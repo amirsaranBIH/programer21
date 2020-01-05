@@ -2,7 +2,18 @@ const mongoose = require('mongoose');
 const config = require('config');
 
 const CourseSchema = new mongoose.Schema({
+    index_number: {
+        type: Number,
+        unique: true,
+        required: true
+    },
     title: {
+        type: String,
+        trim: true,
+        required: true,
+        unique: true
+    },
+    slug: {
         type: String,
         trim: true,
         required: true,
@@ -13,9 +24,9 @@ const CourseSchema = new mongoose.Schema({
         trim: true,
         required: true
     },
-    thumbnail: {
+    image: {
         type: String,
-        default: config.get('UPLOAD_FOLDER') + 'course-images/default_course_thumbnail.jpg',
+        default: config.get('UPLOAD_FOLDER') + 'course-images/default_course_image.jpg',
 
         required: true
     },

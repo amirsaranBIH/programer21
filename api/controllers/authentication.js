@@ -6,13 +6,7 @@ const {
   sendMail
 } = require('../../mail/mail');
 
-var sendJSONresponse = function(res, status, content) {
-  res.status(status);
-  res.json(content);
-};
-
 module.exports.signup = function(req, res) {
-
   var user = new User();
 
   user.first_name = req.body.first_name;
@@ -23,21 +17,21 @@ module.exports.signup = function(req, res) {
   user.setPassword(req.body.password); 
   
   user.save(function(err) {
-    var token;
-    token = user.generateJwt();
+    if (err) throw err;
+
+    const token = user.generateJwt();
     res.status(200);
     res.json({
       "token" : token
     });
     
-    sendMail(user, 'Verify user credentials for Avika');
+    sendMail(user, 'Verify user credentials for Programer21');
   });
 
 };
 
 module.exports.login = function(req, res) {
   passport.authenticate('local', function(err, user, info){
-    var token;
 
     // If Passport throws/catches an error
     if (err) {
@@ -47,7 +41,7 @@ module.exports.login = function(req, res) {
 
     // If a user is found
     if(user){
-      token = user.generateJwt();
+      const token = user.generateJwt();
       res.status(200);
       res.json({
         "token" : token

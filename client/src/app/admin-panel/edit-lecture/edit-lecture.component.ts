@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { LectureService } from 'src/app/services/lecture.service';
+import { TitleToSlugPipe } from 'src/app/pipes/title-to-slug.pipe';
 
 @Component({
   selector: 'app-edit-lecture',
@@ -12,7 +13,13 @@ export class EditLectureComponent implements OnInit {
   public editLectureForm: FormGroup;
   public lecture;
 
-  constructor(private fb: FormBuilder, private route: ActivatedRoute, private lectureService: LectureService, private router: Router) { }
+  constructor(
+    private fb: FormBuilder,
+    private route: ActivatedRoute,
+    private lectureService: LectureService,
+    private router: Router,
+    private titleToSlug: TitleToSlugPipe
+    ) { }
 
   ngOnInit() {
     this.lecture = this.route.snapshot.data.lecture;
@@ -22,10 +29,9 @@ export class EditLectureComponent implements OnInit {
       description: [this.lecture.description, [Validators.required]],
       difficulty: [this.lecture.difficulty, [Validators.required]],
       status: [this.lecture.status, [Validators.required]],
-      thumbnail: [this.lecture.thumbnail],
-      body: [this.lecture.body, [Validators.required]],
       skippable: [this.lecture.skippable]
     });
+
   }
 
   get title() {
@@ -44,15 +50,12 @@ export class EditLectureComponent implements OnInit {
     return this.editLectureForm.get('status');
   }
 
-  get body() {
-    return this.editLectureForm.get('body');
-  }
-
   onSubmit(value) {
+    value.slug = this.titleToSlug.transform(this.editLectureForm.value.title);
+
     this.lectureService.editLecture(this.route.snapshot.params.lecture_id, value).subscribe({
       error: (err) => console.log(err),
       complete: () => this.router.navigate(['/admin-panel'])
     });
   }
-
 }

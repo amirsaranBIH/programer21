@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "avika": {
+    "programer21": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -17,7 +17,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/avika",
+            "outputPath": "dist/programer21",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
@@ -28,14 +28,10 @@
               "src/assets"
             ],
             "styles": [
-              "node_modules/quill/dist/quill.core.css",
-              "node_modules/quill/dist/quill.snow.css",
               "node_modules/css-reset-and-normalize/css/reset-and-normalize.min.css",
               "src/styles.scss"
             ],
-            "scripts": [
-              "node_modules/quill/dist/quill.js"
-            ]
+            "scripts": []
           },
           "configurations": {
             "production": {
@@ -67,18 +63,18 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "avika:build"
+            "browserTarget": "programer21:build"
           },
           "configurations": {
             "production": {
-              "browserTarget": "avika:build:production"
+              "browserTarget": "programer21:build:production"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "avika:build"
+            "browserTarget": "programer21:build"
           }
         },
         "test": {
@@ -115,15 +111,15 @@
           "builder": "@angular-devkit/build-angular:protractor",
           "options": {
             "protractorConfig": "e2e/protractor.conf.js",
-            "devServerTarget": "avika:serve"
+            "devServerTarget": "programer21:serve"
           },
           "configurations": {
             "production": {
-              "devServerTarget": "avika:serve:production"
+              "devServerTarget": "programer21:serve:production"
             }
           }
         }
       }
     }},
-  "defaultProject": "avika"
+  "defaultProject": "programer21"
 }

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { CourseService } from 'src/app/services/course.service';
 import { Router } from '@angular/router';
+import { TitleToSlugPipe } from 'src/app/pipes/title-to-slug.pipe';
 
 @Component({
   selector: 'app-new-course',
@@ -10,9 +11,14 @@ import { Router } from '@angular/router';
 })
 export class NewCourseComponent implements OnInit {
   public courseForm: FormGroup;
-  public thumbnail: File;
+  public image: File;
 
-  constructor(private fb: FormBuilder, private courseService: CourseService, private router: Router) { }
+  constructor(
+    private fb: FormBuilder,
+    private courseService: CourseService,
+    private router: Router,
+    private titleToSlug: TitleToSlugPipe
+    ) { }
 
   ngOnInit() {
     this.courseForm = this.fb.group({
@@ -41,13 +47,15 @@ export class NewCourseComponent implements OnInit {
 
   onSubmit() {
     const fd = new FormData();
-    if (this.thumbnail) {
-      fd.append('thumbnail', this.thumbnail);
+    if (this.image) {
+      fd.append('image', this.image);
     }
     // tslint:disable-next-line: forin
     for (const key in this.courseForm.value) {
       fd.append(key, this.courseForm.value[key]);
     }
+
+    fd.append('slug', this.titleToSlug.transform(this.courseForm.value.title));
 
     this.courseService.createCourse(fd).subscribe({
       error: (err) => console.log(err),
@@ -56,6 +64,6 @@ export class NewCourseComponent implements OnInit {
   }
 
   onFileUpload(file) {
-    this.thumbnail = file;
+    this.image = file;
   }
 }

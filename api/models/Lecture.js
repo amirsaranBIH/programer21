@@ -1,7 +1,18 @@
 const mongoose = require('mongoose');
 
 const LectureSchema = new mongoose.Schema({
+    index_number: {
+        type: Number,
+        unique: true,
+        required: true
+    },
     title: {
+        type: String,
+        trim: true,
+        required: true,
+        unique: true
+    },
+    slug: {
         type: String,
         trim: true,
         required: true,
@@ -39,16 +50,20 @@ const LectureSchema = new mongoose.Schema({
         ref: 'User',
         required: true
     },
-    body: {
+    html_content_path: {
         type: String,
-        trim: true,
-        required: true
+        trim: true
     },
     skippable: {
         type: Boolean,
         default: false,
         required: true
     },
+    module: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Module',
+        required: true
+    }
 });
 
 mongoose.model('Lecture', LectureSchema);

@@ -2,7 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ValidatorService } from '../services/validator.service';
 import { TokenPayload, AuthenticationService } from '../services/authentication.service';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
+import { CourseService } from '../services/course.service';
 
 @Component({
   templateUrl: './home.component.html',
@@ -12,10 +13,20 @@ export class HomeComponent implements OnInit {
   public selectedQuestion = 0;
   public questionsAndAnswers = [];
   public quickSignupForm: FormGroup;
+  public courses;
 
-  constructor(private fb: FormBuilder, private validators: ValidatorService, private authService: AuthenticationService, private router: Router) {}
+  constructor(
+    private fb: FormBuilder,
+    private validators: ValidatorService,
+    private authService: AuthenticationService,
+    private courseService: CourseService,
+    private router: Router,
+    private route: ActivatedRoute
+  ) {}
 
   ngOnInit() {
+    this.courses = this.route.snapshot.data.courses;
+
     this.questionsAndAnswers = [
       {
         question: 'Question 1',
@@ -97,7 +108,7 @@ export class HomeComponent implements OnInit {
 
   onSubmit(credentials: TokenPayload) {
     this.authService.signup(credentials).subscribe(() => {
-      this.router.navigateByUrl('/dashboard');
+      this.router.navigate(['/dashboard']);
     }, (err) => {
       console.error(err);
     });
@@ -105,5 +116,12 @@ export class HomeComponent implements OnInit {
 
   changeSelectedQuestion(index) {
     this.selectedQuestion = index;
+  }
+
+  enrollInCourse(courseId) {
+    this.courseService.enrollInCourse(courseId).subscribe({
+      error: err => console.error(err),
+      complete: () => this.router.navigate(['/dashboard'])
+    });
   }
 }

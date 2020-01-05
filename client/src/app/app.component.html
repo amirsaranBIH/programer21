@@ -1,19 +1,25 @@
 <section class="header flex flex--between flex--center">
-  <span class="brand sans-serif"><a routerLink="/">Avika</a></span>
+  <span class="brand sans-serif"><a routerLink="/">Programer21 <small *ngIf="isDevelopment">(DEV)</small></a></span>
   <nav>
     <ul class="flex flex--center">
-      <li><a href="/admin-panel">Admin Panel</a></li>
-      <li><a href="/learn">Learn</a></li>
-      <li><a href="/games">Educational Games</a></li>
-      <li *ngIf="auth.isLoggedIn()" class="flex flex--center">
-        <a href="/dashboard">
-          <img class="header__profile-image" [src]="auth.getUserDetails.picture" alt="{{auth.getUserDetails.first_name}} {{auth.getUserDetails.last_name}}">
-        </a>
-        <a href="/dashboard">{{auth.getUserDetails.first_name}} {{auth.getUserDetails.last_name}}</a>
+      <li><a [routerLink]="['/learn']">Learn</a></li>
+      <li><a [routerLink]="['/']">Forum</a></li>
+      <li><a [routerLink]="['/']">Educational Games</a></li>
+      <li><a [routerLink]="['/']">Book Program</a></li>
+      <li *ngIf="auth.isLoggedIn()" class="account-link flex flex--center">
+        <img (click)="toggleAccountDropdownMenu()" class="header__profile-image" [src]="auth.getUserDetails.picture" alt="{{auth.getUserDetails.first_name}} {{auth.getUserDetails.last_name}}">
+        <span (click)="toggleAccountDropdownMenu()">{{auth.getUserDetails.first_name}} {{auth.getUserDetails.last_name}} <i class="fa" [ngClass]="{'fa-angle-down' : !showAccountDropdownMenu, 'fa-angle-up': showAccountDropdownMenu}"></i></span>
+        <nav class="account-dropdown" *ngIf="showAccountDropdownMenu">
+          <ul>
+            <li><a (click)="routeTo('/dashboard')">Dashboard</a></li>
+            <li *ngIf="auth.getUserDetails.role === 'moderator' || auth.getUserDetails.role === 'admin'"><a (click)="routeTo('/admin-panel')">Admin Panel</a></li>
+            <li><a (click)="routeTo('/')">Settings</a></li>
+            <li><a (click)="logout()"(click)="auth.logout()">Logout</a></li>
+          </ul>
+        </nav>
       </li>
-      <li *ngIf="!auth.isLoggedIn()"><a href="/login">Login</a></li>
-      <li *ngIf="!auth.isLoggedIn()"><a href="/signup" class="button">Sign Up</a></li>
-      <li *ngIf="auth.isLoggedIn()"><a (click)="auth.logout()">Logout</a></li>
+      <li *ngIf="!auth.isLoggedIn()"><a [routerLink]="['/login']">Login</a></li>
+      <li *ngIf="!auth.isLoggedIn()"><a [routerLink]="['/signup']" class="button">Sign Up</a></li>
     </ul>
   </nav>
 </section>

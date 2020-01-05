@@ -2,7 +2,18 @@ const mongoose = require('mongoose');
 const config = require('config');
 
 const ModuleSchema = new mongoose.Schema({
+    index_number: {
+        type: Number,
+        unique: true,
+        required: true
+    },
     title: {
+        type: String,
+        trim: true,
+        required: true,
+        unique: true
+    },
+    slug: {
         type: String,
         trim: true,
         required: true,
@@ -19,9 +30,9 @@ const ModuleSchema = new mongoose.Schema({
         default: 'beginner',
         required: true
     },
-    thumbnail: {
+    image: {
         type: String,
-        default: config.get('UPLOAD_FOLDER') + 'module-images/default_module_thumbnail.jpg',
+        default: config.get('UPLOAD_FOLDER') + 'module-images/default_module_image.jpg',
         required: true
     },
     status: {
@@ -55,6 +66,11 @@ const ModuleSchema = new mongoose.Schema({
     skippable: {
         type: Boolean,
         default: false,
+        required: true
+    },
+    course: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Course',
         required: true
     }
 });

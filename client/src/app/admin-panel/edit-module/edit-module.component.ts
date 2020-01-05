@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 import { ModuleService } from 'src/app/services/module.service';
+import { TitleToSlugPipe } from 'src/app/pipes/title-to-slug.pipe';
 
 @Component({
   selector: 'app-edit-module',
@@ -10,10 +11,16 @@ import { ModuleService } from 'src/app/services/module.service';
 })
 export class EditModuleComponent implements OnInit {
   public module;
-  public thumbnail: File;
+  public image: File;
   public editModuleForm: FormGroup;
 
-  constructor(private route: ActivatedRoute, private fb: FormBuilder, private moduleService: ModuleService, private router: Router) { }
+  constructor(
+    private route: ActivatedRoute,
+    private fb: FormBuilder,
+    private moduleService: ModuleService,
+    private router: Router,
+    private titleToSlug: TitleToSlugPipe
+    ) { }
 
   ngOnInit() {
     this.module = this.route.snapshot.data.module;
@@ -45,11 +52,15 @@ export class EditModuleComponent implements OnInit {
 
   onSubmit() {
     const fd = new FormData();
-    fd.append('thumbnail', this.thumbnail);
+    if (this.image) {
+      fd.append('image', this.image);
+    }
     // tslint:disable-next-line: forin
     for (const key in this.editModuleForm.value) {
       fd.append(key, this.editModuleForm.value[key]);
     }
+
+    fd.append('slug', this.titleToSlug.transform(this.editModuleForm.value.title));
 
     this.moduleService.editModule(this.route.snapshot.params.module_id, fd).subscribe({
       error: (err) => console.log(err),
@@ -58,6 +69,6 @@ export class EditModuleComponent implements OnInit {
   }
 
   onFileUpload(file) {
-    this.thumbnail = file;
+    this.image = file;
   }
 }

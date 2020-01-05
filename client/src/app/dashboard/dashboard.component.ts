@@ -1,152 +1,28 @@
 import { Component, OnInit } from '@angular/core';
-import { AuthenticationService, UserDetails } from '../services/authentication.service';
+import { UserDetails } from '../services/authentication.service';
+import { ActivatedRoute } from '@angular/router';
+import { LectureService } from '../services/lecture.service';
 
 @Component({
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss']
 })
 export class DashboardComponent implements OnInit {
-  public details: UserDetails;
+  public user: UserDetails;
   public activeCoursePicked = 0;
-  public courses = [];
   public activeModule = -1;
   public activeLecture = -1;
   public selectedCourse = 0;
 
-  constructor(private auth: AuthenticationService) {}
+  constructor(private route: ActivatedRoute, private lectureService: LectureService) {}
 
   ngOnInit() {
-    this.auth.dashboard().subscribe(user => {
-      this.details = user;
-    }, (err) => {
-      console.error(err);
-    });
-
-    this.courses = [
-      {
-        title: 'Course 1',
-        modules: [
-          {
-            title: 'Module 1',
-            lectures: [
-              {
-                title: 'Lecture 1'
-              },
-              {
-                title: 'Lecture 2'
-              },
-              {
-                title: 'Lecture 3'
-              },
-              {
-                title: 'Lecture 3'
-              },
-              {
-                title: 'Lecture 3'
-              },
-              {
-                title: 'Lecture 3'
-              },
-              {
-                title: 'Lecture 3'
-              },
-              {
-                title: 'Lecture 3'
-              },
-              {
-                title: 'Lecture 3'
-              },
-              {
-                title: 'Lecture 3'
-              },
-              {
-                title: 'Lecture 3'
-              },
-              {
-                title: 'Lecture 3'
-              },
-              {
-                title: 'Lecture 3'
-              },
-              {
-                title: 'Lecture 3'
-              },
-              {
-                title: 'Lecture 3'
-              },
-              {
-                title: 'Lecture 3'
-              },
-              {
-                title: 'Lecture 3'
-              },
-              {
-                title: 'Lecture 3'
-              },
-              {
-                title: 'Lecture 3'
-              },
-            ]
-          },
-          {
-            title: 'Module 2',
-            lectures: []
-          },
-          {
-            title: 'Module 3',
-            lectures: [
-              {
-                title: 'Lecture 2'
-              },
-              {
-                title: 'Lecture 3'
-              },
-              {
-                title: 'Lecture 4'
-              },
-            ]
-          },
-        ]
-      },
-      {
-        title: 'Course 2',
-        modules: []
-      },
-      {
-        title: 'Course 3',
-        modules: [
-          {
-            title: 'Module 1',
-            lectures: [
-              {
-                title: 'Lecture 1'
-              },
-              {
-                title: 'Lecture 2'
-              }
-            ]
-          },
-          {
-            title: 'Module 2',
-            lectures: [
-              {
-                title: 'Lecture 1'
-              },
-              {
-                title: 'Lecture 2'
-              },
-              {
-                title: 'Lecture 4'
-              },
-            ]
-          },
-        ]
-      },
-    ]
+    this.user = this.route.snapshot.data.user;
+    console.log(this.user.coursesEnrolledIn)
   }
 
   nextCoursePicked() {
-    if (this.activeCoursePicked === this.courses.length - 1) {
+    if (this.activeCoursePicked === this.user.coursesEnrolledIn.length - 1) {
       this.activeCoursePicked = 0;
     } else {
       this.activeCoursePicked++;
@@ -155,7 +31,7 @@ export class DashboardComponent implements OnInit {
 
   previousCoursePicked() {
     if (this.activeCoursePicked === 0) {
-      this.activeCoursePicked = this.courses.length - 1;
+      this.activeCoursePicked = this.user.coursesEnrolledIn.length - 1;
     } else {
       this.activeCoursePicked--;
     }
@@ -167,5 +43,37 @@ export class DashboardComponent implements OnInit {
 
   changeActiveLecturePicked(newIndex) {
     this.activeLecture = this.activeLecture === newIndex ? -1 : newIndex;
+  }
+
+  skipLecture() {
+    const course = this.user.coursesEnrolledIn[this.activeCoursePicked];
+    const _module = course.course.modules[this.activeModule];
+
+    let nextModuleIndex = 0;
+    let nextLectureIndex = 0;
+
+    if (course.currentLectureIndex === _module.lectures.length - 1) {
+      if (course.currentModuleIndex === course.course.modules.length - 1) {
+        // course finished
+        return;
+      } else {
+        nextModuleIndex = course.currentModuleIndex + 1;
+        nextLectureIndex = 0;
+      }
+    } else {
+      nextModuleIndex = course.currentModuleIndex;
+      nextLectureIndex = course.currentLectureIndex + 1;
+    }
+
+    this.lectureService.skipLecture(this.activeCoursePicked, nextModuleIndex, nextLectureIndex).subscribe({
+      error: (err) => console.log(err),
+      complete: () => {
+        this.activeModule = nextModuleIndex;
+        this.activeLecture = nextLectureIndex;
+        this.user.coursesEnrolledIn[this.activeCoursePicked].currentModuleIndex = nextModuleIndex;
+        this.user.coursesEnrolledIn[this.activeCoursePicked].currentLectureIndex = nextLectureIndex;
+        this.user.coursesEnrolledIn[this.activeCoursePicked].lecturesSkipped.push(_module.lectures[this.activeLecture]._id);
+      }
+    });
   }
 }

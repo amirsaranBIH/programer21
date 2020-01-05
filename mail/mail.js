@@ -24,7 +24,7 @@ exports.sendMail = async (user, subject = 'No subject') => {
   });
 
   let info = await transporter.sendMail({
-    from: `Avika <${SMTP_USER}>`,
+    from: `Programer21 <${SMTP_USER}>`,
     to: user.email,
     subject: subject,
     text: `To verify account go to this link: ${HOST_URL}:${HOST_PORT}/api/verifyEmail/${user._id}/${user.verifyToken}`,

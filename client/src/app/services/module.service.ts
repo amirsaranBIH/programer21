@@ -17,12 +17,21 @@ export class ModuleService {
     return this.http.get(`/api/module/get-module/${moduleId}`);
   }
 
+  getModuleBySlug(slug) {
+    return this.http.get(`/api/module/get-module-by-slug/${slug}`);
+  }
+
   createModule(courseId, data) {
     return this.http.post('/api/module/new/' + courseId, data, { headers: { Authorization: `Bearer ${this.authService.getToken}` }});
   }
 
   editModule(moduleId, data) {
     return this.http.post(`/api/module/edit/${moduleId}`, data,
+      { headers: { Authorization: `Bearer ${this.authService.getToken}` }});
+  }
+
+  deleteModule(moduleId) {
+    return this.http.get(`/api/module/delete/${moduleId}`,
       { headers: { Authorization: `Bearer ${this.authService.getToken}` }});
   }
 }

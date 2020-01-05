@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 import { LectureService } from 'src/app/services/lecture.service';
 import { ActivatedRoute, Router } from '@angular/router';
+import { TitleToSlugPipe } from 'src/app/pipes/title-to-slug.pipe';
 
 @Component({
   selector: 'app-new-lecture',
@@ -11,7 +12,13 @@ import { ActivatedRoute, Router } from '@angular/router';
 export class NewLectureComponent implements OnInit {
   public lectureForm: FormGroup;
 
-  constructor(private fb: FormBuilder, private route: ActivatedRoute, private router: Router, private lectureService: LectureService) { }
+  constructor(
+    private fb: FormBuilder,
+    private route: ActivatedRoute,
+    private router: Router,
+    private lectureService: LectureService,
+    private titleToSlug: TitleToSlugPipe
+    ) { }
 
   ngOnInit() {
     this.lectureForm = this.fb.group({
@@ -19,8 +26,7 @@ export class NewLectureComponent implements OnInit {
       description: ['', [Validators.required]],
       difficulty: ['beginner', [Validators.required]],
       status: ['private', [Validators.required]],
-      thumbnail: [''],
-      body: ['<p>Start writing...</p>', [Validators.required]],
+      image: [''],
       skippable: [false]
     });
   }
@@ -42,6 +48,8 @@ export class NewLectureComponent implements OnInit {
   }
 
   onSubmit(value) {
+    value.slug = this.titleToSlug.transform(this.lectureForm.value.title);
+    
     this.lectureService.createLecture(this.route.snapshot.params.module_id, value).subscribe({
       next: (res: any) => this.router.navigate(['/admin-panel/edit-lecture', res.createdLectureId]),
       error: (err) => console.log(err),

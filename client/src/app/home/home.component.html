@@ -1,11 +1,10 @@
 <div class="container--full">
-  <section class="featured-courses">
+  <section class="featured-courses" [style.background-image]="'url(' + courses[0].image + ')'">
     <section class="featured-courses__course">
       <section class="featured-courses__course__content">
-        <span class="featured-courses__course__heading">HTML</span>
-        <p class="featured-courses__course__brief">Lorem ipsum dolor sit amet consectetur adipisicing elit. Quasi
-          officia dignissimos non voluptate, animi fugiat...</p>
-        <a href="/" class="button button--large">Start course</a>
+        <span class="featured-courses__course__heading">{{ courses[0].title }}</span>
+        <p class="featured-courses__course__brief">{{ courses[0].description | getSummary: 75 }}</p>
+        <button (click)="enrollInCourse(courses[0]._id)" class="button button--large">Start course</button>
       </section>
     </section>
   </section>
@@ -13,7 +12,7 @@
 
 <div class="container">
   <section class="why section">
-    <h2 class="text-center section-heading">Why learn with Avika?</h2>
+    <h2 class="text-center section-heading">Why learn with programer21?</h2>
     <div class="why__grid">
       <div class="why__section flex">
         <div class="why__section__image">
@@ -58,7 +57,7 @@
   </section>
 
   <section class="faq section">
-    <h2 class="text-center section-heading">What is Avika?</h2>
+    <h2 class="text-center section-heading">What is programer21?</h2>
     <div class="faq__content">
       <div class="faq__content__questions">
         <ul>
@@ -149,6 +148,6 @@
   </section>
 
   <section class="copyright section">
-    <p class="text-center">Copyright 2019 Avika</p>
+    <p class="text-center">Copyright 2019 programer21</p>
   </section>
 </div>

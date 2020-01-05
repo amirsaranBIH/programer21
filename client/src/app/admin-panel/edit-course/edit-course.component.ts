@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Validators, FormBuilder, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CourseService } from 'src/app/services/course.service';
+import { TitleToSlugPipe } from 'src/app/pipes/title-to-slug.pipe';
 
 @Component({
   selector: 'app-edit-course',
@@ -10,10 +11,16 @@ import { CourseService } from 'src/app/services/course.service';
 })
 export class EditCourseComponent implements OnInit {
   public course;
-  public thumbnail: File;
+  public image: File;
   public editCourseForm: FormGroup;
 
-  constructor(private route: ActivatedRoute, private fb: FormBuilder, private courseService: CourseService, private router: Router) { }
+  constructor(
+    private route: ActivatedRoute,
+    private fb: FormBuilder,
+    private courseService: CourseService,
+    private router: Router,
+    private titleToSlug: TitleToSlugPipe
+    ) { }
 
   ngOnInit() {
     this.course = this.route.snapshot.data.course;
@@ -23,7 +30,7 @@ export class EditCourseComponent implements OnInit {
       description: [this.course.description, [Validators.required]],
       difficulty: [this.course.difficulty, [Validators.required]],
       status: [this.course.status, [Validators.required]],
-      thumbnail: [this.course.thumbnail]
+      image: [this.course.image]
     });
   }
 
@@ -45,11 +52,17 @@ export class EditCourseComponent implements OnInit {
 
   onSubmit() {
     const fd = new FormData();
-    fd.append('thumbnail', this.thumbnail);
+    if (this.image) {
+      fd.append('image', this.image);
+    }
     // tslint:disable-next-line: forin
     for (const key in this.editCourseForm.value) {
-      fd.append(key, this.editCourseForm.value[key]);
+      if (key !== 'image') {
+        fd.append(key, this.editCourseForm.value[key]);
+      }
     }
+
+    fd.append('slug', this.titleToSlug.transform(this.editCourseForm.value.title));
 
     this.courseService.editCourse(this.route.snapshot.params.course_id, fd).subscribe({
       error: (err) => console.log(err),
@@ -57,4 +70,7 @@ export class EditCourseComponent implements OnInit {
     });
   }
 
+  onFileUpload(file) {
+    this.image = file;
+  }
 }

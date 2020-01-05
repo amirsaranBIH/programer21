@@ -5,7 +5,8 @@ import { FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { ValidatorService } from '../services/validator.service';
 
 @Component({
-  templateUrl: './signup.component.html'
+  templateUrl: './signup.component.html',
+  styleUrls: ['./signup.component.scss']
 })
 export class SignupComponent implements OnInit {
   public signupForm: FormGroup;
@@ -62,10 +63,9 @@ export class SignupComponent implements OnInit {
   }
 
   onSubmit(credentials: TokenPayload) {
-    this.authService.signup(credentials).subscribe(() => {
-      this.router.navigateByUrl('/dashboard');
-    }, (err) => {
-      console.error(err);
+    this.authService.signup(credentials).subscribe({
+      error: err => console.log(err),
+      complete: () => this.router.navigate(['/dashboard'])
     });
   }
 }

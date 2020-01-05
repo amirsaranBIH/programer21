@@ -48,37 +48,45 @@ var UserSchema = new mongoose.Schema({
     },
     required: true
   },
-  categoriesEnrolledIn: [{
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Course',
-    modulesEnrolledIn: [{
+  coursesEnrolledIn: [{
+    course: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'Module',
-      lecturesEnrolledIn: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Lecture'
-      }
-    }]
-  }],
-  categoriesFinished: [{
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Course',
+      ref: 'Course'
+    },
+    currentModuleIndex: {
+      type: Number,
+      unique: true,
+      default: 0
+    },
+    currentLectureIndex: {
+      type: Number,
+      unique: true,
+      default: 0
+    },
+    dateEnrolledIn: {
+      type: Date,
+      default: Date.now
+    },
+    finished: {
+      type: Boolean,
+      default: false
+    },
+    modulesSkipped: [{
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Module'
+    }],
+    lecturesSkipped: [{
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Lecture'
+    }],
     modulesFinished: [{
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'Module',
-      lecturesFinished: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Lecture'
-      }
-    }]
-  }],
-  modulesSkipped: [{
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Module'
-  }],
-  lecturesSkipped: [{
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Lecture'
+      ref: 'Module'
+    }],
+    lecturesFinished: [{
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Lecture'
+    }],
   }],
   createdAt: {
     type: Date,

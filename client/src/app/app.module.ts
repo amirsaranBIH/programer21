@@ -4,7 +4,6 @@ import { HttpClientModule } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule, Routes } from '@angular/router';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { QuillModule } from 'ngx-quill';
 
 import { AppComponent } from './app.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
@@ -26,10 +25,19 @@ import { EditCourseComponent } from './admin-panel/edit-course/edit-course.compo
 import { OneCourseResolverService } from './resolvers/one-course-resolver.service';
 import { OneModuleResolverService } from './resolvers/one-module-resolver.service';
 import { FileUploadComponent } from './includes/file-upload/file-upload.component';
+import { LectureComponent } from './lecture/lecture.component';
+import { OneLectureBySlugResolverService } from './resolvers/one-lecture-by-slug-resolver.service';
+import { TitleToSlugPipe } from './pipes/title-to-slug.pipe';
+import { GetSummaryPipe } from './pipes/get-summary.pipe';
+import { LectureHTMLContentResolverService } from './resolvers/lecture-html-content-by-slug-resolver.service';
+import { UserResolverService } from './resolvers/user-resolver.service';
 
 const routes: Routes = [
   {
     path: '',
+    resolve: {
+      courses: AllCoursesResolverService
+    },
     component: HomeComponent
   },
   {
@@ -77,6 +85,18 @@ const routes: Routes = [
   {
     path: 'dashboard',
     component: DashboardComponent,
+    resolve: {
+      user: UserResolverService
+    },
+    canActivate: [AuthGuardService]
+  },
+  {
+    path: 'lecture/:slug',
+    component: LectureComponent,
+    resolve: {
+      lecture: OneLectureBySlugResolverService,
+      html_content: LectureHTMLContentResolverService
+    },
     canActivate: [AuthGuardService]
   },
 ];
@@ -96,7 +116,10 @@ const routes: Routes = [
     BackButtonComponent,
     EditModuleComponent,
     EditCourseComponent,
-    FileUploadComponent
+    FileUploadComponent,
+    LectureComponent,
+    TitleToSlugPipe,
+    GetSummaryPipe
   ],
   imports: [
     BrowserAnimationsModule,
@@ -104,8 +127,7 @@ const routes: Routes = [
     FormsModule,
     ReactiveFormsModule,
     HttpClientModule,
-    RouterModule.forRoot(routes),
-    QuillModule.forRoot()
+    RouterModule.forRoot(routes)
   ],
   providers: [
     AuthenticationService,
@@ -113,7 +135,11 @@ const routes: Routes = [
     AllCoursesResolverService,
     OneLectureResolverService,
     OneModuleResolverService,
-    OneCourseResolverService
+    OneCourseResolverService,
+    OneLectureBySlugResolverService,
+    LectureHTMLContentResolverService,
+    UserResolverService,
+    TitleToSlugPipe
   ],
   bootstrap: [AppComponent]
 })

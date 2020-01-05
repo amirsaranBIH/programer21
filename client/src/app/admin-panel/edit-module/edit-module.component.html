@@ -9,6 +9,7 @@
                 <label for="title">Title</label>
                 <input type="text" [class.is-invalid]="title.invalid && title.touched" id="title"
                     formControlName="title" placeholder="Enter title">
+                <small class="title-slug">Slug: {{ title.value | titleToSlug }}</small>
                 <div class="form__help text--small" *ngIf="title.invalid && title.touched">
                     <div *ngIf="title.errors?.required">Title is required.</div>
                 </div>
