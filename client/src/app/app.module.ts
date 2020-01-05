@@ -31,6 +31,7 @@ import { TitleToSlugPipe } from './pipes/title-to-slug.pipe';
 import { GetSummaryPipe } from './pipes/get-summary.pipe';
 import { LectureHTMLContentResolverService } from './resolvers/lecture-html-content-by-slug-resolver.service';
 import { UserResolverService } from './resolvers/user-resolver.service';
+import { ToastrModule } from 'ngx-toastr';
 
 const routes: Routes = [
   {
@@ -127,7 +128,8 @@ const routes: Routes = [
     FormsModule,
     ReactiveFormsModule,
     HttpClientModule,
-    RouterModule.forRoot(routes)
+    RouterModule.forRoot(routes),
+    ToastrModule.forRoot()
   ],
   providers: [
     AuthenticationService,

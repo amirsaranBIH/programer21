@@ -91,7 +91,6 @@
         }
 
         &__list-item {
-            background-image: url('https://d1cr57qij2cwzh.cloudfront.net/wp-content/uploads/2019/05/EOA_BackgroundColorsImages2019_Blog.gif');
             background-position: center;
             background-size: cover;
             height: 100%;
@@ -180,16 +179,17 @@
             cursor: pointer;
         }
 
-        .no-content {
-            color: $dark_green;
-            font-size: 1.25em;
-            margin: auto;
-            padding: 1em 0;
+    }
+}
 
-            i {
-                display: block;
-                font-size: 3em;
-            }
-        }
+.no-content {
+    color: $dark_green;
+    font-size: 1.25em;
+    margin: auto;
+    padding: 1em 0;
+
+    i {
+        display: block;
+        font-size: 3em;
     }
 }

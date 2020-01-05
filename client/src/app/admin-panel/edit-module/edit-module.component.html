@@ -52,6 +52,7 @@
             <div class="form__group">
                 <file-upload (onFileUpload)="onFileUpload($event)"></file-upload>
             </div>
+            <img [src]="module.image" alt="">
             <button class="button button--large" [disabled]="editModuleForm.invalid">Update Module</button>
         </form>
     </div>

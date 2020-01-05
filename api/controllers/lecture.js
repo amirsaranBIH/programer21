@@ -138,14 +138,12 @@ module.exports.skipLecture = function (req, res) {
 
         user.save(err => {
             if (err) throw err;
-
             res.json({ status: true });
         });
     });
 };
 
 module.exports.finishLecture = function (req, res) {
-    console.log('works')
     if (!req.payload._id) {
         res.status(401).json({ status: false });
     }
@@ -171,7 +169,6 @@ module.exports.finishLecture = function (req, res) {
 
         user.save(err => {
             if (err) throw err;
-
             res.json({ status: true });
         });
     });

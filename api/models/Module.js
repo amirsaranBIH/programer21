@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-const config = require('config');
 
 const ModuleSchema = new mongoose.Schema({
     index_number: {
@@ -32,7 +31,7 @@ const ModuleSchema = new mongoose.Schema({
     },
     image: {
         type: String,
-        default: config.get('UPLOAD_FOLDER') + 'module-images/default_module_image.jpg',
+        default: 'assets/images/default_module_image.png',
         required: true
     },
     status: {

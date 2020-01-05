@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-const config = require('config');
 
 const CourseSchema = new mongoose.Schema({
     index_number: {
@@ -24,10 +23,15 @@ const CourseSchema = new mongoose.Schema({
         trim: true,
         required: true
     },
+    difficulty: {
+        type: String,
+        enum: ['beginner', 'intermediate', 'advanced'],
+        default: 'beginner',
+        required: true
+    },
     image: {
         type: String,
-        default: config.get('UPLOAD_FOLDER') + 'course-images/default_course_image.jpg',
-
+        default: 'assets/images/default_course_image.png',
         required: true
     },
     status: {
@@ -36,6 +40,13 @@ const CourseSchema = new mongoose.Schema({
         default: 'private',
         required: true
     },
+    modules: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Module',
+            required: true
+        }
+    ],
     createdAt: {
         type: Date,
         default: Date.now,
@@ -46,19 +57,6 @@ const CourseSchema = new mongoose.Schema({
         default: Date.now,
         required: true
     },
-    difficulty: {
-        type: String,
-        enum: ['beginner', 'intermediate', 'advanced'],
-        default: 'beginner',
-        required: true
-    },
-    modules: [
-        {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'Module',
-            required: true
-        }
-    ],
     creator: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',

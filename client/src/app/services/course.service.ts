@@ -40,4 +40,9 @@ export class CourseService {
     return this.http.get(`/api/course/enroll/${courseId}`,
       { headers: { Authorization: `Bearer ${this.authService.getToken}` }});
   }
+
+  finishCourse(courseIndex) {
+    return this.http.get(`/api/course/finish/${courseIndex}`,
+      { headers: { Authorization: `Bearer ${this.authService.getToken}` }});
+  }
 }

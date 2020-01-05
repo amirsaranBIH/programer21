@@ -34,4 +34,14 @@ export class ModuleService {
     return this.http.get(`/api/module/delete/${moduleId}`,
       { headers: { Authorization: `Bearer ${this.authService.getToken}` }});
   }
+
+  skipModule(courseIndex, nextModuleIndex) {
+    return this.http.get(`/api/module/skip/${courseIndex}/${nextModuleIndex}`,
+      { headers: { Authorization: `Bearer ${this.authService.getToken}` }});
+  }
+
+  finishModule(courseIndex, nextModuleIndex) {
+    return this.http.get(`/api/module/finish/${courseIndex}/${nextModuleIndex}`,
+      { headers: { Authorization: `Bearer ${this.authService.getToken}` }});
+  }
 }

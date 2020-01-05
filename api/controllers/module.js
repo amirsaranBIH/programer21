@@ -1,8 +1,9 @@
 var mongoose = require('mongoose');
 var Course = mongoose.model('Course');
 var Module = mongoose.model('Module');
+var User = mongoose.model('User');
 const config = require('config');
-const { extractUploadPathFromUrl, nextModuleIndexNumber } = require('../helpers/shared');
+const { compareIds, extractUploadPathFromUrl, nextModuleIndexNumber } = require('../helpers/shared');
 const { deleteFile } = require('../helpers/file');
 
 module.exports.createModule = async function (req, res) {
@@ -81,5 +82,76 @@ module.exports.deleteModule = function (req, res) {
       }
   
       res.json({ status: true });
+    });
+};
+
+module.exports.skipModule = function (req, res) {
+    if (!req.payload._id) {
+        res.status(401).json({ status: false });
+    }
+
+    User.findById(req.payload._id).populate({
+        path: 'coursesEnrolledIn.course',
+        populate: {
+            path: 'modules',
+            populate: {
+                path: 'lectures',
+                model: 'Lecture'
+            }
+        }
+    }).exec((err, user) => {
+        if (err) throw err;
+
+        const course = user.coursesEnrolledIn[req.params.course_index];
+        const skippedModuleId = course.course.modules[course.currentModuleIndex]._id;
+
+        course.course.modules[course.currentModuleIndex].lectures.forEach(lecture => {
+            if (
+                course.lecturesFinished.some(finishedLectureId => compareIds(finishedLectureId, lecture._id)) ||
+                course.lecturesSkipped.some(skippedLectureId => compareIds(skippedLectureId, lecture._id))
+            ) {
+                // if lecture is already skipped or finished 
+                console.log(lecture._id);
+                return;
+            }
+            console.log('=======================');
+            user.coursesEnrolledIn[req.params.course_index].lecturesSkipped.push(lecture._id);
+        });
+
+        user.coursesEnrolledIn[req.params.course_index].currentModuleIndex = req.params.module_next_index;
+        user.coursesEnrolledIn[req.params.course_index].currentLectureIndex = 0;
+        user.coursesEnrolledIn[req.params.course_index].modulesSkipped.push(skippedModuleId);
+
+        user.save(err => {
+            if (err) throw err;
+            res.json({ status: true });
+        });
+    });
+};
+
+module.exports.finishModule = function (req, res) {
+    if (!req.payload._id) {
+        res.status(401).json({ status: false });
+    }
+
+    User.findById(req.payload._id).populate({
+        path: 'coursesEnrolledIn.course',
+        populate: {
+            path: 'modules'
+        }
+    }).exec((err, user) => {
+        if (err) throw err;
+
+        const course = user.coursesEnrolledIn[req.params.course_index];
+        const finishedModuleId = course.course.modules[course.currentModuleIndex]._id;
+
+        user.coursesEnrolledIn[req.params.course_index].currentModuleIndex = req.params.module_next_index;
+        user.coursesEnrolledIn[req.params.course_index].currentLectureIndex = 0;
+        user.coursesEnrolledIn[req.params.course_index].modulesFinished.push(finishedModuleId);
+
+        user.save(err => {
+            if (err) throw err;
+            res.json({ status: true });
+        });
     });
 };

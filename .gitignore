@@ -30,4 +30,6 @@ build/Release
 node_modules
 
 # My git ignores
-config/*
+config/default.json
+config/development.json
+config/production.json

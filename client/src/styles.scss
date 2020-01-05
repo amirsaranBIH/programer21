@@ -53,7 +53,17 @@ p {
 }
 
 img {
+    width: 100%;
     max-width: 100%;
+}
+
+.loading-icon {
+    font-size: 100px;
+    position: fixed;
+    top: 25%;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 100;
 }
 
 .margin-top {

@@ -30,6 +30,7 @@ router.post('/course/new', auth, upload('image', 'course-images'), ctrlCourse.cr
 router.post('/course/edit/:course_id', auth, upload('image', 'course-images'), ctrlCourse.editCourse);
 router.post('/course/delete/:course_id', auth, ctrlCourse.deleteCourse);
 router.get('/course/enroll/:course_id', auth, ctrlCourse.enrollInCourse);
+router.get('/course/finish/:course_index', auth, ctrlCourse.finishCourse);
 
 // module
 router.get('/module/get-all-modules', ctrlModule.getAllModules);
@@ -37,6 +38,8 @@ router.get('/module/get-module/:module_id', ctrlModule.getModuleById);
 router.post('/module/new/:course_id', auth, upload('image', 'module-images'), ctrlModule.createModule);
 router.post('/module/edit/:module_id', auth, upload('image', 'module-images'), ctrlModule.editModule);
 router.post('/module/delete/:module_id', auth, ctrlModule.editModule);
+router.get('/module/skip/:course_index/:module_next_index', auth, ctrlModule.skipModule);
+router.get('/module/finish/:course_index/:module_next_index', auth, ctrlModule.finishModule);
 
 // lecture
 router.get('/lecture/get-all-lectures', ctrlLecture.getAllLectures);

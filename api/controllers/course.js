@@ -108,3 +108,19 @@ module.exports.enrollInCourse = function (req, res) {
     res.json({ status: true });
   });
 };
+module.exports.finishCourse = function (req, res) {
+  if (!req.payload._id) {
+    res.status(401).json({ status: false });
+  }
+
+  User.findById(req.payload._id, (err, user) => {
+    if (err) throw err;
+    
+    user.coursesEnrolledIn[req.params.course_index].finished = true;
+    
+    user.save(err => {
+      if (err) throw err;
+      res.json({ status: true });
+    });
+  });
+};

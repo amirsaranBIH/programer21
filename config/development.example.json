@@ -1,0 +1,14 @@
+{
+    "HOST_URL": "http://localhost",
+    "HOST_PORT": 3000,
+    "HOST": "http://localhost:3000/",
+
+    "DB_HOST": "mongodb://localhost:27017/programer21",
+
+    "SMTP_HOST": "smtp.ethereal.email",
+    "SMTP_PORT": 587,
+    "SMTP_USER": "darren.wolf39@ethereal.email",
+    "SMTP_PASS": "arqkkHTV2qERWVWEPm",
+
+    "UPLOAD_FOLDER": "uploads/"
+}

@@ -7,6 +7,10 @@ function extractUploadPathFromUrl(url) {
     return ['uploads', url.split('uploads/')[1]].join('/'); 
 }
 
+function compareIds(id1, id2) {
+    return JSON.stringify(id1) === JSON.stringify(id2);
+}
+
 async function nextCourseIndexNumber() {
     const courses = await Course
     .find({}, 'index_number')
@@ -55,4 +59,4 @@ async function nextLectureIndexNumber() {
     return lecture.index_number + 1;
 }
 
-module.exports = { extractUploadPathFromUrl, nextCourseIndexNumber, nextModuleIndexNumber, nextLectureIndexNumber };
+module.exports = { compareIds, extractUploadPathFromUrl, nextCourseIndexNumber, nextModuleIndexNumber, nextLectureIndexNumber };
