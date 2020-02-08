@@ -11,7 +11,7 @@ import { TitleToSlugPipe } from 'src/app/pipes/title-to-slug.pipe';
 })
 export class NewCourseComponent implements OnInit {
   public createCourseForm: FormGroup;
-  public supportedLanguage;
+  public supportedLanguage = '';
   public supportedLanguages = [];
   public supportedLanguageSubmitted = false;
 
@@ -26,7 +26,10 @@ export class NewCourseComponent implements OnInit {
     this.createCourseForm = this.fb.group({
       title: ['', [Validators.required]],
       difficulty: ['', [Validators.required]],
-      description: ['', [Validators.required]],
+      description: ['', [
+        Validators.required,
+        Validators.maxLength(200)
+      ]],
       price: [0, [Validators.required]],
       shortName: ['', [Validators.required]],
       color: ['', [Validators.required]],

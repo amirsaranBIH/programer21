@@ -7,37 +7,43 @@
     <div class="section section--large">
       <div class="courses-and-lectures">
         <div class="courses">
-          <div class="course" [ngStyle]="{'background-image': 'url(' + environment.HOST + courses[currentCourse].image + ')'}">
-            <div class="course-info">
-              <h3 class="h2">{{ courses[currentCourse].title }}</h3>
-              <div class="info">
-                <span>{{courses[currentCourse].numberOfLectures}} {{courses[currentCourse].numberOfLectures > 1 ? 'lectures' : 'lecture'}}</span>
-                <span>{{courses[currentCourse].totalErt}} {{courses[currentCourse].totalErt > 1 ? 'hours' : 'hour'}}</span>
-                <span class="text--capitalize">{{courses[currentCourse].difficulty}}</span>
+          <ng-container *ngIf="courses.length > 0">
+            <div class="course" [ngStyle]="{'background-image': 'url(' + environment.HOST + courses[currentCourse].image + ')'}">
+              <div class="course-info">
+                <h3 class="h2">{{ courses[currentCourse].title }}</h3>
+                <div class="info">
+                  <span>{{courses[currentCourse].numberOfLectures}} {{courses[currentCourse].numberOfLectures === 1 ? 'lecture' : 'lectures'}}</span>
+                  <span>{{courses[currentCourse].totalErt}} {{courses[currentCourse].totalErt === 1 ? 'hour' : 'hours'}}</span>
+                  <span class="text--capitalize">{{courses[currentCourse].difficulty}}</span>
+                </div>
               </div>
             </div>
+            <div class="enrolled-courses-controls flex flex--align-center">
+              <div class="arrow">
+                <img (click)="previousCourse()" [ngClass]="{ 'disabled': currentCourse === 0 }" src="assets/icons/arrow-left.svg" alt="arrow-left">
+              </div>
+              <div class="enrolled-courses-control-info">
+                <div>{{ currentCourse + 1 }} / {{ courses.length }}</div>
+                <div>COURSES</div>
+              </div>
+              <div class="arrow">
+                <img (click)="nextCourse()" [ngClass]="{ 'disabled': currentCourse === courses.length - 1 }" src="assets/icons/arrow-right.svg" alt="arrow-right">
+              </div>
+            </div>
+          </ng-container>
+          <div class="no-courses" *ngIf="courses.length < 1">
+            <img src="/assets/icons/frown.svg" alt="frown">
+            <p>No courses created yet</p>
           </div>
-          <div class="enrolled-courses-controls flex flex--align-center">
-            <div class="arrow">
-              <img (click)="previousCourse()" [ngClass]="{ 'disabled': currentCourse === 0 }" src="assets/icons/arrow-left.svg" alt="arrow-left">
-            </div>
-            <div class="enrolled-courses-control-info">
-              <div>{{ currentCourse + 1 }} / {{ courses.length }}</div>
-              <div>COURSES</div>
-            </div>
-            <div class="arrow">
-              <img (click)="nextCourse()" [ngClass]="{ 'disabled': currentCourse === courses.length - 1 }" src="assets/icons/arrow-right.svg" alt="arrow-right">
-            </div>
-          </div>
         </div>
-        <div class="new-course flex flex--align-center flex--center">
-          <span class="text--center" routerLink="/admin-panel/new-course">Create New Course</span>
+        <div routerLink="/admin-panel/new-course" class="new-course flex flex--align-center flex--center">
+          <span class="text--center">Create New Course</span>
         </div>
-        <div class="edit-course flex flex--align-center flex--center">
-          <span class="text--center" routerLink="/admin-panel/edit-course/{{courses[currentCourse].id}}">Edit Course</span>
+        <div routerLink="/admin-panel/edit-course/{{courses[currentCourse]?.id}}" [ngClass]="{ 'disabled': courses.length < 1 }" class="edit-course flex flex--align-center flex--center">
+          <span class="text--center">Edit Course</span>
         </div>
-        <div class="new-lecture flex flex--align-center flex--center">
-          <span class="text--center" routerLink="/admin-panel/new-lecture/{{courses[currentCourse].id}}">Create Lecture</span>
+        <div routerLink="/admin-panel/new-lecture/{{courses[currentCourse]?.id}}" [ngClass]="{ 'disabled': courses.length < 1 }" class="new-lecture flex flex--align-center flex--center">
+          <span class="text--center">Create Lecture</span>
         </div>
       </div>
     </div>
@@ -70,21 +76,21 @@
         <table>
           <thead>
             <tr>
-              <th [ngClass]="{'hide-sort': currentSortField !== 'id', 'sort-up': currentSortDirection === 'up', 'sort-down': currentSortDirection === 'down' }" (click)="sortUsers('id')">ID</th>
-              <th [ngClass]="{'hide-sort': currentSortField !== 'name', 'sort-up': currentSortDirection === 'up', 'sort-down': currentSortDirection === 'down' }" (click)="sortUsers('name')">Name</th>
-              <th [ngClass]="{'hide-sort': currentSortField !== 'email', 'sort-up': currentSortDirection === 'up', 'sort-down': currentSortDirection === 'down' }" (click)="sortUsers('email')">Email</th>
-              <th [ngClass]="{'hide-sort': currentSortField !== 'username', 'sort-up': currentSortDirection === 'up', 'sort-down': currentSortDirection === 'down' }" (click)="sortUsers('username')">Username</th>
-              <th [ngClass]="{'hide-sort': currentSortField !== 'role', 'sort-up': currentSortDirection === 'up', 'sort-down': currentSortDirection === 'down' }" (click)="sortUsers('role')">Role</th>
-              <th [ngClass]="{'hide-sort': currentSortField !== 'verified', 'sort-up': currentSortDirection === 'up', 'sort-down': currentSortDirection === 'down' }" (click)="sortUsers('verified')">Verified</th>
+              <th class="sort-{{currentSortDirection}}" [ngClass]="{'hide-sort': currentSortField !== 'id' }" (click)="sortUsers('id')">ID</th>
+              <th class="sort-{{currentSortDirection}}" [ngClass]="{'hide-sort': currentSortField !== 'name' }" (click)="sortUsers('name')">Name</th>
+              <th class="sort-{{currentSortDirection}}" [ngClass]="{'hide-sort': currentSortField !== 'email' }" (click)="sortUsers('email')">Email</th>
+              <th class="sort-{{currentSortDirection}}" [ngClass]="{'hide-sort': currentSortField !== 'username' }" (click)="sortUsers('username')">Username</th>
+              <th class="sort-{{currentSortDirection}}" [ngClass]="{'hide-sort': currentSortField !== 'role' }" (click)="sortUsers('role')">Role</th>
+              <th class="sort-{{currentSortDirection}}" [ngClass]="{'hide-sort': currentSortField !== 'verified' }" (click)="sortUsers('verified')">Verified</th>
               <th>Courses Fin./Enr.</th>
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let user of users">
+            <tr *ngFor="let user of users" routerLink="/admin-panel/edit-user/{{user.id}}">
               <td>{{ user.id }}</td>
               <td>{{ user.name }}</td>
               <td>{{ user.email }}</td>
-              <td><a class="link" routerLink="/">{{ user.username }}</a></td>
+              <td><a class="link" routerLink="/user/{{user.username}}">{{ user.username }}</a></td>
               <td class="text--capitalize">{{ user.role }}</td>
               <td>{{ user.verified ? 'Yes' : 'No' }}</td>
               <td>{{ user.finishedCourses }} / {{ user.enrolledCourses }}</td>

@@ -149,6 +149,20 @@
                 color: white;
             }
         }
+
+        .no-courses {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: $black;
+
+            img {
+                margin: 0 auto;
+                display: block;
+                width: 100px;
+            }
+        }
     }
 
     .user-search-and-filter {
@@ -191,6 +205,10 @@
                 padding-left: 5px;
                 cursor: pointer;
                 content: url('/assets/icons/sort-alpha-down.svg');
+            }
+
+            tr {
+                cursor: pointer;
             }
 
             th, td {

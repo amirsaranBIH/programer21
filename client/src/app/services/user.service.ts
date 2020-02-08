@@ -16,4 +16,16 @@ export class UserService {
   getAllUsers() {
     return this.http.get(environment.HOST + '/api/user/getAllUsers').toPromise();
   }
+
+  getUserById(userId) {
+    return this.http.get(environment.HOST + '/api/user/getUserById/' + userId).toPromise();
+  }
+
+  updateUser(userId, userData) {
+    return this.http.post(environment.HOST + '/api/user/updateUser/' + userId, userData);
+  }
+  
+  suspendUser(userId) {
+    return this.http.get(environment.HOST + '/api/user/suspendUser/' + userId);
+  }
 }

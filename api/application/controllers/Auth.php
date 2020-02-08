@@ -68,6 +68,19 @@ class Auth extends MY_Controller  {
 
         $this->setResponseSuccess($response['emailTaken']);
     }
+
+    public function isEmailTakenWhileEditing($userId) {
+        $data = json_decode(file_get_contents('php://input'), true);
+
+        $response = $this->auth->isEmailTakenWhileEditing($userId, $data['email']);
+
+        if ($response === false) {
+            $this->setResponseError();
+            return;
+        }
+
+        $this->setResponseSuccess($response['emailTaken']);
+    }
     
     public function fetchUserSessionData() {
         session_start();

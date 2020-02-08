@@ -24,14 +24,14 @@ class CourseModel extends CI_model {
                     createdAt,
                     updatedAt,
                     (SELECT COUNT(1) FROM course_lectures WHERE course_lectures.courseId = courses.id) AS numberOfLectures,
-                    (SELECT SUM(ert) FROM lectures WHERE lectures.course = courses.id) AS totalErt
+                    (SELECT IF(SUM(ert) IS NULL, 0, SUM(ert)) FROM lectures WHERE lectures.course = courses.id) AS totalErt
                 FROM
                     courses";
 
         $query = $this->db->query($sql);
 
         if (!$query) {
-            log_message(1, $this->db->error()['message']);
+            log_message('error', $this->db->error()['message']);
             return false;
         }
 
@@ -68,7 +68,7 @@ class CourseModel extends CI_model {
         $query = $this->db->query($sql);
 
         if (!$query) {
-            log_message(1, $this->db->error()['message']);
+            log_message('error', $this->db->error()['message']);
             return false;
         }
 
@@ -103,7 +103,7 @@ class CourseModel extends CI_model {
         $query = $this->db->query($sql, $courseId);
 
         if (!$query) {
-            log_message(1, $this->db->error()['message']);
+            log_message('error', $this->db->error()['message']);
             return false;
         }
 
@@ -136,7 +136,7 @@ class CourseModel extends CI_model {
         $query = $this->db->query($sql, $courseSlug);
 
         if (!$query) {
-            log_message(1, $this->db->error()['message']);
+            log_message('error', $this->db->error()['message']);
             return false;
         }
 
@@ -169,7 +169,7 @@ class CourseModel extends CI_model {
         $query = $this->db->query($sql);
 
         if (!$query) {
-            log_message(1, $this->db->error()['message']);
+            log_message('error', $this->db->error()['message']);
             return false;
         }
 
@@ -183,6 +183,8 @@ class CourseModel extends CI_model {
     }
 
     public function createCourse($courseData) {
+        $this->db->trans_start();
+
         $sql = "INSERT INTO
                     courses
                 (
@@ -211,7 +213,7 @@ class CourseModel extends CI_model {
         ));
 
         if (!$query) {
-            log_message(1, $this->db->error()['message']);
+            log_message('error', $this->db->error()['message']);
             return false;
         }
 
@@ -220,14 +222,35 @@ class CourseModel extends CI_model {
         $status = $this->setCourseSupportedLanguages($newlyCreatedCourseId, json_decode($courseData['supportedLanguages']), false);
 
         if (!$status) {
-            log_message(1, $this->db->error()['message']);
+            log_message('error', $this->db->error()['message']);
             return false;
         }
 
-        return $newlyCreatedCourseId; // Returns ID of newly created course
+        if (isset($_FILES['image'])) {
+            $res = $this->uploadCourseImage('image');
+    
+            if (!$res['status']) {
+                log_message('error', 'There was an error while uploading course image');
+
+                return $res;
+            }
+    
+            $uploadedImagePath = '/uploads/course_images/'.$res['data']['file_name'];
+    
+            $this->setCourseImage($newlyCreatedCourseId, $uploadedImagePath);
+        }
+
+        $this->db->trans_complete();
+
+        return array(
+            'status' => true,
+            'newlyCreatedCourseId' => $newlyCreatedCourseId // Returns ID of newly created course
+        );
     }
 
     public function updateCourse($courseId, $courseData) {
+        $this->db->trans_start();
+
         $sql = "UPDATE
                     courses
                 SET
@@ -238,7 +261,7 @@ class CourseModel extends CI_model {
                     difficulty = ?,
                     price = ?,
                     shortName = ?,
-                    color = ?,
+                    color = ?
                 WHERE
                     id = ?";
 
@@ -255,18 +278,36 @@ class CourseModel extends CI_model {
         ));
 
         if (!$query) {
-            log_message(1, $this->db->error()['message']);
+            log_message('error', $this->db->error()['message']);
             return false;
         }
 
-        $status = $this->setCourseSupportedLanguages($courseId, $courseData['supportedLanguages']);
+        $status = $this->setCourseSupportedLanguages($courseId, json_decode($courseData['supportedLanguages']));
 
         if (!$status) {
-            log_message(1, $this->db->error()['message']);
+            log_message('error', 'There was an error while setting course supported languages');
             return false;
         }
 
-        return true;
+        if (isset($_FILES['image'])) {
+            $res = $this->uploadCourseImage('image');
+    
+            if (!$res['status']) {
+                log_message('error', 'There was an error while uploading course image');
+
+                return $res;
+            }
+    
+            $uploadedImagePath = '/uploads/course_images/'.$res['data']['file_name'];
+    
+            $this->setCourseImage($courseId, $uploadedImagePath);
+        }
+
+        $this->db->trans_complete();
+
+        return array(
+            'status' => true
+        );
     }
 
     public function deleteCourse($courseId) {
@@ -278,7 +319,7 @@ class CourseModel extends CI_model {
         $query = $this->db->query($sql, $courseId);
 
         if (!$query) {
-            log_message(1, $this->db->error()['message']);
+            log_message('error', $this->db->error()['message']);
             return false;
         }
 
@@ -299,7 +340,7 @@ class CourseModel extends CI_model {
         ));
 
         if (!$query) {
-            log_message(1, $this->db->error()['message']);
+            log_message('error', $this->db->error()['message']);
             return false;
         }
 
@@ -318,7 +359,7 @@ class CourseModel extends CI_model {
             $query = $this->db->query($sql, $courseId);
     
             if (!$query) {
-                log_message(1, $this->db->error()['message']);
+                log_message('error', $this->db->error()['message']);
                 return false;
             }
         }
@@ -338,7 +379,7 @@ class CourseModel extends CI_model {
             ));
 
             if (!$query2) {
-                log_message(1, $this->db->error()['message']);
+                log_message('error', $this->db->error()['message']);
                 return false;
             }
         }
@@ -359,7 +400,7 @@ class CourseModel extends CI_model {
         $query = $this->db->query($sql, $courseId);
 
         if (!$query) {
-            log_message(1, $this->db->error()['message']);
+            log_message('error', $this->db->error()['message']);
             return false;
         }
 
@@ -384,12 +425,37 @@ class CourseModel extends CI_model {
         $query = $this->db->query($sql, $courseId);
 
         if (!$query) {
-            log_message(1, $this->db->error()['message']);
+            log_message('error', $this->db->error()['message']);
             return false;
         }
 
         $courseStatus = $query->result()['status'];
 
         return $courseStatus === 'public';
+    }
+
+    public function uploadCourseImage($fieldName) {
+        $config['upload_path']      = './uploads/course_images';
+        $config['allowed_types']    = 'gif|jpg|jpeg|png';
+        $config['max_size']         = 500;
+        $config['max_width']        = 1920;
+        $config['max_height']       = 1080;
+        $config['encrypt_name']     = true;
+        $config['file_ext_tolower'] = true;
+        
+        $this->load->library('upload', $config);
+
+        if ($this->upload->do_upload($fieldName)) {
+            return array(
+                'status' => true,
+                'data' => $this->upload->data()
+            );
+        } else {
+            log_message('error', $this->upload->display_errors());
+            return array(
+                'status' => false,
+                'data' => $this->upload->display_errors('', '')
+            );
+        }
     }
 }

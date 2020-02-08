@@ -2,6 +2,7 @@
 
 .file-upload {
     padding: 4em 0;
+    position: relative;
     display: block;
     cursor: pointer;
 
@@ -13,6 +14,20 @@
             @extend .sans-serif;
             font-size: 1.75em;
             color: $light_purple;
+        }
+    }
+
+    .preview-image {
+        position: absolute;
+        top: 1em;
+        left: 1em;
+        
+        img {
+            width: 250px;
+        }
+
+        div {
+            margin-top: .4em;
         }
     }
 }

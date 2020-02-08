@@ -34,7 +34,7 @@
                             <div class="input-help flex flex--not-even flex--align-center">
                                 <div class="input-help-status"></div>
                                 <div class="input-help-message">
-                                    <span>User must have a difficulty!</span>
+                                    <span>Course must have a difficulty!</span>
                                 </div>
                             </div>
                         </div>
@@ -43,13 +43,29 @@
                         <label for="price" class="required">Price</label>
                         <div class="input-group"
                             [ngClass]="{ 'is-invalid' : (price.invalid && price.touched) || (price.invalid && ngForm.submitted) }">
-                            <input type="number" id="spricehortName" formControlName="price"
+                            <input type="number" id="price" formControlName="price"
                                 placeholder="Enter course price">
                             <div class="input-help flex flex--not-even flex--align-center">
                                 <div class="input-help-status"></div>
                                 <div class="input-help-message">
                                     <span>Price is required!</span>
                                 </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="status" class="required">Status</label>
+                    <div class="input-group"
+                        [ngClass]="{ 'is-invalid' : (status.invalid && status.touched) || (status.invalid && ngForm.submitted) }">
+                        <select formControlName="status" id="status">
+                            <option value="private">Private</option>
+                            <option value="public">Public</option>
+                        </select>
+                        <div class="input-help flex flex--not-even flex--align-center">
+                            <div class="input-help-status"></div>
+                            <div class="input-help-message">
+                                <span>Course must have a status!</span>
                             </div>
                         </div>
                     </div>
@@ -114,9 +130,9 @@
                     </div>
                 </div>
                 <div class="supported-languages-list margin-bottom flex flex--not-even flex--align-center">
-                    <div class="supported-language flex flex--not-even flex--align-center" *ngFor="let language of supportedLanguages">
+                    <div class="supported-language flex flex--not-even flex--align-center" *ngFor="let language of supportedLanguages; let i = index">
                         <span class="text--capitalize">{{ language }}</span>
-                        <div class="remove-supported-language">
+                        <div (click)="removeSupportedLanguage(i)" class="remove-supported-language">
                             <img src="assets/icons/remove-supported-language.svg" alt="remove-supported-language">
                         </div>
                     </div>
@@ -130,7 +146,8 @@
                         <div class="input-help flex flex--not-even flex--align-center">
                             <div class="input-help-status"></div>
                             <div class="input-help-message">
-                                <span>Description must be contain less than 200 characters!</span>
+                                <span *ngIf="description.errors?.required">Description is required!</span>
+                                <span *ngIf="description.errors?.maxlength">Description must be contain less than {{ description.errors?.maxlength.requiredLength }} characters!</span>
                             </div>
                         </div>
                     </div>
@@ -138,7 +155,7 @@
             </div>
 
             <div class="margin-top">
-                <file-upload [uploadText]="'Upload Course Image'" (onFileUpload)="onFileUpload($event)"></file-upload>
+                <file-upload [uploadText]="'Upload Course Image'" [imagePreview]="image.value" (onFileUpload)="onFileUpload($event)"></file-upload>
             </div>
             <div class="flex flex--not-even flex--between flex--align-start margin-top">
                 <button type="submit" class="button button--large button--update" [disabled]="editCourseForm.invalid && ngForm.submitted">Update Course</button>
@@ -183,8 +200,9 @@
                     </div>
                 </div>
             </div>
-            <div *ngIf="courseLectures.length < 1">
-                No Courses
+            <div class="no-lectures text--center" *ngIf="courseLectures.length < 1">
+                <img src="/assets/icons/frown.svg" alt="frown">
+                <p>No lectures created yet</p>
             </div>
         </div>
     </div>

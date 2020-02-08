@@ -46,14 +46,27 @@ class Course extends MY_Controller  {
     public function createCourse() {
         $data = $this->input->post();
 
-        $newlyCreatedCourseId = $this->course->createCourse($data);
+        $res = $this->course->createCourse($data);
 
-        if ($newlyCreatedCourseId === false) {
-            $this->setResponseError();
+        if ($res['status'] === false) {
+            $this->setResponseError($res['data']);
             return;
         }
 
-        $this->setResponseSuccess($newlyCreatedCourseId);
+        $this->setResponseSuccess($res['newlyCreatedCourseId']);
+    }
+
+    public function updateCourse($courseId) {
+        $data = $this->input->post();
+
+        $res = $this->course->updateCourse($courseId, $data);
+
+        if ($res['status'] === false) {
+            $this->setResponseError(200, $res['data']);
+            return;
+        }
+
+        $this->setResponseSuccess();
     }
 
     public function deleteCourse($courseId) {

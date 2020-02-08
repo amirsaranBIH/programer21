@@ -22,6 +22,30 @@ class User extends MY_Controller  {
         $this->setResponseSuccess($createdUserId);
     }
 
+    public function updateUser($userId) {
+        $data = json_decode(file_get_contents('php://input'), true);
+
+        $status = $this->user->updateUser($userId, $data);
+
+        if ($status === false) {
+            $this->setResponseError();
+            return;
+        }
+
+        $this->setResponseSuccess();
+    }
+
+    public function suspendUser($userId) {
+        $status = $this->user->suspendUser($userId);
+
+        if ($status === false) {
+            $this->setResponseError();
+            return;
+        }
+
+        $this->setResponseSuccess();
+    }
+
     public function getUserEnrolledCourses($userId) {
         $courses = $this->user->getUserEnrolledCourses($userId);
 
@@ -42,6 +66,17 @@ class User extends MY_Controller  {
         }
 
         $this->setResponseSuccess($users);
+    }
+
+    public function getUserById($userId) {
+        $user = $this->user->getUserById($userId);
+
+        if ($user === false) {
+            $this->setResponseError();
+            return;
+        }
+
+        $this->setResponseSuccess($user);
     }
 
     public function searchUsersByUsernameAndFullname($searchQuery) {

@@ -131,7 +131,8 @@
                         <div class="input-help flex flex--not-even flex--align-center">
                             <div class="input-help-status"></div>
                             <div class="input-help-message">
-                                <span>Description must be contain less than 200 characters!</span>
+                                <span *ngIf="description.errors?.required">Description is required!</span>
+                                <span *ngIf="description.errors?.maxlength">Description must be contain less than {{ description.errors?.maxlength.requiredLength }} characters!</span>
                             </div>
                         </div>
                     </div>

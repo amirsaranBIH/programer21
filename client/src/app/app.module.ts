@@ -40,6 +40,7 @@ import { UserEnrolledCoursesResolverService } from './resolvers/user-enrolled-co
 import { AllPublicCoursesResolverService } from './resolvers/all-public-courses-resolver.service';
 import { AllUsersResolverService } from './resolvers/all-users-resolver.service';
 import { CourseLecturesResolverService } from './resolvers/course-lectures-resolver.service';
+import { UserResolverService } from './resolvers/user-resolver.service';
 
 const routes: Routes = [
   {
@@ -78,7 +79,13 @@ const routes: Routes = [
         }
       },
       { path: 'new-course', component: NewCourseComponent },
-      { path: 'edit-user/:user_id', component: EditUserComponent },
+      {
+        path: 'edit-user/:user_id',
+        component: EditUserComponent,
+        resolve: {
+          user: UserResolverService
+        }
+      },
       {
         path: 'new-lecture/:course_id',
         component: NewLectureComponent,
@@ -204,6 +211,7 @@ export function fetchUserDataProviderFactory(provider: AuthenticationService) {
     AllCoursesResolverService,
     AllUsersResolverService,
     AllPublicCoursesResolverService,
+    UserResolverService,
     CourseLecturesResolverService,
     OneLectureResolverService,
     OneCourseResolverService,

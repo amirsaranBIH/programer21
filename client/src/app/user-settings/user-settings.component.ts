@@ -34,7 +34,7 @@ export class UserSettingsComponent implements OnInit {
       email: ['', [
         Validators.required,
         this.validators.EmailValidator
-      ], [this.validators.IsEmailTakenValidator.bind(this)]],
+      ], [this.validators.IsEmailTakenValidator]],
       image: ['', [Validators.required]]
     });
 

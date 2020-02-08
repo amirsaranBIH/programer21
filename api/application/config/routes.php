@@ -58,15 +58,20 @@ $route['api/auth/signup']['post'] = 'auth/signup';
 $route['api/auth/login']['post'] = 'auth/login';
 $route['api/auth/logout'] = 'auth/logout';
 $route['api/auth/isEmailTaken']['post'] = 'auth/isEmailTaken';
+$route['api/auth/isEmailTakenWhileEditing/(:num)']['post'] = 'auth/isEmailTakenWhileEditing/$1';
 $route['api/auth/checkIfUserLoggedIn'] = 'auth/checkIfUserLoggedIn';
 $route['api/auth/fetchUserSessionData'] = 'auth/fetchUserSessionData';
 
 $route['api/user/getUserEnrolledCourses/(:num)'] = 'user/getUserEnrolledCourses/$1';
 $route['api/user/getAllUsers'] = 'user/getAllUsers';
+$route['api/user/getUserById/(:num)'] = 'user/getUserById/$1';
+$route['api/user/updateUser/(:num)']['post'] = 'user/updateUser/$1';
+$route['api/user/suspendUser/(:num)'] = 'user/suspendUser/$1';
 
 $route['api/course/getAllPublicCourses'] = 'course/getAllPublicCourses';
 $route['api/course/getAllCourses'] = 'course/getAllCourses';
 $route['api/course/createCourse']['post'] = 'course/createCourse';
+$route['api/course/updateCourse/(:num)']['post'] = 'course/updateCourse/$1';
 $route['api/course/getCourseById/(:num)'] = 'course/getCourseById/$1';
 $route['api/course/getCourseLectures/(:num)'] = 'course/getCourseLectures/$1';
 $route['api/course/deleteCourse/(:num)'] = 'course/deleteCourse/$1';

@@ -56,20 +56,25 @@
         </div>
       </div>
       <div class="enrolled-courses-list">
-        <div routerLink="/" class="enrolled-course" [ngStyle]="{'background-image': 'url(' + environment.HOST + enrolledCourses[currentEnrolledCourse].image + ')'}">
-          <h3 class="h2">{{ enrolledCourses[currentEnrolledCourse].title }}</h3>
-        </div>
-        <div class="enrolled-courses-controls flex flex--align-center">
-          <div class="arrow">
-            <img (click)="previousEnrolledCourse()" [ngClass]="{ 'disabled': currentEnrolledCourse === 0 }" src="assets/icons/arrow-left.svg" alt="arrow-left">
+        <ng-container *ngIf="enrolledCourses.length > 0">
+          <div routerLink="/" class="enrolled-course" [ngStyle]="{'background-image': 'url(' + environment.HOST + enrolledCourses[currentEnrolledCourse].image + ')'}">
+            <h3 class="h2">{{ enrolledCourses[currentEnrolledCourse].title }}</h3>
           </div>
-          <div class="enrolled-courses-control-info">
-            <div>{{ currentEnrolledCourse + 1 }} / {{ enrolledCourses.length }}</div>
-            <div>COURSES</div>
+          <div class="enrolled-courses-controls flex flex--align-center">
+            <div class="arrow">
+              <img (click)="previousEnrolledCourse()" [ngClass]="{ 'disabled': currentEnrolledCourse === 0 }" src="assets/icons/arrow-left.svg" alt="arrow-left">
+            </div>
+            <div class="enrolled-courses-control-info">
+              <div>{{ currentEnrolledCourse + 1 }} / {{ enrolledCourses.length }}</div>
+              <div>COURSES</div>
+            </div>
+            <div class="arrow">
+              <img (click)="nextEnrolledCourse()" [ngClass]="{ 'disabled': currentEnrolledCourse === enrolledCourses.length - 1 }" src="assets/icons/arrow-right.svg" alt="arrow-right">
+            </div>
           </div>
-          <div class="arrow">
-            <img (click)="nextEnrolledCourse()" [ngClass]="{ 'disabled': currentEnrolledCourse === enrolledCourses.length - 1 }" src="assets/icons/arrow-right.svg" alt="arrow-right">
-          </div>
+        </ng-container>
+        <div class="no-courses" *ngIf="enrolledCourses.length < 1">
+          No courses
         </div>
       </div>
     </div>

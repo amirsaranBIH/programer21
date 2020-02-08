@@ -38,9 +38,13 @@ export class EditCourseComponent implements OnInit {
     this.editCourseForm = this.fb.group({
       title: [this.course.title, [Validators.required]],
       difficulty: [this.course.difficulty, [Validators.required]],
-      description: [this.course.description, [Validators.required]],
+      description: [this.course.description, [
+        Validators.required,
+        Validators.maxLength(200)
+      ]],
       price: [this.course.price, [Validators.required]],
       shortName: [this.course.shortName, [Validators.required]],
+      status: [this.course.status, [Validators.required]],
       color: [this.course.color, [Validators.required]],
       image: [this.course.image, [Validators.required]]
     });
@@ -68,6 +72,10 @@ export class EditCourseComponent implements OnInit {
     return this.editCourseForm.get('shortName');
   }
 
+  get status() {
+    return this.editCourseForm.get('status');
+  }
+
   get color() {
     return this.editCourseForm.get('color');
   }
@@ -92,10 +100,10 @@ export class EditCourseComponent implements OnInit {
     }
 
     fd.append('slug', this.titleToSlug.transform(this.editCourseForm.value.title));
+    fd.append('supportedLanguages', JSON.stringify(this.supportedLanguages));
 
-    this.courseService.editCourse(this.route.snapshot.params.course_id, fd).subscribe({
-      error: (err) => console.log(err),
-      complete: () => this.router.navigate(['/admin-panel'])
+    this.courseService.updateCourse(this.route.snapshot.params.course_id, fd).subscribe({
+      error: (err) => console.log(err)
     });
   }
 
@@ -130,6 +138,10 @@ export class EditCourseComponent implements OnInit {
 
       return true;
     });
+  }
+
+  removeSupportedLanguage(supportedLanguageIndex) {
+    this.supportedLanguages.splice(supportedLanguageIndex, 1);
   }
 
   deleteCourse() {

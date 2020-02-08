@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 import { ValidatorService } from 'src/app/services/validator.service';
+import { ActivatedRoute } from '@angular/router';
+import { UserService } from 'src/app/services/user.service';
+import { AuthenticationService } from 'src/app/services/authentication.service';
 
 @Component({
   selector: 'app-edit-user',
@@ -9,45 +12,57 @@ import { ValidatorService } from 'src/app/services/validator.service';
 })
 export class EditUserComponent implements OnInit {
   public editUserForm: FormGroup;
+  public user;
 
-  constructor(private fb: FormBuilder, private validators: ValidatorService) { }
+  constructor(
+    private fb: FormBuilder,
+    private validators: ValidatorService,
+    private route: ActivatedRoute,
+    private userService: UserService,
+    private authService: AuthenticationService
+  ) { }
 
   ngOnInit() {
+    this.user = this.route.snapshot.data.user;
+
     this.editUserForm = this.fb.group({
-      firstName: ['', [
+      id: this.user.id,
+      firstName: [this.user.firstName, [
         Validators.required,
         Validators.minLength(2),
         Validators.maxLength(16),
+        this.validators.NameValidator
       ]],
-      lastName: ['', [
+      lastName: [this.user.lastName, [
         Validators.required,
         Validators.minLength(2),
         Validators.maxLength(16),
+        this.validators.NameValidator
       ]],
-      username: ['', [
+      username: [this.user.username, [
         Validators.required,
         Validators.minLength(3),
         Validators.maxLength(16),
       ]],
-      role: ['user', [
+      role: [this.user.role, [
         Validators.required,
         Validators.pattern('(user|administrator|moderator)')
       ]],
-      emailVerified: [false, [
+      emailVerified: [this.user.verified, [
         Validators.required,
-        Validators.pattern('(true|false)')
+        Validators.pattern('(1|0)')
       ]],
-      email: ['', [
+      email: [this.user.email, [
         Validators.required,
         this.validators.EmailValidator
-      ], [this.validators.IsEmailTakenValidator.bind(this)]],
-      description: ['', [
+      ], [this.validators.IsEmailTakenWhileEditing.bind(this)]],
+      description: [this.user.description, [
         Validators.maxLength(200),
       ]],
-      city: ['', [
+      city: [this.user.city, [
         Validators.maxLength(50),
       ]],
-      gender: ['', [
+      gender: [this.user.gender, [
         Validators.pattern('(male|female|other)')
       ]]
     });
@@ -89,4 +104,16 @@ export class EditUserComponent implements OnInit {
     return this.editUserForm.get('gender');
   }
 
+  onSubmit(value) {
+    this.userService.updateUser(this.route.snapshot.params.user_id, value).subscribe({
+      error: (err) => console.log(err)
+    });
+  }
+
+  suspendUser() {
+    this.userService.suspendUser(this.route.snapshot.params.user_id).subscribe({
+      error: (err) => console.log(err),
+      complete: () => this.user.suspended = this.user.suspended === 1 ? 0 : 1
+    });
+  }
 }

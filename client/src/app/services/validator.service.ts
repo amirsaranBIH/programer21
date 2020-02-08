@@ -1,21 +1,29 @@
 import { Injectable } from '@angular/core';
 import { AbstractControl } from '@angular/forms';
 import { AuthenticationService } from './authentication.service';
+import { ActivatedRoute } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ValidatorService {
-  constructor(private authService: AuthenticationService) { }
+  constructor(private authService: AuthenticationService, private route: ActivatedRoute) { }
 
-  async IsEmailTakenValidator(control: AbstractControl) {
+  IsEmailTakenValidator = async (control: AbstractControl) => {
     const email = control.value;
     const isEmailTaken = await this.authService.isEmailTaken(email);
 
     return isEmailTaken ? { emailTaken: true } : null;
   }
 
-  async IsEmailInUseValidator(control: AbstractControl) {
+  async IsEmailTakenWhileEditing(control: AbstractControl) {
+    const email = control.value;
+    const isEmailTaken = await this.authService.isEmailTakenWhileEditing(this.route.snapshot.params.user_id, email);
+
+    return isEmailTaken ? { emailTaken: true } : null;
+  }
+
+  IsEmailInUseValidator = async (control: AbstractControl) => {
     const email = control.value;
     const isEmailInUse = await this.authService.isEmailTaken(email);
 
@@ -56,7 +64,6 @@ export class ValidatorService {
       return null;
     }
     if (password && confirmPassword && (password.value !== confirmPassword.value)) {
-      console.log(confirmPassword);
       return { passwordsNotMatching: true };
     } else {
       return null;

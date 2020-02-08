@@ -33,7 +33,7 @@ class LectureModel extends CI_model {
         $query = $this->db->query($sql, $courseId);
 
         if (!$query) {
-            log_message(1, $this->db->error()['message']);
+            log_message('error', $this->db->error()['message']);
             return false;
         }
 
@@ -70,7 +70,7 @@ class LectureModel extends CI_model {
         $query = $this->db->query($sql, $courseId);
 
         if (!$query) {
-            log_message(1, $this->db->error()['message']);
+            log_message('error', $this->db->error()['message']);
             return false;
         }
 
@@ -116,7 +116,7 @@ class LectureModel extends CI_model {
         ));
 
         if (!$query) {
-            log_message(1, $this->db->error()['message']);
+            log_message('error', $this->db->error()['message']);
             return false;
         }
 
@@ -151,7 +151,7 @@ class LectureModel extends CI_model {
         $query = $this->db->query($sql, $lectureId);
 
         if (!$query) {
-            log_message(1, $this->db->error()['message']);
+            log_message('error', $this->db->error()['message']);
             return false;
         }
 
@@ -182,7 +182,7 @@ class LectureModel extends CI_model {
         $query = $this->db->query($sql, $lectureSlug);
 
         if (!$query) {
-            log_message(1, $this->db->error()['message']);
+            log_message('error', $this->db->error()['message']);
             return false;
         }
 
@@ -217,7 +217,7 @@ class LectureModel extends CI_model {
         $query = $this->db->query($sql);
 
         if (!$query) {
-            log_message(1, $this->db->error()['message']);
+            log_message('error', $this->db->error()['message']);
             return false;
         }
 
@@ -231,6 +231,8 @@ class LectureModel extends CI_model {
     }
 
     public function createLecture($courseId, $lectureData) {
+        $this->db->trans_start();
+
         $sql = "SELECT
                     IF(MAX(orderIndex) + 1 IS NULL, 1, MAX(orderIndex) + 1) AS nextIOrderIndex
                 FROM
@@ -241,7 +243,7 @@ class LectureModel extends CI_model {
         $query = $this->db->query($sql, $courseId);
 
         if (!$query) {
-            log_message(1, $this->db->error()['message']);
+            log_message('error', $this->db->error()['message']);
             return false;
         }
 
@@ -276,12 +278,36 @@ class LectureModel extends CI_model {
             $nextIOrderIndex
         ));
 
+        $newlyCreatedLectureId = $this->db->insert_id();
+
         if (!$query) {
-            log_message(1, $this->db->error()['message']);
+            log_message('error', $this->db->error()['message']);
+            return false;
+        }    
+
+        $sql = "INSERT INTO
+                    course_lectures
+                (
+                    `courseId`,
+                    `lectureId`
+                ) VALUES
+                ( 
+                    ?, ?
+                )";
+
+        $query = $this->db->query($sql, array(
+            $courseId,
+            $newlyCreatedLectureId
+        ));
+
+        if (!$query) {
+            log_message('error', $this->db->error()['message']);
             return false;
         }
 
-        return $this->db->insert_id(); // Returns ID of newly created lecture
+        $this->db->trans_complete();
+
+        return $newlyCreatedLectureId; // Returns ID of newly created lecture
     }
 
     public function updateLecture($lectureId, $lectureData) {
@@ -308,7 +334,7 @@ class LectureModel extends CI_model {
         ));
 
         if (!$query) {
-            log_message(1, $this->db->error()['message']);
+            log_message('error', $this->db->error()['message']);
             return false;
         }
 
@@ -324,7 +350,7 @@ class LectureModel extends CI_model {
         $query = $this->db->query($sql, $lectureId);
 
         if (!$query) {
-            log_message(1, $this->db->error()['message']);
+            log_message('error', $this->db->error()['message']);
             return false;
         }
 

@@ -24,8 +24,8 @@
               </div>
               <h2>{{course.title}}</h2>
               <div class="course-info">
-                  <span>{{course.numberOfLectures}} {{course.numberOfLectures > 1 ? 'lectures' : 'lecture'}}</span>
-                  <span>{{course.totalErt}} {{course.totalErt > 1 ? 'hours' : 'hour'}}</span>
+                  <span>{{course.numberOfLectures}} {{course.numberOfLectures === 1 ? 'lecture' : 'lectures'}}</span>
+                  <span>{{course.totalErt}} {{course.totalErt === 1 ? 'hour' : 'hours'}}</span>
                   <span class="text--capitalize">{{course.difficulty}}</span>
               </div>
               <p>{{course.description | getSummary: 100}}</p>

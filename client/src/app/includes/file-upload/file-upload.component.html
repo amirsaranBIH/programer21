@@ -1,4 +1,8 @@
-<label for="file-upload" class="file-upload section flex">
+<label for="file-upload" class="file-upload section flex" (drop)="drop($event)" (dragover)="drag($event)" (drag)="drag($event)">
+    <div *ngIf="imagePreview !== ''" class="preview-image">
+        <img [src]="imagePreview" alt="preview-upload-image">
+        <div>Uploaded image preview</div>
+    </div>
     <div class="file-upload-content">
         <img src="assets/icons/cloud-upload.svg" alt="cloud-upload">
         <p class="text--center">{{ uploadText }}</p>

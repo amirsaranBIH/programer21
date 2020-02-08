@@ -38,7 +38,7 @@ export class SignupFormComponent implements OnInit {
       email: ['', [
         Validators.required,
         this.validators.EmailValidator
-      ], [this.validators.IsEmailTakenValidator.bind(this)]],
+      ], [this.validators.IsEmailTakenValidator]],
       password: ['', [
         Validators.required,
         Validators.minLength(8),

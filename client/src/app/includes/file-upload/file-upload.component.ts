@@ -12,6 +12,7 @@ export class FileUploadComponent implements OnInit {
   @Output() onFileUpload: EventEmitter<any> = new EventEmitter();
 
   @Input() uploadText = 'Upload Image';
+  @Input() imagePreview = '';
 
   constructor() { }
 
@@ -19,7 +20,35 @@ export class FileUploadComponent implements OnInit {
   }
 
   uploadFile(e) {
+    if (e.target.files && e.target.files[0]) {
+      const reader = new FileReader();
+
+      reader.onload = (event: any) => {
+        this.imagePreview = event.target.result;
+      };
+
+      reader.readAsDataURL(e.target.files[0]);
+    }
+
     this.onFileUpload.emit(e.target.files[0]);
+  }
+
+  drag(e) {
+    console.log('woorksl')
+    e.preventDefault();
+  }
+
+  drop(e) {
+    const reader = new FileReader();
+
+    reader.onload = (event: any) => {
+      this.imagePreview = event.target.result;
+    };
+
+    reader.readAsDataURL(e.dataTransfer.files[0]);
+
+    this.onFileUpload.emit(e.dataTransfer.files[0]);
+    e.preventDefault();
   }
 
 }

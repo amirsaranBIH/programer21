@@ -59,22 +59,30 @@ export class AdminPanelComponent implements OnInit {
 
   sortUsers(selectedSortField) {
     if (this.currentSortField === selectedSortField) {
-      this.currentSortDirection = this.currentSortDirection === 'up' ? 'down' : 'up';
+      if (this.currentSortDirection === 'up') {
+        this.currentSortDirection = 'down';
+      } else {
+        this.currentSortField = '';
+      }
     } else {
-      this.currentSortDirection = 'up';
       this.currentSortField = selectedSortField;
+      this.currentSortDirection = 'up';
     }
 
-    this.users.sort((a, b) => {
-      if ( a[this.currentSortField] < b[this.currentSortField] ) {
-        return this.currentSortDirection === 'up' ? -1 : 1;
-      }
+    if (this.currentSortField !== '') {
+      this.users.sort((a, b) => {
+        if ( a[this.currentSortField] < b[this.currentSortField] ) {
+          return this.currentSortDirection === 'up' ? -1 : 1;
+        }
 
-      if ( a[this.currentSortField] > b[this.currentSortField] ) {
-        return this.currentSortDirection === 'up' ? 1 : -1;
-      }
+        if ( a[this.currentSortField] > b[this.currentSortField] ) {
+          return this.currentSortDirection === 'up' ? 1 : -1;
+        }
 
-      return 0;
-    });
+        return 0;
+      });
+    } else {
+      this.users = JSON.parse(JSON.stringify(this.unfilteredUsers));
+    }
   }
 }

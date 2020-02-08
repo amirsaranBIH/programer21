@@ -23,7 +23,7 @@ export class LoginComponent implements OnInit {
       email: ['', [
         Validators.required,
         this.validators.EmailValidator
-      ], [this.validators.IsEmailInUseValidator.bind(this)]],
+      ], [this.validators.IsEmailInUseValidator]],
       password: ['', [Validators.required]]
     });
   }

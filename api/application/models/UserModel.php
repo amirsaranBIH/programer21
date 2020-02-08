@@ -36,7 +36,7 @@ class UserModel extends CI_model {
         $query = $this->db->query($sql);
 
         if (!$query) {
-            log_message(1, $this->db->error()['message']);
+            log_message('error', $this->db->error()['message']);
             return false;
         }
 
@@ -64,7 +64,10 @@ class UserModel extends CI_model {
                     gender,
                     suspended,
                     createdAt,
-                    updatedAt
+                    updatedAt,
+                    (SELECT COUNT(1) FROM user_courses WHERE user_courses.userId = users.id) AS enrolledCourses,
+                    (SELECT COUNT(1) FROM user_courses WHERE user_courses.userId = users.id AND user_courses.status = 'finished') AS finishedCourses,
+                    IF(emailVerifiedAt IS NULL, 0, 1) AS verified
                 FROM
                     users
                 WHERE
@@ -73,7 +76,7 @@ class UserModel extends CI_model {
         $query = $this->db->query($sql, $userId);
 
         if (!$query) {
-            log_message(1, $this->db->error()['message']);
+            log_message('error', $this->db->error()['message']);
             return false;
         }
 
@@ -95,7 +98,10 @@ class UserModel extends CI_model {
                     gender,
                     suspended,
                     createdAt,
-                    updatedAt
+                    updatedAt,
+                    (SELECT COUNT(1) FROM user_courses WHERE user_courses.userId = users.id) AS enrolledCourses,
+                    (SELECT COUNT(1) FROM user_courses WHERE user_courses.userId = users.id AND user_courses.status = 'finished') AS finishedCourses,
+                    IF(emailVerifiedAt IS NULL, 0, 1) AS verified
                 FROM
                     users
                 WHERE
@@ -104,7 +110,7 @@ class UserModel extends CI_model {
         $query = $this->db->query($sql, $username);
 
         if (!$query) {
-            log_message(1, $this->db->error()['message']);
+            log_message('error', $this->db->error()['message']);
             return false;
         }
 
@@ -124,7 +130,7 @@ class UserModel extends CI_model {
         $query = $this->db->query($sql, $userId);
 
         if (!$query) {
-            log_message(1, $this->db->error()['message']);
+            log_message('error', $this->db->error()['message']);
             return false;
         }
 
@@ -159,11 +165,52 @@ class UserModel extends CI_model {
         ));
 
         if (!$query) {
-            log_message(1, $this->db->error()['message']);
+            log_message('error', $this->db->error()['message']);
             return false;
         }
 
         return $this->db->insert_id(); // Returns id of newly created user
+    }
+
+    public function updateUser($userId, $userData) {
+        $sql = "UPDATE
+                    users
+                SET
+                    firstName = ?,
+                    lastName = ?,
+                    username = ?,
+                    email = ?,
+                    role = ?,
+                    description = ?,
+                    city = ?,
+                    gender = ?
+                WHERE
+                    id = ?";
+
+        $query = $this->db->query($sql, array(
+            $userData['firstName'],
+            $userData['lastName'],
+            $userData['username'],
+            $userData['email'],
+            $userData['role'],
+            $userData['description'],
+            $userData['city'],
+            $userData['gender'],
+            $userId
+        ));
+
+        if (!$query) {
+            log_message('error', $this->db->error()['message']);
+            return false;
+        }
+
+        if ($userData['emailVerified'] === '1') {
+            $this->verifyUserEmail($userId);
+        } else {
+            $this->unverifyUserEmail($userId);
+        }
+
+        return true;
     }
 
     public function updateUserFirstAndLastName($userId, $userData) {
@@ -182,7 +229,7 @@ class UserModel extends CI_model {
         ));
 
         if (!$query) {
-            log_message(1, $this->db->error()['message']);
+            log_message('error', $this->db->error()['message']);
             return false;
         }
 
@@ -203,7 +250,7 @@ class UserModel extends CI_model {
         ));
 
         if (!$query) {
-            log_message(1, $this->db->error()['message']);
+            log_message('error', $this->db->error()['message']);
             return false;
         }
 
@@ -228,7 +275,7 @@ class UserModel extends CI_model {
         ));
 
         if (!$query) {
-            log_message(1, $this->db->error()['message']);
+            log_message('error', $this->db->error()['message']);
             return false;
         }
 
@@ -251,7 +298,7 @@ class UserModel extends CI_model {
         ));
 
         if (!$query) {
-            log_message(1, $this->db->error()['message']);
+            log_message('error', $this->db->error()['message']);
             return false;
         }
 
@@ -270,7 +317,7 @@ class UserModel extends CI_model {
         $query = $this->db->query($sql, $userId);
 
         if (!$query) {
-            log_message(1, $this->db->error()['message']);
+            log_message('error', $this->db->error()['message']);
             return false;
         }
         
@@ -283,11 +330,11 @@ class UserModel extends CI_model {
         return true;
     }
 
-    public function suspendUser($userId) {
+    public function unverifyUserEmail($userId) {
         $sql = "UPDATE
                     users
                 SET
-                    suspended = 1
+                    emailVerifiedAt = NULL
                 WHERE
                     id = ?";
 
@@ -295,7 +342,26 @@ class UserModel extends CI_model {
         $query = $this->db->query($sql, $userId);
 
         if (!$query) {
-            log_message(1, $this->db->error()['message']);
+            log_message('error', $this->db->error()['message']);
+            return false;
+        }
+
+        return true;
+    }
+
+    public function suspendUser($userId) {
+        $sql = "UPDATE
+                    users
+                SET
+                    suspended = IF(users.suspended = 0, 1, 0)
+                WHERE
+                    id = ?";
+
+
+        $query = $this->db->query($sql, $userId);
+
+        if (!$query) {
+            log_message('error', $this->db->error()['message']);
             return false;
         }
 
@@ -317,7 +383,7 @@ class UserModel extends CI_model {
         ));
 
         if (!$query) {
-            log_message(1, $this->db->error()['message']);
+            log_message('error', $this->db->error()['message']);
             return false;
         }
 
@@ -350,7 +416,7 @@ class UserModel extends CI_model {
         $query = $this->db->query($sql, $userId);
 
         if (!$query) {
-            log_message(1, $this->db->error()['message']);
+            log_message('error', $this->db->error()['message']);
             return false;
         }
 
@@ -388,7 +454,7 @@ class UserModel extends CI_model {
         $query = $this->db->query($sql, $userId);
 
         if (!$query) {
-            log_message(1, $this->db->error()['message']);
+            log_message('error', $this->db->error()['message']);
             return false;
         }
 
@@ -415,7 +481,7 @@ class UserModel extends CI_model {
         $query = $this->db->query($sql, $userId);
 
         if (!$query) {
-            log_message(1, $this->db->error()['message']);
+            log_message('error', $this->db->error()['message']);
             return false;
         }
 
@@ -462,7 +528,7 @@ class UserModel extends CI_model {
         ));
 
         if (!$query) {
-            log_message(1, $this->db->error()['message']);
+            log_message('error', $this->db->error()['message']);
             return false;
         }
 
@@ -480,7 +546,7 @@ class UserModel extends CI_model {
 
         if (!$isCoursePublic) {
             $date = date('YYYY-MM-DD');
-            log_message(1, "User $userId tried enrolling in private course [$date]");
+            log_message('error', "User $userId tried enrolling in private course [$date]");
             return false;
         }
 
@@ -511,7 +577,7 @@ class UserModel extends CI_model {
         ));
 
         if (!$query) {
-            log_message(1, $this->db->error()['message']);
+            log_message('error', $this->db->error()['message']);
             return false;
         }
 
@@ -520,7 +586,7 @@ class UserModel extends CI_model {
 
     public function setNewTokenForUser($userId) {
         $sql = "UPDATE
-                    user
+                    users
                 SET
                     token = ?
                 WHERE
@@ -534,7 +600,7 @@ class UserModel extends CI_model {
         ));
 
         if (!$query) {
-            log_message(1, $this->db->error()['message']);
+            log_message('error', $this->db->error()['message']);
             return false;
         }
 

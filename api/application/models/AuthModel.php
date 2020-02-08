@@ -21,7 +21,7 @@ class AuthModel extends CI_model {
         $query = $this->db->query($sql, $email);
 
         if (!$query) {
-            log_message(1, $this->db->error()['message']);
+            log_message('error', $this->db->error()['message']);
             return false;
         }
 
@@ -53,7 +53,33 @@ class AuthModel extends CI_model {
         $query = $this->db->query($sql, $email);
 
         if (!$query) {
-            log_message(1, $this->db->error()['message']);
+            log_message('error', $this->db->error()['message']);
+            return false;
+        }
+
+        $emailTaken = $query->first_row()->emailTaken;
+        return array(
+            'emailTaken' => $emailTaken > 0
+        );
+    }
+
+    public function isEmailTakenWhileEditing($userId, $email) {
+        $sql = "SELECT
+                    COUNT(1) AS emailTaken
+                FROM
+                    users
+                WHERE
+                    email = ?
+                AND
+                    id != ?";
+
+        $query = $this->db->query($sql, array(
+            $email,
+            $userId
+        ));
+
+        if (!$query) {
+            log_message('error', $this->db->error()['message']);
             return false;
         }
 

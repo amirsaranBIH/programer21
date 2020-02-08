@@ -15,7 +15,10 @@
                             <div class="input-help flex flex--not-even flex--align-center">
                                 <div class="input-help-status"></div>
                                 <div class="input-help-message">
-                                    <span>First name is required!</span>
+                                    <span *ngIf="firstName.errors?.required">First name is required!</span>
+                                    <span *ngIf="firstName.errors?.nameNotValid && !firstName.errors?.required">First name can only have alphabetical characters!</span>
+                                    <span *ngIf="firstName.errors?.minlength && !firstName.errors?.nameNotValid">First name must be atleast {{ firstName.errors?.minlength.requiredLength }} characters long!</span>
+                                    <span *ngIf="firstName.errors?.maxlength && !firstName.errors?.nameNotValid">First name must be less than {{ firstName.errors?.maxlength.requiredLength }} characters long!</span>
                                 </div>
                             </div>
                         </div>
@@ -29,7 +32,10 @@
                             <div class="input-help flex flex--not-even flex--align-center">
                                 <div class="input-help-status"></div>
                                 <div class="input-help-message">
-                                    <span>Last name is required!</span>
+                                    <span *ngIf="lastName.errors?.required">Last name is required!</span>
+                                    <span *ngIf="lastName.errors?.nameNotValid && !lastName.errors?.required">Last name can only have alphabetical characters!</span>
+                                    <span *ngIf="lastName.errors?.minlength && !lastName.errors?.nameNotValid">Last name must be atleast {{ lastName.errors?.minlength.requiredLength }} characters long!</span>
+                                    <span *ngIf="lastName.errors?.maxlength && !lastName.errors?.nameNotValid">Last name must be less than {{ lastName.errors?.maxlength.requiredLength }} characters long!</span>
                                 </div>
                             </div>
                         </div>
@@ -45,7 +51,9 @@
                             <div class="input-help flex flex--not-even flex--align-center">
                                 <div class="input-help-status"></div>
                                 <div class="input-help-message">
-                                    <span>Username is required!</span>
+                                    <span *ngIf="username.errors?.required">Username is required!</span>
+                                    <span *ngIf="username.errors?.minlength">Username must be atleast {{ username.errors?.minlength.requiredLength }} characters long!</span>
+                                    <span *ngIf="username.errors?.maxlength">Username must be less than {{ username.errors?.maxlength.requiredLength }} characters long!</span>
                                 </div>
                             </div>
                         </div>
@@ -58,7 +66,9 @@
                             <div class="input-help flex flex--not-even flex--align-center">
                                 <div class="input-help-status"></div>
                                 <div class="input-help-message">
-                                    <span>Email is required!</span>
+                                    <span *ngIf="email.errors?.required">Email is required!</span>
+                                    <span *ngIf="email.errors?.notValidEmail && !email.errors?.required">Email is invalid!</span>
+                                    <span *ngIf="email.errors?.emailTaken && !email.errors?.required">An account with that email has been registered!</span>
                                 </div>
                             </div>
                         </div>
@@ -87,8 +97,8 @@
                         <div class="input-group"
                             [ngClass]="{ 'is-invalid' : (emailVerified.invalid && emailVerified.touched) || (emailVerified.invalid && ngForm.submitted) }">
                             <select formControlName="emailVerified" id="emailVerified">
-                                <option value="true">Yes</option>
-                                <option value="false">No</option>
+                                <option value="1">Yes</option>
+                                <option value="0">No</option>
                             </select>
                             <div class="input-help flex flex--not-even flex--align-center">
                                 <div class="input-help-status"></div>
@@ -107,7 +117,7 @@
                     <label for="description">User Description</label>
                     <div class="input-group"
                         [ngClass]="{ 'is-invalid' : (description.invalid && description.touched) || (description.invalid && ngForm.submitted) }">
-                        <textarea name="description" id="description" cols="30" rows="5"
+                        <textarea formControlName="description" id="description" cols="30" rows="5"
                             placeholder="User Description"></textarea>
                         <div class="input-help flex flex--not-even flex--align-center">
                             <div class="input-help-status"></div>
@@ -151,14 +161,14 @@
                     </div>
                 </div>
             </div>
+            <div class="flex flex--not-even flex--between flex--align-center margin-top">
+                <div>
+                    <button type="submit" class="button button--large button--update" [disabled]="ngForm.submitted && ngForm.invalid">Update User</button>
+                </div>
+                <div>
+                    <button type="button" (click)="suspendUser()" class="button button--large button--delete">{{ user.suspended ? 'Unsuspend User' : 'Suspend User' }}</button>
+                </div>
+            </div>
         </form>
-        <div class="flex flex--not-even flex--between flex--align-center margin-top">
-            <div>
-                <button type="submit" class="button button--large button--update">Update User</button>
-            </div>
-            <div>
-                <button class="button button--large button--delete">Suspend User</button>
-            </div>
-        </div>
     </div>
   </div>

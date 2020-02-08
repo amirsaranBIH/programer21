@@ -153,4 +153,14 @@
     .course-delete-reminder {
         margin-top: .25em;
     }
+
+    .no-lectures {
+        color: $black;
+
+        img {
+            margin: 0 auto;
+            display: block;
+            width: 50px;
+        }
+    }
 }

@@ -53,4 +53,14 @@ export class AuthenticationService {
         }
       });
   }
+
+  public async isEmailTakenWhileEditing(userId, email: string): Promise<boolean> {
+    return await this.http.post(environment.HOST + '/api/auth/isEmailTakenWhileEditing/' + userId, { email })
+      .toPromise()
+      .then((res: any) => {
+        if (res.status) {
+          return res.data;
+        }
+      });
+  }
 }

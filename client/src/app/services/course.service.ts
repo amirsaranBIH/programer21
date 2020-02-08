@@ -32,8 +32,8 @@ export class CourseService {
     return this.http.post('/api/course/createCourse', data);
   }
 
-  editCourse(courseId, data) {
-    return this.http.post(`/api/course/edit/${courseId}`, data);
+  updateCourse(courseId, data) {
+    return this.http.post(`/api/course/updateCourse/${courseId}`, data);
   }
 
   deleteCourse(courseId) {
