@@ -1,123 +1,118 @@
  <div class="container">
   <div class="dashboard">
-    <div class="dashboard__section dashboard__user">
-      <div class="dashboard__user__content">
-        <img [src]="user.picture" alt="{{user.first_name}} {{user.last_name}}">
-        <h3 class="dashboard__user__content__name"><span>{{user.first_name}} {{user.last_name}}</span></h3>
-        <p class="dashboard__user__content__role">{{user.role}}</p>
-        <p class="dashboard__user__content__email">{{user.email}}</p>
+    <div class="user-details">
+      <div class="flex flex--not-even flex--align-center">
+        <div class="user-image">
+          <img [src]="user.image" [alt]="user.username">
+        </div>
+        <div class="user-account-details">
+          <h1 class="h2">{{ user.firstName }} {{ user.lastName }}</h1>
+          <div class="user-username">@{{ user.username }}</div>
+          <div class="user-role h4 text--capitalize">{{ user.role }}</div>
+        </div>
       </div>
     </div>
-    <div class="dashboard__section dashboard__pick">
-      <ul class="dashboard__pick__list" *ngIf="user.coursesEnrolledIn?.length > 0">
-        <li class="dashboard__pick__list-item" *ngFor="let course of user.coursesEnrolledIn; let courseIndex = index"
-          [ngStyle]="{'flex': activeCoursePicked === courseIndex ? '1' : 'unset'}" [style.background-image]="'url(' + course.course.image + ')'">
-          <div class="dashboard__pick__list-item__content">
-            <h3 class="dashboard__pick__list-item__heading">{{course.course.title}}</h3>
-            <p class="dashboard__pick__list-item__complete-percentage">{{percentCompleted}}% COMPLETE</p>
+    <div class="course-activity">
+      <h2 class="image-heading">
+        <img src="assets/icons/activity.svg" alt="activity"> 
+        <span>Course Activity</span>
+      </h2>
+      <div class="section">
+        <div class="course-activity-graph">
+          <svg  viewBox="0 0 20 20">
+            <circle r="10" cx="10" cy="10" fill="white" />
+            <circle *ngFor="let p of courseActivityPercentages; let i = index" [attr.r]="5" [attr.cx]="10" [attr.cy]="10" [attr.fill]="'transparent'"
+                    [attr.stroke]="p.color"
+                    [attr.stroke-width]="10"
+                    [attr.stroke-dasharray]="'calc(' + p.percentage + ' * 31.4 / 100) 31.4'"
+                    [attr.transform]="'rotate(' + p.offset + ', 10, 10)'"
+                    [style.z-index]="1000" />
+          </svg>
+        </div>
+        <div class="course-activity-legend flex flex--not-even flex--between flex--align-center">
+          <div class="course-activity-course flex flex--align-center">
+            <span class="course-activity-color"></span>
+            <span class="course-activity-name"><a class="link" routerLink="/">HTML</a></span>
           </div>
-        </li>
-      </ul>
-      <i *ngIf="user.coursesEnrolledIn?.length > 0" class="fa fa-angle-left dashboard__pick__list__arrow-previous" (click)="previousCoursePicked()"></i>
-      <i *ngIf="user.coursesEnrolledIn?.length > 0" class="fa fa-angle-right dashboard__pick__list__arrow-next" (click)="nextCoursePicked()"></i>
-      <ul *ngIf="user.coursesEnrolledIn?.length < 1" class="dashboard__pick__list">
-        <p class="no-content text-center">
-          <i class="fa fa-frown-o"></i>
-          No courses yet
-        </p>
-      </ul>
+          <div class="course-activity-course flex flex--align-center">
+            <span class="course-activity-color"></span>
+            <span class="course-activity-name"><a class="link" routerLink="/">CSS</a></span>
+          </div>
+          <div class="course-activity-course flex flex--align-center">
+            <span class="course-activity-color"></span>
+            <span class="course-activity-name"><a class="link" routerLink="/">JS</a></span>
+          </div>
+        </div>
+      </div>
     </div>
-    <div class="dashboard__section dashboard__list">
-      <ul class="dashboard__list--modules">
-        <li [ngClass]="{'active': activeModule === moduleIndex}"
-          *ngFor="let module of user.coursesEnrolledIn[activeCoursePicked]?.course?.modules; let moduleIndex = index">
-          <div (click)="changeActiveModulePicked(moduleIndex)" class="dashboard__list__item__header flex flex--between">
-            <span>
-              <i
-                *ngIf="user.coursesEnrolledIn[activeCoursePicked]?.currentModuleIndex > moduleIndex ||
-                user.coursesEnrolledIn[activeCoursePicked]?.finished"
-                class="fa fa-check"
-              ></i>
-              <i
-                *ngIf="user.coursesEnrolledIn[activeCoursePicked]?.currentModuleIndex === moduleIndex &&
-                !user.coursesEnrolledIn[activeCoursePicked]?.finished"
-                class="fa fa-book"
-              ></i>
-              {{ module.title }}
-            </span>
-            <i [ngClass]="{'fa-angle-left': activeModule === moduleIndex, 'fa-angle-down': activeModule !== moduleIndex}"
-                  class="fa"></i>
+    <div class="enrolled-courses flex flex--not-even flex--column">
+      <div class="flex flex--not-even flex--between flex--align-center">
+        <h2 class="image-heading">
+          <img src="assets/icons/enrolled-courses.svg" alt="enrolled-courses">
+          <span>Enrolled Courses</span>
+        </h2>
+        <div>
+          <a class="link" routerLink="/">Check out all the courses</a>
+        </div>
+      </div>
+      <div class="enrolled-courses-list">
+        <div routerLink="/" class="enrolled-course" [ngStyle]="{'background-image': 'url(' + environment.HOST + enrolledCourses[currentEnrolledCourse].image + ')'}">
+          <h3 class="h2">{{ enrolledCourses[currentEnrolledCourse].title }}</h3>
+        </div>
+        <div class="enrolled-courses-controls flex flex--align-center">
+          <div class="arrow">
+            <img (click)="previousEnrolledCourse()" [ngClass]="{ 'disabled': currentEnrolledCourse === 0 }" src="assets/icons/arrow-left.svg" alt="arrow-left">
           </div>
-          <div *ngIf="activeModule === moduleIndex" class="dashboard__list__item-content">
-            <div class="dashboard__list__module-content">
-                <h4>{{ module.title }}</h4>
-                <p>{{ module.description }}</p>
-                <div class="flex flex--end">
-                  <button
-                    class="button button--small margin-right"
-                    (click)="skipModule()"
-                    *ngIf="user.coursesEnrolledIn[activeCoursePicked]?.currentModuleIndex === moduleIndex &&
-                    !user.coursesEnrolledIn[activeCoursePicked]?.finished"
-                    [disabled]="!module.skippable"
-                  >{{module.skippable ? 'Skip module' : 'Not Skippable'}}</button>
-                </div>
-            </div>
-            <ul class="dashboard__list dashboard__list--lectures">
-              <li [ngClass]="{'active': activeLecture === lectureIndex}"
-                *ngFor="let lecture of user.coursesEnrolledIn[activeCoursePicked]?.course?.modules[activeModule]?.lectures; let lectureIndex = index">
-                <div (click)="changeActiveLecturePicked(lectureIndex)"
-                  class="dashboard__list--lectures__item__header flex flex--between">
-                  <span>
-                    <i
-                      *ngIf="user.coursesEnrolledIn[activeCoursePicked]?.currentModuleIndex > moduleIndex ||
-                      (user.coursesEnrolledIn[activeCoursePicked]?.currentModuleIndex === moduleIndex &&
-                      user.coursesEnrolledIn[activeCoursePicked]?.currentLectureIndex > lectureIndex) ||
-                      user.coursesEnrolledIn[activeCoursePicked]?.finished"
-                      class="fa fa-check"
-                    ></i>
-                    <i
-                      *ngIf="user.coursesEnrolledIn[activeCoursePicked]?.currentModuleIndex === moduleIndex &&
-                      user.coursesEnrolledIn[activeCoursePicked]?.currentLectureIndex === lectureIndex &&
-                      !user.coursesEnrolledIn[activeCoursePicked]?.finished"
-                      class="fa fa-book"
-                    ></i>
-                    {{ lecture.title }}
-                  </span>
-                  <i [ngClass]="{'fa-angle-left': activeLecture === lectureIndex, 'fa-angle-down': activeLecture !== lectureIndex}"
-                    class="fa"></i>
-                </div>
-                <div *ngIf="activeLecture === lectureIndex" class="dashboard__list__item-content">
-                  <div class="dashboard__list__module-content">
-                      <h4>{{ lecture.title }}</h4>
-                      <p>{{ lecture.description }}</p>
-                      <div class="flex flex--end">
-                        <button
-                          class="button button--small margin-right"
-                          (click)="skipLecture()"
-                          *ngIf="(user.coursesEnrolledIn[activeCoursePicked]?.currentModuleIndex === moduleIndex &&
-                          user.coursesEnrolledIn[activeCoursePicked]?.currentLectureIndex === lectureIndex) &&
-                          !user.coursesEnrolledIn[activeCoursePicked]?.finished"
-                          [disabled]="!lecture.skippable"
-                        >{{lecture.skippable ? 'Skip lecture' : 'Not Skippable'}}</button>
-                        <button
-                          class="button button--small"
-                          [routerLink]="['/lecture', lecture.slug]"
-                          *ngIf="(user.coursesEnrolledIn[activeCoursePicked]?.currentModuleIndex > moduleIndex ||
-                          (user.coursesEnrolledIn[activeCoursePicked]?.currentModuleIndex >= moduleIndex &&
-                          user.coursesEnrolledIn[activeCoursePicked]?.currentLectureIndex >= lectureIndex)) ||
-                          user.coursesEnrolledIn[activeCoursePicked]?.finished"
-                        >View lecture</button>
-                      </div>
-                  </div>
-                </div>
-              </li>
-              <p *ngIf="user.coursesEnrolledIn[activeCoursePicked]?.course?.modules[activeModule]?.lectures.length < 1"
-                class="no-content text-center"><i class="fa fa-frown-o"></i>No lectures yet</p>
-            </ul>
+          <div class="enrolled-courses-control-info">
+            <div>{{ currentEnrolledCourse + 1 }} / {{ enrolledCourses.length }}</div>
+            <div>COURSES</div>
           </div>
-        </li>
-        <p *ngIf="user.coursesEnrolledIn[activeCoursePicked]?.course?.modules.length < 1" class="no-content text-center"><i class="fa fa-frown-o"></i>No modules yet</p>
-      </ul>
+          <div class="arrow">
+            <img (click)="nextEnrolledCourse()" [ngClass]="{ 'disabled': currentEnrolledCourse === enrolledCourses.length - 1 }" src="assets/icons/arrow-right.svg" alt="arrow-right">
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="latest-lectures flex flex--not-even flex--column">
+      <h2 class="image-heading"><img src="assets/icons/latest-lectures.svg" alt="latest-lectures"> Latest Lectures</h2>
+      <div class="section">
+        <div class="latest-lectures-list">
+          <li class="latest-lecture">
+            <h3 class="link"><a routerLink="/">HTML For Absolute Beginners</a></h3>
+            <span>Finished at February 29, 2020</span>
+          </li>
+          <li class="latest-lecture">
+            <h3 class="link"><a routerLink="/">HTML For Absolute Beginners</a></h3>
+            <span>Finished at February 29, 2020</span>
+          </li>
+          <li class="latest-lecture">
+            <h3 class="link"><a routerLink="/">HTML For Absolute Beginners</a></h3>
+            <span>Finished at February 29, 2020</span>
+          </li>
+          <li class="latest-lecture">
+            <h3 class="link"><a routerLink="/">HTML For Absolute Beginners</a></h3>
+            <span>Finished at February 29, 2020</span>
+          </li>
+          <li class="latest-lecture">
+            <h3 class="link"><a routerLink="/">HTML For Absolute Beginners</a></h3>
+            <span>Finished at February 29, 2020</span>
+          </li>
+        </div>
+      </div>
+    </div>
+    <div class="monthly-activity flex flex--not-even flex--column">
+      <h2 class="image-heading"><img src="assets/icons/activity.svg" alt="activity"> Monthly Activity</h2>
+      <div class="section flex flex--not-even flex--column">
+        <div class="current-month h3">
+          <span class="image-heading flex--center"><img src="assets/icons/date.svg" alt="date"> January 2020</span>
+        </div>
+        <div class="monthly-activity-days flex">
+          <div class="monthly-activity-day text--center flex flex--column flex--not-even flex--end" *ngFor="let day of monthlyActivityDays; let i = index">
+            <div class="monthly-activity-bar" [ngStyle]="{ 'height': day + '%' }"></div>
+            <span class="day text--small">{{(i + 1).toString().padStart(2, '0')}}</span>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </div>

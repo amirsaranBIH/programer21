@@ -1,8 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { environment } from 'src/environments/environment';
 import { ActivatedRoute } from '@angular/router';
-import { CourseService } from '../services/course.service';
-import { ModuleService } from '../services/module.service';
-import { LectureService } from '../services/lecture.service';
 
 @Component({
   selector: 'app-admin-panel',
@@ -11,80 +9,72 @@ import { LectureService } from '../services/lecture.service';
 })
 export class AdminPanelComponent implements OnInit {
   public courses = [];
-  public selectedCourse = 0;
-  public selectedModule = 0;
-  public selectedLecture = 0;
-
-  public activeCourse = -1;
-  public activeModule = -1;
-  public activeLecture = -1;
+  public currentCourse = 0;
+  public users = [];
+  public unfilteredUsers = [];
+  public searchInput = '';
+  public roleFilter = '';
+  public verifiedFilter = '';
+  public currentSortField = '';
+  public currentSortDirection = 'up';
+  public environment = environment;
 
   constructor(
-    private route: ActivatedRoute,
-    private courseService: CourseService,
-    private moduleService: ModuleService,
-    private lectureService: LectureService
+    private route: ActivatedRoute
   ) {}
 
   ngOnInit() {
+    this.users = this.route.snapshot.data.users;
+
+    this.unfilteredUsers = JSON.parse(JSON.stringify(this.users));
+
     this.courses = this.route.snapshot.data.courses;
-    console.log(this.courses);
   }
 
-  changeSelectedCourse(newIndex) {
-    this.selectedCourse = newIndex;
-    this.selectedModule = 0;
-    this.selectedLecture = 0;
-    this.activeCourse = this.activeCourse === newIndex ? -1 : newIndex;
-    this.activeModule = -1;
-    this.activeLecture = -1;
+  previousCourse() {
+    this.currentCourse--;
   }
 
-  changeSelectedModule(newIndex) {
-    this.selectedModule = newIndex;
-    this.selectedLecture = 0;
-    this.activeModule = this.activeModule === newIndex ? -1 : newIndex;
-    this.activeLecture = -1;
+  nextCourse() {
+    this.currentCourse++;
   }
 
-  changeSelectedLecture(newIndex) {
-    this.selectedLecture = newIndex;
-    this.activeLecture = this.activeLecture === newIndex ? -1 : newIndex;
+  filterUsers() {
+    this.users = this.unfilteredUsers.filter(user => {
+      if (this.searchInput !== '' && !user.name.match(new RegExp(this.searchInput, 'i'))) {
+        return false;
+      }
+
+      if (this.roleFilter !== '' && user.role !== this.roleFilter) {
+        return false;
+      }
+
+      if (this.verifiedFilter !== '' && user.verified.toString() !== this.verifiedFilter) {
+        return false;
+      }
+
+      return true;
+    });
   }
 
-  deleteCourse(courseId, courseIndex) {
-    if (confirm('Are you sure?')) {
-      this.courseService.deleteCourse(courseId).subscribe({
-        error: (err) => console.log(err),
-        complete: () => {
-          this.courses.splice(courseIndex, 1);
-          this.activeCourse = -1;
-        }
-      });
+  sortUsers(selectedSortField) {
+    if (this.currentSortField === selectedSortField) {
+      this.currentSortDirection = this.currentSortDirection === 'up' ? 'down' : 'up';
+    } else {
+      this.currentSortDirection = 'up';
+      this.currentSortField = selectedSortField;
     }
-  }
 
-  deleteModule(moduleId, courseIndex, moduleIndex) {
-    if (confirm('Are you sure?')) {
-      this.moduleService.deleteModule(moduleId).subscribe({
-        error: (err) => console.log(err),
-        complete: () => {
-          this.courses[courseIndex].modules.splice(moduleIndex, 1);
-          this.activeModule = -1;
-        }
-      });
-    }
-  }
+    this.users.sort((a, b) => {
+      if ( a[this.currentSortField] < b[this.currentSortField] ) {
+        return this.currentSortDirection === 'up' ? -1 : 1;
+      }
 
-  deleteLecture(lectureId, courseIndex, moduleIndex, lectureIndex) {
-    if (confirm('Are you sure?')) {
-      this.lectureService.deleteLecture(lectureId).subscribe({
-        error: (err) => console.log(err),
-        complete: () => {
-          this.courses[courseIndex].modules[moduleIndex].lectures.splice(lectureIndex, 1);
-          this.activeLecture = -1;
-        }
-      });
-    }
+      if ( a[this.currentSortField] > b[this.currentSortField] ) {
+        return this.currentSortDirection === 'up' ? 1 : -1;
+      }
+
+      return 0;
+    });
   }
 }

@@ -1,71 +1,14 @@
 import { Component, OnInit } from '@angular/core';
-import { AuthenticationService, TokenPayload } from '../services/authentication.service';
-import { Router } from '@angular/router';
-import { FormBuilder, Validators, FormGroup } from '@angular/forms';
-import { ValidatorService } from '../services/validator.service';
 
 @Component({
   templateUrl: './signup.component.html',
   styleUrls: ['./signup.component.scss']
 })
 export class SignupComponent implements OnInit {
-  public signupForm: FormGroup;
 
-  constructor(private authService: AuthenticationService, private router: Router, private fb: FormBuilder, private validators: ValidatorService) {}
+  constructor() {}
 
   ngOnInit() {
-    this.signupForm = this.fb.group({
-      first_name: ['', [
-        Validators.required,
-        Validators.minLength(1),
-        Validators.maxLength(16),
-      ]],
-      last_name: ['', [
-        Validators.required,
-        Validators.minLength(1),
-        Validators.maxLength(16),
-      ]],
-      email: ['', [
-        Validators.required,
-        this.validators.EmailValidator
-      ], [this.validators.IsEmailTakenValidator.bind(this)]],
-      password: ['', [
-        Validators.required,
-        Validators.minLength(8),
-        this.validators.PasswordValidator
-      ]],
-      confirmPassword: ['', [
-        Validators.required
-      ]]
-    }, {
-        validator: this.validators.ConfirmPasswordValidator
-      });
   }
 
-  get first_name() {
-    return this.signupForm.get('first_name');
-  }
-
-  get last_name() {
-    return this.signupForm.get('last_name');
-  }
-
-  get email() {
-    return this.signupForm.get('email');
-  }
-
-  get password() {
-    return this.signupForm.get('password');
-  }
-
-  get confirmPassword() {
-    return this.signupForm.get('confirmPassword');
-  }
-
-  onSubmit(credentials: TokenPayload) {
-    this.authService.signup(credentials).subscribe({
-      error: err => console.log(err),
-      complete: () => this.router.navigate(['/dashboard'])
-    });
-  }
 }

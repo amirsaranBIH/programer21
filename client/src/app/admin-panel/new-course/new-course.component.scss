@@ -1,0 +1,75 @@
+@import '../../../styles';
+
+.new-course {
+    .color-picker {
+        label {
+            height: 54px;
+            width: 54px;
+            background-color: $black;
+            margin-left: 1em;
+            cursor: pointer;
+        }
+
+        img {
+            height: 25px;
+            width: 25px;
+            margin: auto;
+        }
+    }
+
+    .color-group-label {
+        display: inline-block;
+        margin-bottom: .5em;
+    }
+
+    .color-input-group {
+        input {
+            flex: 1;
+        }
+
+        input {
+            margin: 0;
+        }
+    }
+
+    .supported-language-group {
+        flex: 1;
+    }
+
+    .add-language-button {
+        margin: auto;
+        
+        button {
+            height: 54px;
+            width: 54px;
+            border: 0;
+            background-color: $green;
+            cursor: pointer;
+
+            img {
+                height: 25px;
+                width: 25px;
+            }
+        }
+    }
+
+    .supported-languages-list {
+        .supported-language {
+            background-color: $green;
+            padding: .5em;
+            
+            span {
+                color: white;
+            }
+
+            img {
+                width: 15px;
+                margin-left: .5em;
+            }
+        }
+        
+        .supported-language + .supported-language {
+            margin-left: 1em;
+        }
+    }
+}

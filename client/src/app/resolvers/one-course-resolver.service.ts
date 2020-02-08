@@ -9,7 +9,7 @@ export class OneCourseResolverService implements Resolve<any> {
   constructor(private courseService: CourseService) { }
 
   resolve(route: ActivatedRouteSnapshot) {
-    return this.courseService.getCourseById(route.paramMap.get('course_id'));
+    return this.courseService.getCourseById(route.paramMap.get('course_id')).then((res: any) => res.data);
   }
 
 }

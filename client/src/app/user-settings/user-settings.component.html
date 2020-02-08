@@ -1,0 +1,193 @@
+<div class="container">
+    <div class="user-settings">
+        <h2>Account Information</h2>
+        <div class="section section--large">
+            <form class="form" [formGroup]="accountInfoForm" #ngForm="ngForm" action="signup" method="POST"
+                (ngSubmit)="onSubmit(accountInfoForm.value)">
+                <div class="flex flex--not-even">
+                    <div class="image-upload flex flex--column flex--align-center">
+                        <img src="assets/images/default_profile_picture.png" alt="default-profile-picture">
+                        <label for="file-upload" class="flex flex--not-even flex--align-center">
+                            <img src="assets/icons/file-upload.svg" alt="file-upload">
+                            <span>Upload profile image</span>
+                            <input type="file" id="file-upload" accept=".png,.jpg,.jpeg,.gif" hidden (change)="uploadFile($event)">
+                        </label>
+                    </div>
+                    <div class="fullname">
+                        <div class="form-group">
+                            <label for="firstName" class="required">First Name</label>
+                            <div class="input-group"
+                                [ngClass]="{ 'is-invalid' : (firstName.invalid && firstName.touched) || (firstName.invalid && ngForm.submitted) }">
+                                <input type="text" id="firstName" formControlName="firstName"
+                                    placeholder="What's your first name">
+                                <div class="input-help flex flex--not-even flex--align-center">
+                                    <div class="input-help-status"></div>
+                                    <div class="input-help-message">
+                                        <span>First name is required!</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="lastName" class="required">Last Name</label>
+                            <div class="input-group"
+                                [ngClass]="{ 'is-invalid' : (lastName.invalid && lastName.touched) || (lastName.invalid && ngForm.submitted) }">
+                                <input type="text" id="lastName" formControlName="lastName"
+                                    placeholder="What's your last name">
+                                <div class="input-help flex flex--not-even flex--align-center">
+                                    <div class="input-help-status"></div>
+                                    <div class="input-help-message">
+                                        <span>Last name is required!</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex margin-top">
+                    <div class="form-group">
+                        <label for="username" class="required">Username</label>
+                        <div class="input-group"
+                            [ngClass]="{ 'is-invalid' : (username.invalid && username.touched) || (username.invalid && ngForm.submitted) }">
+                            <input class="username-input" type="text" id="username" formControlName="username"
+                                placeholder="What you want to be know as on Programer21">
+                            <div class="input-help flex flex--not-even flex--align-center">
+                                <div class="input-help-status"></div>
+                                <div class="input-help-message">
+                                    <span>Username is required!</span>
+                                </div>
+                            </div>
+                        </div>
+                        <p class="can-change-username text--right">Can change again in: 28 days</p>
+                    </div>
+                    <div class="form-group">
+                        <label for="email" class="required">Email</label>
+                        <div class="input-group"
+                            [ngClass]="{ 'is-invalid' : (email.invalid && email.touched) || (email.invalid && ngForm.submitted) }">
+                            <input class="email-input" type="email" id="email" formControlName="email"
+                                placeholder="Your email address">
+                            <div class="input-help flex flex--not-even flex--align-center">
+                                <div class="input-help-status"></div>
+                                <div class="input-help-message">
+                                    <span>Email is required!</span>
+                                </div>
+                            </div>
+                        </div>
+                        <p class="email-verified flex flex--not-even flex--align-center flex--end">
+                            <img src="assets/icons/verified-user.svg" alt="verified-user">
+                            <span>Email verified</span>
+                        </p>
+                    </div>
+                </div>
+                <button type="submit" class="button button--update margin-top--small">Update Account</button>
+            </form>
+        </div>
+
+        <h2 class="margin-top">Additional Information</h2>
+        <div class="section section--large">
+            <form class="form" [formGroup]="additionalInfoForm" #ngForm="ngForm" action="signup" method="POST"
+                (ngSubmit)="onSubmit(additionalInfoForm.value)">
+                <div class="form-group">
+                    <label for="description">User Description</label>
+                    <div class="input-group"
+                        [ngClass]="{ 'is-invalid' : (description.invalid && description.touched) || (description.invalid && ngForm.submitted) }">
+                        <textarea name="description" id="description" cols="30" rows="5"
+                            placeholder="User Description"></textarea>
+                        <div class="input-help flex flex--not-even flex--align-center">
+                            <div class="input-help-status"></div>
+                            <div class="input-help-message">
+                                <span>Description must be contain less than 200 characters!</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex">
+                    <div class="form-group">
+                        <label for="city">City</label>
+                        <div class="input-group"
+                            [ngClass]="{ 'is-invalid' : (city.invalid && city.touched) || (city.invalid && ngForm.submitted) }">
+                            <input type="text" id="city" formControlName="city" placeholder="Enter city">
+                            <div class="input-help flex flex--not-even flex--align-center">
+                                <div class="input-help-status"></div>
+                                <div class="input-help-message">
+                                    <span>Description must be contain less than 50 characters!</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="gender">Gender</label>
+                        <div class="input-group"
+                            [ngClass]="{ 'is-invalid' : (gender.invalid && gender.touched) || (gender.invalid && ngForm.submitted) }">
+                            <select formControlName="gender" id="gender">
+                                <option value="">Select Gender</option>
+                                <option value="male">Male</option>
+                                <option value="female">Female</option>
+                                <option value="other">Other</option>
+                            </select>
+                            <div class="input-help flex flex--not-even flex--align-center">
+                                <div class="input-help-status"></div>
+                                <div class="input-help-message">
+                                    <span>Gender can only be Male, Female and Other!</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <button type="submit" class="button button--update margin-top--small">Update Account</button>
+            </form>
+        </div>
+
+        <h2 class="margin-top">Change Password</h2>
+        <div class="section section--large">
+            <form class="form" [formGroup]="changePasswordForm" #ngForm="ngForm" action="signup" method="POST"
+                (ngSubmit)="onSubmit(changePasswordForm.value)">
+                <div class="form-group">
+                    <label for="description">New Password</label>
+                    <div class="input-group"
+                        [ngClass]="{ 'is-invalid' : (newPassword.invalid && newPassword.touched) || (newPassword.invalid && ngForm.submitted) }">
+                        <input type="text" id="newPassword" formControlName="newPassword"
+                            placeholder="Enter new password" autocomplete="new-password">
+                        <div class="input-help flex flex--not-even flex--align-center">
+                            <div class="input-help-status"></div>
+                            <div class="input-help-message">
+                                <span>Password is required!</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex">
+                    <div class="form-group">
+                        <label for="password">Old Password</label>
+                        <div class="input-group"
+                            [ngClass]="{ 'is-invalid' : (password.invalid && password.touched) || (password.invalid && ngForm.submitted) }">
+                            <input type="password" id="password" formControlName="password"
+                                placeholder="Your old password" autocomplete="new-password">
+                            <div class="input-help flex flex--not-even flex--align-center">
+                                <div class="input-help-status"></div>
+                                <div class="input-help-message">
+                                    <span>Password is required!</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="confirmPassword">Confirm Old Password</label>
+                        <div class="input-group"
+                            [ngClass]="{ 'is-invalid' : (confirmPassword.invalid && confirmPassword.touched) || (confirmPassword.invalid && ngForm.submitted) }">
+                            <input type="password" id="confirmPassword" formControlName="confirmPassword"
+                                placeholder="Confirm old password">
+                            <div class="input-help flex flex--not-even flex--align-center">
+                                <div class="input-help-status"></div>
+                                <div class="input-help-message">
+                                    <span>Please confirm password!</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <button type="submit" class="button button--update margin-top--small">Change Password</button>
+            </form>
+        </div>
+    </div>
+</div>

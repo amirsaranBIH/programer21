@@ -5,8 +5,8 @@
 export const environment = {
   production: false,
   HOST_URL: 'http://localhost',
-  HOST_PORT: 3000,
-  HOST: 'http://localhost:3000/',
+  HOST_PORT: 4201,
+  HOST: 'http://localhost:4200',
 
   UPLOAD_FOLDER: 'uploads/'
 };

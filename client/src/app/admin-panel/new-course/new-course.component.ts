@@ -10,8 +10,10 @@ import { TitleToSlugPipe } from 'src/app/pipes/title-to-slug.pipe';
   styleUrls: ['./new-course.component.scss']
 })
 export class NewCourseComponent implements OnInit {
-  public courseForm: FormGroup;
-  public image: File;
+  public createCourseForm: FormGroup;
+  public supportedLanguage;
+  public supportedLanguages = [];
+  public supportedLanguageSubmitted = false;
 
   constructor(
     private fb: FormBuilder,
@@ -21,49 +23,84 @@ export class NewCourseComponent implements OnInit {
     ) { }
 
   ngOnInit() {
-    this.courseForm = this.fb.group({
+    this.createCourseForm = this.fb.group({
       title: ['', [Validators.required]],
+      difficulty: ['', [Validators.required]],
       description: ['', [Validators.required]],
-      difficulty: ['beginner', [Validators.required]],
-      status: ['private', [Validators.required]]
+      price: [0, [Validators.required]],
+      shortName: ['', [Validators.required]],
+      color: ['', [Validators.required]],
+      image: ['', [Validators.required]]
     });
   }
 
   get title() {
-    return this.courseForm.get('title');
-  }
-
-  get description() {
-    return this.courseForm.get('description');
+    return this.createCourseForm.get('title');
   }
 
   get difficulty() {
-    return this.courseForm.get('difficulty');
+    return this.createCourseForm.get('difficulty');
   }
 
-  get status() {
-    return this.courseForm.get('status');
+  get description() {
+    return this.createCourseForm.get('description');
+  }
+
+  get price() {
+    return this.createCourseForm.get('price');
+  }
+
+  get shortName() {
+    return this.createCourseForm.get('shortName');
+  }
+
+  get color() {
+    return this.createCourseForm.get('color');
+  }
+
+  get image() {
+    return this.createCourseForm.get('image');
   }
 
   onSubmit() {
+    if (this.createCourseForm.invalid) {
+      return false;
+    }
+
     const fd = new FormData();
     if (this.image) {
-      fd.append('image', this.image);
+      fd.append('image', this.image.value);
     }
     // tslint:disable-next-line: forin
-    for (const key in this.courseForm.value) {
-      fd.append(key, this.courseForm.value[key]);
+    for (const key in this.createCourseForm.value) {
+      fd.append(key, this.createCourseForm.value[key]);
     }
 
-    fd.append('slug', this.titleToSlug.transform(this.courseForm.value.title));
+    fd.append('slug', this.titleToSlug.transform(this.createCourseForm.value.title));
+    fd.append('supportedLanguages', JSON.stringify(this.supportedLanguages));
 
     this.courseService.createCourse(fd).subscribe({
-      error: (err) => console.log(err),
-      complete: () => this.router.navigate(['/admin-panel'])
+      error: (err) => console.error(err),
+      next: (res: any) => this.router.navigate(['/admin-panel/edit-course', res.data])
     });
   }
 
   onFileUpload(file) {
-    this.image = file;
+    this.image.patchValue(file);
+  }
+
+  colorChanged(newColor) {
+    this.color.patchValue(newColor);
+  }
+
+  addSupportedLanguage() {
+    this.supportedLanguageSubmitted = true;
+
+    if (this.supportedLanguage.trim() !== '') {
+      this.supportedLanguages.push(this.supportedLanguage.trim());
+      this.supportedLanguageSubmitted = false;
+    }
+
+    this.supportedLanguage = '';
   }
 }

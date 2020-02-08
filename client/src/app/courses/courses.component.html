@@ -1,0 +1,35 @@
+<div class="container">
+    <div class="courses">
+      <div class="flex flex flex--not-even flex--between flex--align-center margin-bottom--small">
+          <h1>All Courses</h1>
+          <div class="course-search-and-filter">
+              <input type="search" name="search" placeholder="Search courses" [(ngModel)]="searchInput" (input)="filterCourses()">
+              <select name="payment" [(ngModel)]="paymentFilter" (change)="filterCourses()">
+                  <option value="">Filter by payment</option>
+                  <option value="free">Free</option>
+                  <option value="paid">Paid</option>
+              </select>
+              <select name="difficulty" [(ngModel)]="difficultyFilter" (change)="filterCourses()">
+                  <option value="">Filter by difficulty</option>
+                  <option value="beginner">Beginner</option>
+                  <option value="advanced">Advanced</option>
+              </select>
+          </div>
+      </div>
+      <div class="courses-list">
+          <div class="course" *ngFor="let course of courses">
+              <div class="thumbnail">
+                  <img [src]="course.image" [alt]="course.title">
+                <span class="price">{{ course.price === 0 ? 'FREE' : ('$' + course.price) }}</span>
+              </div>
+              <h2>{{course.title}}</h2>
+              <div class="course-info">
+                  <span>{{course.numberOfLectures}} {{course.numberOfLectures > 1 ? 'lectures' : 'lecture'}}</span>
+                  <span>{{course.totalErt}} {{course.totalErt > 1 ? 'hours' : 'hour'}}</span>
+                  <span class="text--capitalize">{{course.difficulty}}</span>
+              </div>
+              <p>{{course.description | getSummary: 100}}</p>
+          </div>
+      </div>
+    </div>
+  </div>

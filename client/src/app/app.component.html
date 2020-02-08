@@ -1,29 +1,26 @@
-<section class="header flex flex--between flex--center">
-  <span class="brand sans-serif"><a routerLink="/">Programer21 <small *ngIf="isDevelopment">(DEV)</small></a></span>
-  <nav>
-    <ul class="flex flex--center">
-      <li><a [routerLink]="['/learn']">Learn</a></li>
-      <li><a [routerLink]="['/']">Forum</a></li>
-      <li><a [routerLink]="['/']">Educational Games</a></li>
-      <li><a [routerLink]="['/']">Book Program</a></li>
-      <li *ngIf="auth.isLoggedIn()" class="account-link flex flex--center">
-        <img (click)="toggleAccountDropdownMenu()" class="header__profile-image" [src]="auth.getUserDetails.picture" alt="{{auth.getUserDetails.first_name}} {{auth.getUserDetails.last_name}}">
-        <span (click)="toggleAccountDropdownMenu()">{{auth.getUserDetails.first_name}} {{auth.getUserDetails.last_name}} <i class="fa" [ngClass]="{'fa-angle-down' : !showAccountDropdownMenu, 'fa-angle-up': showAccountDropdownMenu}"></i></span>
+<section class="header flex flex--between flex--align-center" [ngClass]="{'header--fixed' : hasFixedHeader}">
+  <span class="brand sans-serif h4"><a routerLink="/">Programer21 <small *ngIf="isDevelopment">(DEV)</small></a></span>
+  <nav class="navigation">
+    <ul class="flex flex--not-even flex--align-center flex--end">
+      <li><a routerLink="/courses">Courses</a></li>
+      <li class="account-link flex flex--not-even flex--align-center" *ngIf="auth.userData">
+        <img (click)="toggleAccountDropdownMenu()" class="profile-image" [src]="auth.userData.image" alt="{{auth.userData.firstName}} {{auth.userData.lastName}}">
+        <span (click)="toggleAccountDropdownMenu()">{{auth.userData.firstName}} {{auth.userData.lastName}} <i class="fa" [ngClass]="{'fa-angle-down' : !showAccountDropdownMenu, 'fa-angle-up': showAccountDropdownMenu}"></i></span>
         <nav class="account-dropdown" *ngIf="showAccountDropdownMenu">
           <ul>
-            <li><a (click)="routeTo('/dashboard')">Dashboard</a></li>
-            <li *ngIf="auth.getUserDetails.role === 'moderator' || auth.getUserDetails.role === 'admin'"><a (click)="routeTo('/admin-panel')">Admin Panel</a></li>
-            <li><a (click)="routeTo('/')">Settings</a></li>
-            <li><a (click)="logout()"(click)="auth.logout()">Logout</a></li>
+            <li (click)="routeTo('/dashboard')"><a>Dashboard</a></li>
+            <li *ngIf="auth.userData.role === 'administrator'"><a (click)="routeTo('/admin-panel')">Admin Panel</a></li>
+            <li (click)="routeTo('/')"><a>Settings</a></li>
+            <li (click)="logout()"><a>Logout</a></li>
           </ul>
         </nav>
       </li>
-      <li *ngIf="!auth.isLoggedIn()"><a [routerLink]="['/login']">Login</a></li>
-      <li *ngIf="!auth.isLoggedIn()"><a [routerLink]="['/signup']" class="button">Sign Up</a></li>
+      <li *ngIf="!auth.userData"><a routerLink="/login">Login</a></li>
+      <li *ngIf="!auth.userData"><a routerLink="/signup">Sign Up</a></li>
     </ul>
   </nav>
 </section>
-<div *ngIf="loading" class="loading-icon">
-  <i class="fa fa-refresh fa-spin"></i>
+<div *ngIf="loading" class="loading">
+  <div class="loading__block"></div>
 </div>
 <router-outlet></router-outlet>

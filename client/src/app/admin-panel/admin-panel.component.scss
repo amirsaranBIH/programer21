@@ -1,121 +1,206 @@
 @import '../../styles';
 
 .admin-panel {
-    &__create-lectures {
+    .courses-and-lectures {
+        display: -ms-grid;
         display: grid;
-        grid-template-columns: repeat(3, minmax(400px, 1fr));
-        grid-gap: 1em;
-        margin-top: 2em;
+        grid-gap: 2em;
+        -ms-grid-columns: 2fr 2em 1fr;
+        grid-template-columns: 2fr 1fr;
+        -ms-grid-rows: 2fr 2em 1fr 2em 1fr;
+        grid-template-rows: 2fr 1fr 1fr;
+            grid-template-areas:"courses new-course"
+                            "courses edit-course"
+                            "courses new-lecture";
 
-        &__header {
-            margin-bottom: .5em;
-        }
-        
-        &__list {
-            display: flex;
-            flex-direction: column;
-            height: 700px;
-            background-color: $lighter_green;
-            overflow: auto;
-            -ms-overflow-style: none;
-            scrollbar-width: none;
-        }
-
-        &__list::-webkit-scrollbar {
-            display: none;
-        }
-        
-        &__list li {
-            background-color: $green;
-            border-bottom: 2px solid $darker_green;
-            display: flex;
-            flex-direction: column;
-        }
-        
-        &__list li.active {
-            background-color: $dark_green;
-            flex: 1;
-        }
-        
-        &__list li.active &__item__header {
+        .courses {
+            -ms-grid-row: 1;
+            -ms-grid-row-span: 5;
+            -ms-grid-column: 1;
             color: white;
+            grid-area: courses;
+            position: relative;
+
+            img {
+                height: 100%;
+            }
+
+            .course {
+                height: 100%;
+                background-position: center;
+                background-size: cover;
+            }
+
+            .enrolled-courses-controls {
+                position: absolute;
+                bottom: 105px;
+                right: 25px;
+                color: white;
+
+                .arrow img {
+                    width: 30px;
+                    cursor: pointer;
+                }
+                
+                .enrolled-courses-control-info {
+                    margin: 0 10px;
+                    @extend .sans-serif;
+                    
+                    
+                    div:first-child {
+                        font-size: 2.3em;
+                        font-weight: bold;
+                        line-height: .85;
+                    }
+                }
+            }
+
+            .course-info {
+                position: absolute;
+                bottom: 0;
+                left: 0;
+                width: 100%;
+                padding: 1em;
+                background-color: rgba(0, 0, 0, .5);
+
+                .info {
+                    @extend .sans-serif;
+                    font-weight: bold;
+        
+                    span + span {
+                        position: relative;
+                        margin-left: 1.5em;
+                        
+                        &::before {
+                            content: '';
+                            display: block;
+                            position: absolute;
+                            width: 6px;
+                            height: 6px;
+                            border-radius: 6px;
+                            background-color: white;
+                            left: -16px;
+                            top: 50%;
+                            transform: translateY(-30%);
+                        }
+                    }
+                }
+            }
         }
 
-        &__list li.active &__item-content {
-            background-color: white;
-            flex: 1;
-            padding: 1em;
+        .buttons {
+            @extend .sans-serif;
+            cursor: pointer;
+        }
+
+        .new-course {
+            -ms-grid-row: 1;
+            -ms-grid-column: 3;
+            grid-area: new-course;
+            background-color: $red;
+            @extend .buttons;
             
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
+            span {
+                color: white;
+                font-size: 2.5em;
+                padding: 1em;
+                line-height: 1.2em;
+            }
         }
 
-        .item-content {
-            &__actions i {
+        .edit-course {
+            -ms-grid-row: 3;
+            -ms-grid-column: 3;
+            grid-area: edit-course;
+            border: 3px solid $green;
+            @extend .buttons;
+
+            span {
+                color: $green;
                 font-size: 1.75em;
             }
+        }
 
-            &__actions i + i {
-                margin-left: .5em;
-            }
+        .edit-course:hover {
+            background-color: $green;
 
-            &__status {
-                padding: .1em .4em;
-                background-color: $darker_green;
+            span {
                 color: white;
-                font-weight: lighter;
-                text-transform: capitalize;
-            }
-
-            &__main i {
-                margin-left: .5em;
-                color: $light_green;
-            }
-
-            &__difficulty {
-                text-transform: capitalize;
-            }
-        }
-        
-        &__item__header {
-            padding: .75em;
-            cursor: pointer;
-        }
-
-        .no-content {
-            color: $dark_green;
-            font-size: 1.25em;
-            margin: auto;
-
-            i {
-                display: block;
-                font-size: 3em;
             }
         }
 
-        .add-button {
-            cursor: pointer;
-            font-size: 1.25em;
-            color: $dark_green;
+        .new-lecture {
+            -ms-grid-row: 5;
+            -ms-grid-column: 3;
+            grid-area: new-lecture;
+            border: 3px solid $red;
+            @extend .buttons;
+
+            span {
+                color: $red;
+                font-size: 1.75em;
+            }
         }
 
-        .edit-button {
-            cursor: pointer;
-            font-size: 1.25em;
-            color: $yellow;
+        .new-lecture:hover {
+            background-color: $red;
+            
+            span {
+                color: white;
+            }
+        }
+    }
+
+    .user-search-and-filter {
+        input,
+        select {
+            border: 0;
+            color: $black;
+            padding: .6em 1em;
         }
 
-        .delete-button {
-            cursor: pointer;
-            font-size: 1.25em;
-            color: $red;
+        .filter {
+            select + select {
+                margin-left: 1em;
+            }
         }
+    }
 
-        .link-button {
-            cursor: pointer;
-            font-size: 1.25em;
-            color: $green;
+    .users-table {
+        height: 500px;
+        max-height: 500px;
+        overflow-y: auto;
+        @extend .scrollbar--large;
+
+        table {
+            width: 100%;
+            background-color: white;
+
+            thead {
+                border-bottom: 1px solid $grey;
+                font-weight: bold;
+            }
+            
+            .sort-up:not(.hide-sort)::after {
+                padding-left: 5px;
+                cursor: pointer;
+                content: url('/assets/icons/sort-alpha-up.svg');
+            }
+            
+            .sort-down:not(.hide-sort)::after {
+                padding-left: 5px;
+                cursor: pointer;
+                content: url('/assets/icons/sort-alpha-down.svg');
+            }
+
+            th, td {
+                padding: .75em;
+            }
+
+            tbody tr:hover,
+            th:hover {
+                background-color: $lighter_grey;
+            }
         }
     }
 }

@@ -1,0 +1,69 @@
+@import '../../styles';
+
+.courses {
+    .course-search-and-filter {
+        input,
+        select {
+            border: 0;
+            background-color: $lighter_grey;
+            color: $black;
+            padding: .6em 1em;
+        }
+    }
+
+    .course-search-and-filter * + * {
+        margin-left: 1em;
+    }
+
+    .courses-list {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(400px, 1fr));
+        grid-gap: 2em;
+
+        .course {
+            .thumbnail {
+                position: relative;
+
+                .price {
+                    position: absolute;
+                    min-width: 105px;
+                    top: 20px;
+                    left: 0;
+                    padding: .5em 1em;
+                    color: white;
+                    @extend .h2;
+                    background-color: $green;
+                    text-align: center;
+                }
+            }
+
+            .course-info {
+                color: $red;
+                @extend .sans-serif;
+                font-weight: bold;
+    
+                span + span {
+                    position: relative;
+                    margin-left: 1.5em;
+                    
+                    &::before {
+                        content: '';
+                        display: block;
+                        position: absolute;
+                        width: 6px;
+                        height: 6px;
+                        border-radius: 6px;
+                        background-color: $red;
+                        left: -16px;
+                        top: 50%;
+                        transform: translateY(-30%);
+                    }
+                }
+            }
+
+            p {
+                margin-bottom: 0;
+            }
+        }
+    }
+}

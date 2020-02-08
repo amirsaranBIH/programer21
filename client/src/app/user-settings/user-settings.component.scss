@@ -1,0 +1,47 @@
+@import '../../styles';
+
+.user-settings {
+    .image-upload {
+        flex: 1;
+        padding-right: 1em;
+
+        & > img {
+            width: 150px;
+            border-radius: 200px;
+        }
+
+        label {
+            cursor: pointer;
+            color: $dark_purple;
+
+            img {
+                width: 13px;
+                margin-right: .35em;
+            }
+        }
+    }
+
+    .fullname {
+        padding-left: 1em;
+        flex: 2;
+    }
+
+    .email-verified {
+        color: $green;
+        margin-top: .25em;
+
+        img {
+            width: 13px;
+            margin-right: .35em;
+        }
+    }
+
+    .can-change-username {
+        margin-top: .25em;
+    }
+
+    .username-input,
+    .email-input {
+        margin-bottom: 0 !important;
+    }
+}

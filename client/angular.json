@@ -58,17 +58,25 @@
                   "maximumError": "5mb"
                 }
               ]
+            },
+            "es5": {
+              "tsConfig": "./tsconfig.es5.json"
             }
           }
         },
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "programer21:build"
+            "browserTarget": "programer21:build",
+            "proxyConfig": "proxy.conf.json"
           },
           "configurations": {
             "production": {
               "browserTarget": "programer21:build:production"
+            },
+            "es5": {
+              "browserTarget": "programer21:build:es5",
+              "proxyConfig": "proxy.conf.json"
             }
           }
         },

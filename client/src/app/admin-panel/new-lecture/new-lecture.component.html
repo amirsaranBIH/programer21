@@ -1,55 +1,64 @@
 <div class="container">
     <div class="new-lecture">
-        <form class="form form--max-width" [formGroup]="lectureForm" (ngSubmit)="onSubmit(lectureForm.value)">
-            <div class="flex flex--between flex--center">
-                <h1>New Lecture</h1>
-                <back-button [backRoute]="['/admin-panel']"></back-button>
-            </div>
-            <div class="form__group">
-                <label for="title">Title</label>
-                <input type="text" [class.is-invalid]="title.invalid && title.touched" id="title"
-                    formControlName="title" placeholder="Enter title">
-                <small class="title-slug">Slug: {{ title.value | titleToSlug }}</small>
-                <div class="form__help text--small" *ngIf="title.invalid && title.touched">
-                    <div *ngIf="title.errors?.required">Title is required.</div>
-                </div>
-            </div>
-            <div class="form__group">
-                <label for="description">Description</label>
-                <textarea type="description" [class.is-invalid]="description.invalid && description.touched"
-                    id="description" formControlName="description" placeholder="Enter description" rows="5"></textarea>
-                <div class="form__help text--small" *ngIf="description.invalid && description.touched">
-                    <div *ngIf="description.errors?.required">Description is required.</div>
-                </div>
-            </div>
-            <div class="form__group--flex">
-                <div class="form__section">
-                    <label for="difficulty">Difficulty</label>
-                    <select formControlName="difficulty" id="difficulty">
-                        <option value="beginner">Beginner</option>
-                        <option value="intermediate">Intermediate</option>
-                        <option value="advanced">Advanced</option>
-                    </select>
-                    <div class="form__help text--small" *ngIf="difficulty.invalid && difficulty.touched">
-                        <div *ngIf="difficulty.errors?.required">Difficulty is required.</div>
+        <form class="form" [formGroup]="createLectureForm" #ngForm="ngForm" action="signup" method="POST"
+        (ngSubmit)="onSubmit(createLectureForm.value)">
+            <h2>Create Lecture For: {{ course.title }}</h2>
+
+            <div class="section section--large">
+                <div class="form-group">
+                    <div class="flex flex--align-center flex--not-even flex--between">
+                        <label for="title" class="required">Title</label>
+                        <span>Slug: {{ title.value | titleToSlug }}</span>
+                    </div>
+                    <div class="input-group"
+                        [ngClass]="{ 'is-invalid' : (title.invalid && title.touched) || (title.invalid && ngForm.submitted) }">
+                        <input type="text" id="title" formControlName="title"
+                            placeholder="Course title">
+                        <div class="input-help flex flex--not-even flex--align-center">
+                            <div class="input-help-status"></div>
+                            <div class="input-help-message">
+                                <span>Title is required!</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <div class="form__section">
-                    <label for="status">Status</label>
-                    <select formControlName="status" id="status">
-                        <option value="private">Private</option>
-                        <option value="public">Public</option>
-                    </select>
-                    <div class="form__help text--small" *ngIf="status.invalid && status.touched">
-                        <div *ngIf="status.errors?.required">Status is required.</div>
+                <div class="form-group">
+                    <label for="difficulty" class="required">Difficulty</label>
+                    <div class="input-group"
+                        [ngClass]="{ 'is-invalid' : (difficulty.invalid && difficulty.touched) || (difficulty.invalid && ngForm.submitted) }">
+                        <select formControlName="difficulty" id="difficulty">
+                            <option value="">Select difficulty</option>
+                            <option value="beginner">Beginner</option>
+                            <option value="advanced">Advanced</option>
+                        </select>
+                        <div class="input-help flex flex--not-even flex--align-center">
+                            <div class="input-help-status"></div>
+                            <div class="input-help-message">
+                                <span>User must have a difficulty!</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
+                <div class="form-group">
+                    <label for="description">Description</label>
+                    <div class="input-group"
+                        [ngClass]="{ 'is-invalid' : (description.invalid && description.touched) || (description.invalid && ngForm.submitted) }">
+                        <textarea formControlName="description" id="description" cols="30" rows="5"
+                            placeholder="Enter Description"></textarea>
+                        <div class="input-help flex flex--not-even flex--align-center">
+                            <div class="input-help-status"></div>
+                            <div class="input-help-message">
+                                <span>Description must be contain less than 200 characters!</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <input type="checkbox" id="skippable" formControlName="skippable">
+                    <label for="skippable">Make lecture skippable</label>
+                </div>
             </div>
-            <div class="form__group margin-bottom">
-                <input type="checkbox" formControlName="skippable" id="skippable">
-                <label for="skippable">Skippable</label>
-            </div>
-            <button class="button button--large" [disabled]="lectureForm.invalid">Create Lecture</button>
+            <button type="submit" class="button button--large button--create margin-top">Create Lecture</button>
         </form>
     </div>
 </div>

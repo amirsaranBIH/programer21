@@ -1,0 +1,92 @@
+import { Component, OnInit, Input } from '@angular/core';
+import { Router } from '@angular/router';
+import { FormBuilder, Validators, FormGroup } from '@angular/forms';
+import { AuthenticationService } from 'src/app/services/authentication.service';
+import { ValidatorService } from 'src/app/services/validator.service';
+
+@Component({
+  selector: 'app-signup-form',
+  templateUrl: './signup-form.component.html',
+  styleUrls: ['./signup-form.component.scss']
+})
+export class SignupFormComponent implements OnInit {
+  public signupForm: FormGroup;
+
+  @Input() buttonText = 'Create Account';
+
+  constructor(private authService: AuthenticationService, private router: Router, private fb: FormBuilder, private validators: ValidatorService) {}
+
+  ngOnInit() {
+    this.signupForm = this.fb.group({
+      firstName: ['', [
+        Validators.required,
+        Validators.minLength(2),
+        Validators.maxLength(16),
+        this.validators.NameValidator
+      ]],
+      lastName: ['', [
+        Validators.required,
+        Validators.minLength(2),
+        Validators.maxLength(16),
+        this.validators.NameValidator
+      ]],
+      username: ['', [
+        Validators.required,
+        Validators.minLength(3),
+        Validators.maxLength(16),
+      ]],
+      email: ['', [
+        Validators.required,
+        this.validators.EmailValidator
+      ], [this.validators.IsEmailTakenValidator.bind(this)]],
+      password: ['', [
+        Validators.required,
+        Validators.minLength(8),
+        this.validators.PasswordValidator
+      ]],
+      confirmPassword: ['', [
+        Validators.required
+      ]]
+    }, {
+        validator: this.validators.ConfirmPasswordValidator
+      });
+
+  }
+
+  get firstName() {
+    return this.signupForm.get('firstName');
+  }
+
+  get lastName() {
+    return this.signupForm.get('lastName');
+  }
+
+  get username() {
+    return this.signupForm.get('username');
+  }
+
+  get email() {
+    return this.signupForm.get('email');
+  }
+
+  get password() {
+    return this.signupForm.get('password');
+  }
+
+  get confirmPassword() {
+    return this.signupForm.get('confirmPassword');
+  }
+
+  onSubmit(data) {
+    if (this.signupForm.valid) {
+      this.authService.signup(data).subscribe({
+        error: err => console.log(err),
+        complete: () => {
+          this.authService.fetchUserSessionData().then(() => {
+            this.router.navigate(['/dashboard']);
+          });
+        }
+      });
+    }
+  }
+}

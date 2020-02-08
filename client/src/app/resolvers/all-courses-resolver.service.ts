@@ -9,7 +9,7 @@ export class AllCoursesResolverService implements Resolve<any> {
   constructor(private courseService: CourseService) { }
 
   resolve() {
-    return this.courseService.getAllCourses();
+    return this.courseService.getAllCourses().then((res: any) => res.data);
   }
 
 }

@@ -3,6 +3,7 @@ import { Validators, FormBuilder, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CourseService } from 'src/app/services/course.service';
 import { TitleToSlugPipe } from 'src/app/pipes/title-to-slug.pipe';
+import { LectureService } from 'src/app/services/lecture.service';
 
 @Component({
   selector: 'app-edit-course',
@@ -11,49 +12,77 @@ import { TitleToSlugPipe } from 'src/app/pipes/title-to-slug.pipe';
 })
 export class EditCourseComponent implements OnInit {
   public course;
-  public image: File;
+  public courseLectures = [];
+  public unfilteredCourseLectures = [];
   public editCourseForm: FormGroup;
+  public supportedLanguage;
+  public supportedLanguages = [];
+  public supportedLanguageSubmitted = false;
+  public searchInput = '';
+  public statusFilter = '';
 
   constructor(
     private route: ActivatedRoute,
     private fb: FormBuilder,
     private courseService: CourseService,
     private router: Router,
-    private titleToSlug: TitleToSlugPipe
+    private titleToSlug: TitleToSlugPipe,
+    private lectureService: LectureService
     ) { }
 
   ngOnInit() {
     this.course = this.route.snapshot.data.course;
+    this.courseLectures = this.route.snapshot.data.courseLectures;
+    this.supportedLanguages = this.course.supportedLanguages;
 
     this.editCourseForm = this.fb.group({
       title: [this.course.title, [Validators.required]],
-      description: [this.course.description, [Validators.required]],
       difficulty: [this.course.difficulty, [Validators.required]],
-      status: [this.course.status, [Validators.required]],
-      image: [this.course.image]
+      description: [this.course.description, [Validators.required]],
+      price: [this.course.price, [Validators.required]],
+      shortName: [this.course.shortName, [Validators.required]],
+      color: [this.course.color, [Validators.required]],
+      image: [this.course.image, [Validators.required]]
     });
+
+    this.unfilteredCourseLectures = JSON.parse(JSON.stringify(this.courseLectures));
   }
 
   get title() {
     return this.editCourseForm.get('title');
   }
 
-  get description() {
-    return this.editCourseForm.get('description');
-  }
-
   get difficulty() {
     return this.editCourseForm.get('difficulty');
   }
 
-  get status() {
-    return this.editCourseForm.get('status');
+  get description() {
+    return this.editCourseForm.get('description');
+  }
+
+  get price() {
+    return this.editCourseForm.get('price');
+  }
+
+  get shortName() {
+    return this.editCourseForm.get('shortName');
+  }
+
+  get color() {
+    return this.editCourseForm.get('color');
+  }
+
+  get image() {
+    return this.editCourseForm.get('image');
   }
 
   onSubmit() {
+    if (this.editCourseForm.invalid) {
+      return false;
+    }
     const fd = new FormData();
     if (this.image) {
-      fd.append('image', this.image);
+      fd.append('image', this.image.value);
     }
     // tslint:disable-next-line: forin
     for (const key in this.editCourseForm.value) {
@@ -71,6 +100,55 @@ export class EditCourseComponent implements OnInit {
   }
 
   onFileUpload(file) {
-    this.image = file;
+    this.image.patchValue(file);
+  }
+
+  colorChanged(newColor) {
+    this.color.patchValue(newColor);
+  }
+
+  addSupportedLanguage() {
+    this.supportedLanguageSubmitted = true;
+
+    if (this.supportedLanguage.trim() !== '') {
+      this.supportedLanguages.push(this.supportedLanguage.trim());
+      this.supportedLanguageSubmitted = false;
+    }
+
+    this.supportedLanguage = '';
+  }
+
+  filterLectures() {
+    this.courseLectures = this.unfilteredCourseLectures.filter(lecture => {
+      if (this.searchInput !== '' && !lecture.title.match(new RegExp(this.searchInput, 'i'))) {
+        return false;
+      }
+
+      if (this.statusFilter !== '' && lecture.status !== this.statusFilter) {
+        return false;
+      }
+
+      return true;
+    });
+  }
+
+  deleteCourse() {
+    if (confirm('Are you sure?')) {
+      this.courseService.deleteCourse(this.route.snapshot.params.course_id).subscribe({
+        error: (err) => console.log(err),
+        complete: () => this.router.navigate(['admin-panel'])
+      });
+    }
+  }
+
+  deleteLecture(lectureId, lectureIndex) {
+    if (confirm('Are you sure?')) {
+      this.lectureService.deleteLecture(lectureId).subscribe({
+        error: (err) => console.log(err),
+        complete: () => {
+          this.courseLectures.splice(lectureIndex, 1);
+        }
+      });
+    }
   }
 }

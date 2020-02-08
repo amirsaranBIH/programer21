@@ -1,4 +1,4 @@
-import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
 
 @Component({
   // tslint:disable-next-line: component-selector
@@ -10,6 +10,8 @@ export class FileUploadComponent implements OnInit {
 
   // tslint:disable-next-line: no-output-on-prefix
   @Output() onFileUpload: EventEmitter<any> = new EventEmitter();
+
+  @Input() uploadText = 'Upload Image';
 
   constructor() { }
 

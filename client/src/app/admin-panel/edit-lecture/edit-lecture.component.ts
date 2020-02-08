@@ -16,46 +16,53 @@ export class EditLectureComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private route: ActivatedRoute,
-    private lectureService: LectureService,
     private router: Router,
+    private lectureService: LectureService,
     private titleToSlug: TitleToSlugPipe
     ) { }
 
-  ngOnInit() {
-    this.lecture = this.route.snapshot.data.lecture;
+    ngOnInit() {
+      this.lecture = this.route.snapshot.data.lecture;
 
-    this.editLectureForm = this.fb.group({
-      title: [this.lecture.title, [Validators.required]],
-      description: [this.lecture.description, [Validators.required]],
-      difficulty: [this.lecture.difficulty, [Validators.required]],
-      status: [this.lecture.status, [Validators.required]],
-      skippable: [this.lecture.skippable]
-    });
+      this.editLectureForm = this.fb.group({
+        title: [this.lecture.title, [Validators.required]],
+        description: [this.lecture.description, [Validators.required]],
+        status: [this.lecture.status, [Validators.required]],
+        difficulty: [this.lecture.difficulty, [Validators.required]],
+        skippable: [this.lecture.skippable]
+      });
+    }
 
-  }
+    get title() {
+      return this.editLectureForm.get('title');
+    }
 
-  get title() {
-    return this.editLectureForm.get('title');
-  }
+    get description() {
+      return this.editLectureForm.get('description');
+    }
 
-  get description() {
-    return this.editLectureForm.get('description');
-  }
+    get difficulty() {
+      return this.editLectureForm.get('difficulty');
+    }
 
-  get difficulty() {
-    return this.editLectureForm.get('difficulty');
-  }
-
-  get status() {
-    return this.editLectureForm.get('status');
-  }
+    get status() {
+      return this.editLectureForm.get('status');
+    }
 
   onSubmit(value) {
     value.slug = this.titleToSlug.transform(this.editLectureForm.value.title);
 
     this.lectureService.editLecture(this.route.snapshot.params.lecture_id, value).subscribe({
-      error: (err) => console.log(err),
-      complete: () => this.router.navigate(['/admin-panel'])
+      error: (err) => console.log(err)
     });
+  }
+
+  deleteLecture() {
+    if (confirm('Are you sure?')) {
+      this.lectureService.deleteLecture(this.route.snapshot.params.lecture_id).subscribe({
+        error: (err) => console.log(err),
+        complete: () => this.router.navigate(['admin-panel', 'edit-course', this.lecture.course])
+      });
+    }
   }
 }

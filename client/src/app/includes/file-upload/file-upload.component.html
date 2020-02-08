@@ -1,1 +1,7 @@
-<input type="file" (change)="uploadFile($event)">
+<label for="file-upload" class="file-upload section flex">
+    <div class="file-upload-content">
+        <img src="assets/icons/cloud-upload.svg" alt="cloud-upload">
+        <p class="text--center">{{ uploadText }}</p>
+        <input type="file" id="file-upload" accept=".png,.jpg,.jpeg,.gif" hidden (change)="uploadFile($event)">
+    </div>
+</label>

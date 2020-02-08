@@ -1,0 +1,98 @@
+<h2 class="text--white margin-bottom">Create An Account</h2>
+    <form class="form" [formGroup]="signupForm" #ngForm="ngForm" action="signup" method="POST" (ngSubmit)="onSubmit(signupForm.value)">
+      <div class="flex">
+        <div class="form-group">
+          <label for="firstName">First Name</label>
+          <div class="input-group" [ngClass]="{ 'is-invalid' : (firstName.invalid && firstName.touched) || (firstName.invalid && ngForm.submitted) }">
+            <input type="text" id="firstName" formControlName="firstName" placeholder="What's your first name">
+            <div class="input-help flex flex--not-even flex--align-center">
+              <div class="input-help-status"></div>
+              <div class="input-help-message">
+                <span *ngIf="firstName.errors?.required">First name is required!</span>
+                <span *ngIf="firstName.errors?.nameNotValid && !firstName.errors?.required">First name can only have alphabetical characters!</span>
+                <span *ngIf="firstName.errors?.minlength && !firstName.errors?.nameNotValid">First name must be atleast {{ firstName.errors?.minlength.requiredLength }} characters long!</span>
+                <span *ngIf="firstName.errors?.maxlength && !firstName.errors?.nameNotValid">First name must be less than {{ firstName.errors?.maxlength.requiredLength }} characters long!</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="lastName">Last Name</label>
+          <div class="input-group" [ngClass]="{ 'is-invalid' : (lastName.invalid && lastName.touched) || (lastName.invalid && ngForm.submitted) }">
+            <input type="text" id="lastName" formControlName="lastName" placeholder="What's your last name">
+            <div class="input-help flex flex--not-even flex--align-center">
+              <div class="input-help-status"></div>
+              <div class="input-help-message">
+                <span *ngIf="lastName.errors?.required">Last name is required!</span>
+                <span *ngIf="lastName.errors?.nameNotValid && !lastName.errors?.required">Last name can only have alphabetical characters!</span>
+                <span *ngIf="lastName.errors?.minlength && !lastName.errors?.nameNotValid">Last name must be atleast {{ lastName.errors?.minlength.requiredLength }} characters long!</span>
+                <span *ngIf="lastName.errors?.maxlength && !lastName.errors?.nameNotValid">Last name must be less than {{ lastName.errors?.maxlength.requiredLength }} characters long!</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="username">Username</label>
+        <div class="input-group" [ngClass]="{ 'is-invalid' : (username.invalid && username.touched) || (username.invalid && ngForm.submitted) }">
+          <input type="text" id="username" formControlName="username" placeholder="What you want to be know as on Programer21" autocomplete="new-password">
+          <div class="input-help flex flex--not-even flex--align-center">
+            <div class="input-help-status"></div>
+            <div class="input-help-message">
+              <span *ngIf="username.errors?.required">Username is required!</span>
+              <span *ngIf="username.errors?.minlength">Username must be atleast {{ username.errors?.minlength.requiredLength }} characters long!</span>
+              <span *ngIf="username.errors?.maxlength">Username must be less than {{ username.errors?.maxlength.requiredLength }} characters long!</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="email">Email</label>
+        <div class="input-group" [ngClass]="{ 'is-invalid' : (email.invalid && email.touched) || (email.invalid && ngForm.submitted) }">
+          <input type="email" id="email" formControlName="email" placeholder="Your email address">
+          <div class="input-help flex flex--not-even flex--align-center">
+            <div class="input-help-status"></div>
+            <div class="input-help-message">
+              <span *ngIf="email.errors?.required">Email is required!</span>
+              <span *ngIf="email.errors?.notValidEmail && !email.errors?.required">Email is invalid!</span>
+              <span *ngIf="email.errors?.emailTaken && !email.errors?.required">An account with that email has been registered!</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="password">Password</label>
+        <div class="input-group" [ngClass]="{ 'is-invalid' : (password.invalid && password.touched) || (password.invalid && ngForm.submitted) }">
+          <input type="password" id="password" formControlName="password" placeholder="The strongest password you can remember" autocomplete="new-password">
+          <div class="input-help flex flex--not-even flex--align-center">
+            <div class="input-help-status"></div>
+            <div class="input-help-message">
+              <span *ngIf="password.errors?.required">Password is required!</span>
+              <span *ngIf="password.errors?.minlength">Password must be atleast {{ password.errors?.minlength.requiredLength }} characters long!</span>
+              <span *ngIf="password.errors?.notValidPassword && !password.errors?.required && !password.errors?.minlength">Password must have a capital letter, a number and a special character!</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="confirmPassword">Confirm Password</label>
+        <div class="input-group" [ngClass]="{ 'is-invalid' : (confirmPassword.invalid && confirmPassword.touched) || (confirmPassword.invalid && ngForm.submitted) }">
+          <input type="password" id="confirmPassword" formControlName="confirmPassword" placeholder="Confirm the strongest password">
+          <div class="input-help flex flex--not-even flex--align-center">
+            <div class="input-help-status"></div>
+            <div class="input-help-message">
+              <span *ngIf="confirmPassword.errors?.required">Password is required!</span>
+              <span *ngIf="ngForm.errors?.passwordsNotMatching">Passwords don't match!</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="margin-top--large">
+        <div class="flex flex--center flex--not-even">
+          <button type="submit" class="button button--large" [disabled]="signupForm.invalid && ngForm.submitted">{{ buttonText }}</button>
+        </div>
+        <div class="flex flex--center flex--not-even">
+          <div class="form-alternative-link">or <a routerLink="/login">Sign In</a></div>
+        </div>
+      </div>
+    </form>

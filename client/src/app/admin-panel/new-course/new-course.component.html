@@ -1,55 +1,147 @@
 <div class="container">
     <div class="new-course">
-        <form class="form form--max-width" [formGroup]="courseForm" (ngSubmit)="onSubmit()" enctype="multipart/form-data">
-            <div class="flex flex--between flex--center">
-                <h1>New Course</h1>
-                <back-button [backRoute]="['/admin-panel']"></back-button>
-            </div>
-            <div class="form__group">
-                <label for="title">Title</label>
-                <input type="text" [class.is-invalid]="title.invalid && title.touched" id="title"
-                    formControlName="title" placeholder="Enter title">
-                <small class="title-slug">Slug: {{ title.value | titleToSlug }}</small>
-                <div class="form__help text--small" *ngIf="title.invalid && title.touched">
-                    <div *ngIf="title.errors?.required">Title is required.</div>
-                </div>
-            </div>
-            <div class="form__group--flex">
-                <div class="form__section">
-                    <label for="difficulty">Difficulty</label>
-                    <select formControlName="difficulty" id="difficulty">
-                        <option value="beginner">Beginner</option>
-                        <option value="intermediate">Intermediate</option>
-                        <option value="advanced">Advanced</option>
-                    </select>
-                    <div class="form__help text--small" *ngIf="difficulty.invalid && difficulty.touched">
-                        <div *ngIf="difficulty.errors?.required">Difficulty is required.</div>
+        <form class="form" [formGroup]="createCourseForm" #ngForm="ngForm" action="signup" method="POST"
+        (ngSubmit)="onSubmit(createCourseForm.value)">
+            <h2>Create New Course</h2>
+
+            <div class="section section--large">
+                <div class="form-group">
+                    <div class="flex flex--align-center flex--not-even flex--between">
+                        <label for="title" class="required">Title</label>
+                        <span>Slug: {{ title.value | titleToSlug }}</span>
+                    </div>
+                    <div class="input-group"
+                        [ngClass]="{ 'is-invalid' : (title.invalid && title.touched) || (title.invalid && ngForm.submitted) }">
+                        <input type="text" id="title" formControlName="title"
+                            placeholder="Course title">
+                        <div class="input-help flex flex--not-even flex--align-center">
+                            <div class="input-help-status"></div>
+                            <div class="input-help-message">
+                                <span>Title is required!</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <div class="form__section">
-                    <label for="status">Status</label>
-                    <select formControlName="status" id="status">
-                        <option value="private">Private</option>
-                        <option value="public">Public</option>
-                    </select>
-                    <div class="form__help text--small" *ngIf="status.invalid && status.touched">
-                        <div *ngIf="status.errors?.required">Status is required.</div>
+                <div class="flex">
+                    <div class="form-group">
+                        <label for="difficulty" class="required">Difficulty</label>
+                        <div class="input-group"
+                            [ngClass]="{ 'is-invalid' : (difficulty.invalid && difficulty.touched) || (difficulty.invalid && ngForm.submitted) }">
+                            <select formControlName="difficulty" id="difficulty">
+                                <option value="">Select difficulty</option>
+                                <option value="beginner">Beginner</option>
+                                <option value="advanced">Advanced</option>
+                            </select>
+                            <div class="input-help flex flex--not-even flex--align-center">
+                                <div class="input-help-status"></div>
+                                <div class="input-help-message">
+                                    <span>User must have a difficulty!</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="price" class="required">Price</label>
+                        <div class="input-group"
+                            [ngClass]="{ 'is-invalid' : (price.invalid && price.touched) || (price.invalid && ngForm.submitted) }">
+                            <input type="number" id="spricehortName" formControlName="price"
+                                placeholder="Enter course price">
+                            <div class="input-help flex flex--not-even flex--align-center">
+                                <div class="input-help-status"></div>
+                                <div class="input-help-message">
+                                    <span>Price is required!</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex">
+                    <div class="form-group">
+                        <label for="shortName" class="required">Programming Language / Short Name</label>
+                        <div class="input-group"
+                            [ngClass]="{ 'is-invalid' : (shortName.invalid && shortName.touched) || (shortName.invalid && ngForm.submitted) }">
+                            <input type="text" id="shortName" formControlName="shortName"
+                                placeholder="Enter course programming language / short name">
+                            <div class="input-help flex flex--not-even flex--align-center">
+                                <div class="input-help-status"></div>
+                                <div class="input-help-message">
+                                    <span>Programming language / short name is required!</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="color" class="required color-group-label">Color</label>
+                        <div class="input-group"
+                            [ngClass]="{ 'is-invalid' : (color.invalid && color.touched) || (color.invalid && ngForm.submitted) }">
+                            <div class="color-input-group flex flex--not-even flex--align-center">
+                                <input type="text" id="color" formControlName="color"
+                                    placeholder="What you want to be know as on Programer21">
+                                <div class="color-picker">
+                                    <label class="flex" for="color-picker" [ngStyle]="{ 'background-color': color.value }">
+                                        <img src="assets/icons/color-picker.svg" alt="color-picker">
+                                        <input type="color" hidden id="color-picker" #colorPicker (change)="colorChanged(colorPicker.value)">
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="input-help flex flex--not-even flex--align-center">
+                                <div class="input-help-status"></div>
+                                <div class="input-help-message">
+                                    <span>Color is required!</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex flex--not-even flex--align-center">
+                    <div class="form-group supported-language-group">
+                        <label for="supportedLanguage" class="required">Supported Languages</label>
+                        <div class="input-group"
+                            [ngClass]="{ 'is-invalid' : !supportedLanguage && supportedLanguageSubmitted }">
+                            <input type="text" id="supportedLanguage" [ngModelOptions]="{standalone: true}" [(ngModel)]="supportedLanguage"
+                                placeholder="Enter supported language to add">
+                            <div class="input-help flex flex--not-even flex--align-center">
+                                <div class="input-help-status"></div>
+                                <div class="input-help-message">
+                                    <span>Supported language can't be empty!</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="add-language-button">
+                        <button type="button" class="flex" (click)="addSupportedLanguage()">
+                            <img src="assets/icons/plus.svg" alt="plus">
+                        </button>
+                    </div>
+                </div>
+                <div class="supported-languages-list margin-bottom flex flex--not-even flex--align-center">
+                    <div class="supported-language flex flex--not-even flex--align-center" *ngFor="let language of supportedLanguages">
+                        <span class="text--capitalize">{{ language }}</span>
+                        <div class="remove-supported-language">
+                            <img src="assets/icons/remove-supported-language.svg" alt="remove-supported-language">
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="description">User Description</label>
+                    <div class="input-group"
+                        [ngClass]="{ 'is-invalid' : (description.invalid && description.touched) || (description.invalid && ngForm.submitted) }">
+                        <textarea formControlName="description" id="description" cols="30" rows="5"
+                            placeholder="User Description"></textarea>
+                        <div class="input-help flex flex--not-even flex--align-center">
+                            <div class="input-help-status"></div>
+                            <div class="input-help-message">
+                                <span>Description must be contain less than 200 characters!</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-            <div class="form__group">
-                <label for="description">Description</label>
-                <textarea type="description" [class.is-invalid]="description.invalid && description.touched"
-                    id="description" formControlName="description" placeholder="Enter description" rows="5"></textarea>
-                <div class="form__help text--small" *ngIf="description.invalid && description.touched">
-                    <div *ngIf="description.errors?.required">Description is required.</div>
-                </div>
+
+            <div class="margin-top">
+                <file-upload [uploadText]="'Upload Course Image'" (onFileUpload)="onFileUpload($event)"></file-upload>
             </div>
-            <div class="form__group">
-                <file-upload (onFileUpload)="onFileUpload($event)"></file-upload>
-            </div>
-            <button type="submit" class="button button--large"
-                [disabled]="courseForm.invalid">Create Course</button>
+            <button type="submit" class="button button--large button--create margin-top" [disabled]="createCourseForm.invalid && ngForm.submitted">Create Course</button>
         </form>
     </div>
 </div>

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { AuthenticationService, TokenPayload } from '../services/authentication.service';
+import { AuthenticationService } from '../services/authentication.service';
 import { Router } from '@angular/router';
 import { FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { ValidatorService } from '../services/validator.service';
@@ -10,14 +10,13 @@ import { ValidatorService } from '../services/validator.service';
 })
 export class LoginComponent implements OnInit {
   public loginForm: FormGroup;
-  public submitted = false;
 
   constructor(
     private authService: AuthenticationService,
     private router: Router,
     private fb: FormBuilder,
     private validators: ValidatorService
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.loginForm = this.fb.group({
@@ -25,7 +24,7 @@ export class LoginComponent implements OnInit {
         Validators.required,
         this.validators.EmailValidator
       ], [this.validators.IsEmailInUseValidator.bind(this)]],
-      password: ['', [ Validators.required ]]
+      password: ['', [Validators.required]]
     });
   }
 
@@ -37,18 +36,26 @@ export class LoginComponent implements OnInit {
     return this.loginForm.get('password');
   }
 
-  onSubmit(credentials: TokenPayload) {
-    this.submitted = true;
-    this.authService.login(credentials).subscribe(res => {
-      this.router.navigateByUrl('/dashboard');
-    }, (err) => {
-      console.error(err);
-      if (err.status === 401  &&
-          !this.email.hasError('required') &&
-          !this.email.hasError('notValidEmail') &&
-          !this.email.hasError('emailNotInUse')) {
-        this.password.setErrors({ wrongPassword: true });
-      }
-    });
+  onSubmit(credentials) {
+    if (this.loginForm.valid) {
+      this.authService.login(credentials).subscribe({
+        error: error => console.error(error),
+        next: (res: any) => {
+          if (res.status) {
+            if (res.data) {
+              this.authService.fetchUserSessionData().then(() => {
+                this.router.navigate(['dashboard']);
+              });
+            } else {
+              if (!this.email.hasError('required') &&
+                  !this.email.hasError('notValidEmail') &&
+                  !this.email.hasError('emailNotInUse')) {
+                this.password.setErrors({ wrongPassword: true });
+              }
+            }
+          }
+        }
+      });
+    }
   }
 }

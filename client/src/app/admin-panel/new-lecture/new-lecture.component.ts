@@ -10,7 +10,8 @@ import { TitleToSlugPipe } from 'src/app/pipes/title-to-slug.pipe';
   styleUrls: ['./new-lecture.component.scss']
 })
 export class NewLectureComponent implements OnInit {
-  public lectureForm: FormGroup;
+  public createLectureForm: FormGroup;
+  public course;
 
   constructor(
     private fb: FormBuilder,
@@ -21,38 +22,34 @@ export class NewLectureComponent implements OnInit {
     ) { }
 
   ngOnInit() {
-    this.lectureForm = this.fb.group({
+    this.course = this.route.snapshot.data.course;
+
+    this.createLectureForm = this.fb.group({
       title: ['', [Validators.required]],
       description: ['', [Validators.required]],
       difficulty: ['beginner', [Validators.required]],
-      status: ['private', [Validators.required]],
-      image: [''],
       skippable: [false]
     });
   }
 
   get title() {
-    return this.lectureForm.get('title');
+    return this.createLectureForm.get('title');
   }
 
   get description() {
-    return this.lectureForm.get('description');
+    return this.createLectureForm.get('description');
   }
 
   get difficulty() {
-    return this.lectureForm.get('difficulty');
-  }
-
-  get status() {
-    return this.lectureForm.get('status');
+    return this.createLectureForm.get('difficulty');
   }
 
   onSubmit(value) {
-    value.slug = this.titleToSlug.transform(this.lectureForm.value.title);
-    
-    this.lectureService.createLecture(this.route.snapshot.params.module_id, value).subscribe({
-      next: (res: any) => this.router.navigate(['/admin-panel/edit-lecture', res.createdLectureId]),
+    value.slug = this.titleToSlug.transform(this.createLectureForm.value.title);
+
+    this.lectureService.createLecture(this.route.snapshot.params.course_id, value).subscribe({
       error: (err) => console.log(err),
+      next: (res: any) => this.router.navigate(['/admin-panel/edit-lecture', res.data])
     });
   }
 }

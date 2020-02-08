@@ -1,89 +1,97 @@
 <div class="container">
-  <section class="admin-panel">
-    <h1>Admin Panel</h1>
-    <div class="admin-panel__create-lectures">
-      <div class="admin-panel__create-lectures__section">
-        <div class="admin-panel__create-lectures__header flex flex--between flex--center">
-            <span class="h4">Courses</span>
-            <i routerLink="/admin-panel/new-course" class="fa fa-plus add-button"></i>
+  <div class="admin-panel">
+    <h2 class="flex flex--not-even flex--align-center image-heading">
+      <img src="assets/icons/enrolled-courses.svg" alt="enrolled-courses">
+      <span>Courses & Lectures</span>
+    </h2>
+    <div class="section section--large">
+      <div class="courses-and-lectures">
+        <div class="courses">
+          <div class="course" [ngStyle]="{'background-image': 'url(' + environment.HOST + courses[currentCourse].image + ')'}">
+            <div class="course-info">
+              <h3 class="h2">{{ courses[currentCourse].title }}</h3>
+              <div class="info">
+                <span>{{courses[currentCourse].numberOfLectures}} {{courses[currentCourse].numberOfLectures > 1 ? 'lectures' : 'lecture'}}</span>
+                <span>{{courses[currentCourse].totalErt}} {{courses[currentCourse].totalErt > 1 ? 'hours' : 'hour'}}</span>
+                <span class="text--capitalize">{{courses[currentCourse].difficulty}}</span>
+              </div>
+            </div>
+          </div>
+          <div class="enrolled-courses-controls flex flex--align-center">
+            <div class="arrow">
+              <img (click)="previousCourse()" [ngClass]="{ 'disabled': currentCourse === 0 }" src="assets/icons/arrow-left.svg" alt="arrow-left">
+            </div>
+            <div class="enrolled-courses-control-info">
+              <div>{{ currentCourse + 1 }} / {{ courses.length }}</div>
+              <div>COURSES</div>
+            </div>
+            <div class="arrow">
+              <img (click)="nextCourse()" [ngClass]="{ 'disabled': currentCourse === courses.length - 1 }" src="assets/icons/arrow-right.svg" alt="arrow-right">
+            </div>
+          </div>
         </div>
-        <ul class="admin-panel__create-lectures__list">
-          <li [ngClass]="{'active': activeCourse === i}" *ngFor="let course of courses; let i = index">
-            <div (click)="changeSelectedCourse(i)" class="admin-panel__create-lectures__item__header flex flex--between">
-                <span>{{ course.title }}</span>
-                <i [ngClass]="{'fa-angle-left': activeCourse === i, 'fa-angle-down': activeCourse !== i}" class="fa"></i>
-            </div>
-            <div *ngIf="activeCourse === i" class="admin-panel__create-lectures__item-content">
-              <div class="item-content__main">
-                <h4>{{ course.title }}</h4>
-                <p><small class="item-content__status">{{ course.status }}</small></p>
-                <p class="item-content__difficulty">{{ course.difficulty }}</p>
-                <p>{{ course.description }}</p>
-              </div>
-              <div class="item-content__actions flex flex--end">
-                  <i (click)="deleteCourse(course._id, i)" class="fa fa-trash delete-button"></i>
-                  <i [routerLink]="['/admin-panel/edit-course', course._id]" class="fa fa-pencil edit-button"></i>
-              </div>
-            </div>
-          </li>
-          <p *ngIf="courses.length < 1" class="no-content text-center"><i class="fa fa-frown-o"></i>No courses here</p>
-        </ul>
+        <div class="new-course flex flex--align-center flex--center">
+          <span class="text--center" routerLink="/admin-panel/new-course">Create New Course</span>
+        </div>
+        <div class="edit-course flex flex--align-center flex--center">
+          <span class="text--center" routerLink="/admin-panel/edit-course/{{courses[currentCourse].id}}">Edit Course</span>
+        </div>
+        <div class="new-lecture flex flex--align-center flex--center">
+          <span class="text--center" routerLink="/admin-panel/new-lecture/{{courses[currentCourse].id}}">Create Lecture</span>
+        </div>
       </div>
-      <div class="admin-panel__create-lectures__section">
-          <div class="admin-panel__create-lectures__header flex flex--between flex--center">
-              <span class="h4">Modules</span>
-              <i *ngIf="courses[activeCourse]?._id" [routerLink]="['/admin-panel/new-module', courses[activeCourse]?._id]" class="fa fa-plus add-button"></i>
-          </div>
-          <ul class="admin-panel__create-lectures__list">
-              <li [ngClass]="{'active': activeModule === i}" *ngFor="let module of courses[selectedCourse]?.modules; let i = index">
-                <div (click)="changeSelectedModule(i)" class="admin-panel__create-lectures__item__header flex flex--between">
-                    <span>{{ module.title }}</span>
-                    <i [ngClass]="{'fa-angle-left': activeModule === i, 'fa-angle-down': activeModule !== i}" class="fa"></i>
-                </div>
-                <div *ngIf="activeModule === i" class="admin-panel__create-lectures__item-content">
-                  <div class="item-content__main">
-                    <h4>{{ module.title }}</h4>
-                    <p><small class="item-content__status">{{ module.status }}</small> <i *ngIf="module.skippable" class="fa fa-fast-forward" title="Module skippable"></i></p>
-                    <p class="item-content__difficulty">{{ module.difficulty }}</p>
-                    <p>{{ module.description }}</p>
-                  </div>
-                  <div class="item-content__actions flex flex--end">
-                      <i (click)="deleteModule(module._id, selectedCourse, i)" class="fa fa-trash delete-button"></i>
-                      <i [routerLink]="['/admin-panel/edit-module', module._id]" class="fa fa-pencil edit-button"></i>
-                  </div>
-                </div>
-              </li>
-              <p *ngIf="courses[selectedCourse]?.modules.length < 1" class="no-content text-center"><i class="fa fa-frown-o"></i>No modules here</p>
-            </ul>
-        </div>
-        <div class="admin-panel__create-lectures__section">
-            <div class="admin-panel__create-lectures__header flex flex--between flex--center">
-                <span class="h4">Lectures</span>
-                <i *ngIf="courses[activeCourse]?.modules[activeModule]?._id" [routerLink]="['/admin-panel/new-lecture', courses[activeCourse]?.modules[activeModule]?._id]" class="fa fa-plus add-button"></i>
-            </div>
-            <ul class="admin-panel__create-lectures__list">
-                <li [ngClass]="{'active': activeLecture === i}" *ngFor="let lecture of courses[selectedCourse]?.modules[selectedModule]?.lectures; let i = index">
-                  <div (click)="changeSelectedLecture(i)" class="admin-panel__create-lectures__item__header flex flex--between">
-                      <span>{{ lecture.title }}</span>
-                      <i [ngClass]="{'fa-angle-left': activeLecture === i, 'fa-angle-down': activeLecture !== i}" class="fa"></i>
-                  </div>
-                  <div *ngIf="activeLecture === i" class="admin-panel__create-lectures__item-content">
-                    <div class="item-content__main">
-                        <h4>{{ lecture.title }}</h4>
-                        <p><small class="item-content__status">{{ lecture.status }}</small> <i *ngIf="lecture.skippable" class="fa fa-fast-forward" title="Lecture skippable"></i></p>
-                        <p class="item-content__difficulty">{{ lecture.difficulty }}</p>
-                        <p>{{ lecture.description }}</p>
-                    </div>
-                    <div class="item-content__actions flex flex--end">
-                        <i [routerLink]="['/lecture', lecture.slug]" class="fa fa-link link-button"></i>
-                        <i (click)="deleteLecture(lecture._id, selectedCourse, selectedModule, i)" class="fa fa-trash delete-button"></i>
-                        <i [routerLink]="['/admin-panel/edit-lecture', lecture._id]" class="fa fa-pencil edit-button"></i>
-                    </div>
-                  </div>
-                </li>
-                <p *ngIf="courses[selectedCourse]?.modules[selectedModule]?.lectures.length < 1" class="no-content text-center"><i class="fa fa-frown-o"></i>No lectures here</p>
-              </ul>
-          </div>
     </div>
-  </section>
+
+    <h2 class="margin-top flex flex--not-even flex--align-center image-heading">
+      <img src="assets/icons/users-cog.svg" alt="users-cog">
+      <span>Users</span>
+    </h2>
+    <div class="section section--large">
+      <div class="user-search-and-filter margin-bottom">
+        <div class="flex flex--not-even flex--align-center flex--between">
+          <input type="search" name="search" placeholder="Search users" [(ngModel)]="searchInput" (input)="filterUsers()">
+          <div class="filter">
+            <select name="payment" [(ngModel)]="roleFilter" (change)="filterUsers()">
+                <option value="">Filter by role</option>
+                <option value="user">User</option>
+                <option value="administrator">Administrator</option>
+                <option value="moderator">Moderator</option>
+            </select>
+            <select name="difficulty" [(ngModel)]="verifiedFilter" (change)="filterUsers()">
+                <option value="">Filter by verified</option>
+                <option value="1">Yes</option>
+                <option value="0">No</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div class="users-table">
+        <table>
+          <thead>
+            <tr>
+              <th [ngClass]="{'hide-sort': currentSortField !== 'id', 'sort-up': currentSortDirection === 'up', 'sort-down': currentSortDirection === 'down' }" (click)="sortUsers('id')">ID</th>
+              <th [ngClass]="{'hide-sort': currentSortField !== 'name', 'sort-up': currentSortDirection === 'up', 'sort-down': currentSortDirection === 'down' }" (click)="sortUsers('name')">Name</th>
+              <th [ngClass]="{'hide-sort': currentSortField !== 'email', 'sort-up': currentSortDirection === 'up', 'sort-down': currentSortDirection === 'down' }" (click)="sortUsers('email')">Email</th>
+              <th [ngClass]="{'hide-sort': currentSortField !== 'username', 'sort-up': currentSortDirection === 'up', 'sort-down': currentSortDirection === 'down' }" (click)="sortUsers('username')">Username</th>
+              <th [ngClass]="{'hide-sort': currentSortField !== 'role', 'sort-up': currentSortDirection === 'up', 'sort-down': currentSortDirection === 'down' }" (click)="sortUsers('role')">Role</th>
+              <th [ngClass]="{'hide-sort': currentSortField !== 'verified', 'sort-up': currentSortDirection === 'up', 'sort-down': currentSortDirection === 'down' }" (click)="sortUsers('verified')">Verified</th>
+              <th>Courses Fin./Enr.</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let user of users">
+              <td>{{ user.id }}</td>
+              <td>{{ user.name }}</td>
+              <td>{{ user.email }}</td>
+              <td><a class="link" routerLink="/">{{ user.username }}</a></td>
+              <td class="text--capitalize">{{ user.role }}</td>
+              <td>{{ user.verified ? 'Yes' : 'No' }}</td>
+              <td>{{ user.finishedCourses }} / {{ user.enrolledCourses }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
 </div>

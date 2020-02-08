@@ -1,0 +1,156 @@
+@import '../../../styles';
+
+.edit-course {
+    .color-picker {
+        label {
+            height: 54px;
+            width: 54px;
+            background-color: $black;
+            margin-left: 1em;
+            cursor: pointer;
+        }
+
+        img {
+            height: 25px;
+            width: 25px;
+            margin: auto;
+        }
+    }
+
+    .color-group-label {
+        display: inline-block;
+        margin-bottom: .5em;
+    }
+
+    .color-input-group {
+        input {
+            flex: 1;
+        }
+
+        input {
+            margin: 0;
+        }
+    }
+
+    .supported-language-group {
+        flex: 1;
+    }
+
+    .filter-lectures {
+        input,
+        select {
+            border: 0;
+            background-color: $light_grey;
+            color: $black;
+            padding: .6em 1em;
+        }
+    }
+
+    .filter-lectures * + * {
+        margin-left: 1em;
+    }
+
+    .add-language-button {
+        margin: auto;
+        
+        button {
+            height: 54px;
+            width: 54px;
+            border: 0;
+            background-color: $green;
+            cursor: pointer;
+
+            img {
+                height: 25px;
+                width: 25px;
+            }
+        }
+    }
+
+    .supported-languages-list {
+        .supported-language {
+            background-color: $green;
+            padding: .5em;
+            
+            span {
+                color: white;
+            }
+
+            img {
+                width: 15px;
+                margin-left: .5em;
+            }
+        }
+        
+        .supported-language + .supported-language {
+            margin-left: 1em;
+        }
+    }
+
+    .course-lectures-list {
+        .course-lecture {
+            background-color: $lighter_grey;
+            padding: 1em;
+
+            .lecture-title {
+                flex: 1;
+
+                img {
+                    width: 25px;
+                    margin-right: .75em;
+                    transition: transform .4s ease;
+                }
+
+                span {
+                    color: $blue;
+                    @extend .sans-serif;
+                    font-weight: bold;
+                }
+
+                .private-lecture-title {
+                    color: $dark_purple;
+                }
+            }
+
+
+            .lecture-actions {
+                span {
+                    cursor: pointer;
+                    
+                    img {
+                        margin-right: .2em;
+                    }
+                }
+
+                .edit-lecture {
+                    color: $green;
+
+                    img {
+                        width: 15px;
+                    }
+                }
+
+                .delete-lecture {
+                    cursor: pointer;
+
+                    img {
+                        width: 12px;
+                    }
+                }
+
+                & span + span {
+                    margin-left: 1em;
+                }
+            }
+        }
+
+        .course-lecture + .course-lecture {
+            margin-top: 1em;
+        }
+
+    }
+
+    .course-delete-reminder {
+        margin-top: .25em;
+    }
+}

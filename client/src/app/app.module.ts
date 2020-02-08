@@ -1,5 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
+import { NgModule, APP_INITIALIZER } from '@angular/core';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule, Routes } from '@angular/router';
@@ -13,31 +13,39 @@ import { HomeComponent } from './home/home.component';
 import { AuthenticationService } from './services/authentication.service';
 import { AuthGuardService } from './services/auth-guard.service';
 import { AdminPanelComponent } from './admin-panel/admin-panel.component';
-import { NewModuleComponent } from './admin-panel/new-module/new-module.component';
 import { NewLectureComponent } from './admin-panel/new-lecture/new-lecture.component';
 import { NewCourseComponent } from './admin-panel/new-course/new-course.component';
 import { AllCoursesResolverService } from './resolvers/all-courses-resolver.service';
 import { OneLectureResolverService } from './resolvers/one-lecture-resolver.service';
 import { BackButtonComponent } from './includes/back-button/back-button.component';
 import { EditLectureComponent } from './admin-panel/edit-lecture/edit-lecture.component';
-import { EditModuleComponent } from './admin-panel/edit-module/edit-module.component';
 import { EditCourseComponent } from './admin-panel/edit-course/edit-course.component';
 import { OneCourseResolverService } from './resolvers/one-course-resolver.service';
-import { OneModuleResolverService } from './resolvers/one-module-resolver.service';
 import { FileUploadComponent } from './includes/file-upload/file-upload.component';
 import { LectureComponent } from './lecture/lecture.component';
 import { OneLectureBySlugResolverService } from './resolvers/one-lecture-by-slug-resolver.service';
 import { TitleToSlugPipe } from './pipes/title-to-slug.pipe';
 import { GetSummaryPipe } from './pipes/get-summary.pipe';
 import { LectureHTMLContentResolverService } from './resolvers/lecture-html-content-by-slug-resolver.service';
-import { UserResolverService } from './resolvers/user-resolver.service';
 import { ToastrModule } from 'ngx-toastr';
+import { SignupFormComponent } from './signup/signup-form/signup-form.component';
+import { CoursesComponent } from './courses/courses.component';
+import { CourseComponent } from './course/course.component';
+import { UserCourseComponent } from './dashboard/user-course/user-course.component';
+import { UserSettingsComponent } from './user-settings/user-settings.component';
+import { EditUserComponent } from './admin-panel/edit-user/edit-user.component';
+import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
+import { NewPasswordComponent } from './new-password/new-password.component';
+import { UserEnrolledCoursesResolverService } from './resolvers/user-enrolled-courses-resolver.service';
+import { AllPublicCoursesResolverService } from './resolvers/all-public-courses-resolver.service';
+import { AllUsersResolverService } from './resolvers/all-users-resolver.service';
+import { CourseLecturesResolverService } from './resolvers/course-lectures-resolver.service';
 
 const routes: Routes = [
   {
     path: '',
     resolve: {
-      courses: AllCoursesResolverService
+      // courses: AllCoursesResolverService
     },
     component: HomeComponent
   },
@@ -50,6 +58,14 @@ const routes: Routes = [
     component: SignupComponent
   },
   {
+    path: 'forgot-password',
+    component: ForgotPasswordComponent
+  },
+  {
+    path: 'new-password',
+    component: NewPasswordComponent
+  },
+  {
     path: 'admin-panel',
     canActivate: [AuthGuardService],
     children: [
@@ -57,25 +73,29 @@ const routes: Routes = [
         path: '',
         component: AdminPanelComponent,
         resolve: {
-          courses: AllCoursesResolverService
+          courses: AllCoursesResolverService,
+          users: AllUsersResolverService
         }
       },
       { path: 'new-course', component: NewCourseComponent },
-      { path: 'new-module/:course_id', component: NewModuleComponent },
-      { path: 'new-lecture/:module_id', component: NewLectureComponent },
-      { path: 'edit-course/:course_id',
-        component: EditCourseComponent,
+      { path: 'edit-user/:user_id', component: EditUserComponent },
+      {
+        path: 'new-lecture/:course_id',
+        component: NewLectureComponent,
         resolve: {
           course: OneCourseResolverService
         }
       },
-      { path: 'edit-module/:module_id',
-        component: EditModuleComponent,
+      {
+        path: 'edit-course/:course_id',
+        component: EditCourseComponent,
         resolve: {
-          module: OneModuleResolverService
+          course: OneCourseResolverService,
+          courseLectures: CourseLecturesResolverService
         }
       },
-      { path: 'edit-lecture/:lecture_id',
+      {
+        path: 'edit-lecture/:lecture_id',
         component: EditLectureComponent,
         resolve: {
           lecture: OneLectureResolverService
@@ -85,42 +105,83 @@ const routes: Routes = [
    },
   {
     path: 'dashboard',
-    component: DashboardComponent,
+    canActivate: [AuthGuardService],
     resolve: {
-      user: UserResolverService
+      enrolledCourses: UserEnrolledCoursesResolverService
     },
-    canActivate: [AuthGuardService]
+    children: [
+      {
+        path: '',
+        component: DashboardComponent
+      },
+      {
+        path: 'course/:course_id',
+        component: UserCourseComponent,
+        resolve: {
+        }
+      },
+      {
+        path: 'settings',
+        component: UserSettingsComponent,
+        resolve: {
+        }
+      }
+    ]
+    // canActivate: [AuthGuardService]
+  },
+  {
+    path: 'courses',
+    component: CoursesComponent,
+    resolve: {
+      courses: AllPublicCoursesResolverService
+    }
+  },
+  {
+    path: 'course/:course_id',
+    component: CourseComponent,
+    resolve: {
+    }
   },
   {
     path: 'lecture/:slug',
     component: LectureComponent,
     resolve: {
-      lecture: OneLectureBySlugResolverService,
-      html_content: LectureHTMLContentResolverService
+      // lecture: OneLectureBySlugResolverService,
+      // html_content: LectureHTMLContentResolverService
     },
     canActivate: [AuthGuardService]
   },
 ];
 
+export function fetchUserDataProviderFactory(provider: AuthenticationService) {
+  return () => provider.fetchUserSessionData();
+}
+
 @NgModule({
   declarations: [
     AppComponent,
     AdminPanelComponent,
+    CoursesComponent,
+    CourseComponent,
     DashboardComponent,
     LoginComponent,
     SignupComponent,
+    SignupFormComponent,
     HomeComponent,
-    NewModuleComponent,
     NewLectureComponent,
     NewCourseComponent,
     EditLectureComponent,
     BackButtonComponent,
-    EditModuleComponent,
     EditCourseComponent,
     FileUploadComponent,
     LectureComponent,
     TitleToSlugPipe,
-    GetSummaryPipe
+    GetSummaryPipe,
+    UserCourseComponent,
+    UserSettingsComponent,
+    EditUserComponent,
+    ForgotPasswordComponent,
+    NewPasswordComponent
   ],
   imports: [
     BrowserAnimationsModule,
@@ -133,14 +194,22 @@ const routes: Routes = [
   ],
   providers: [
     AuthenticationService,
+    {
+      provide: APP_INITIALIZER,
+      useFactory: fetchUserDataProviderFactory,
+      deps: [AuthenticationService],
+      multi: true
+    },
     AuthGuardService,
     AllCoursesResolverService,
+    AllUsersResolverService,
+    AllPublicCoursesResolverService,
+    CourseLecturesResolverService,
     OneLectureResolverService,
-    OneModuleResolverService,
     OneCourseResolverService,
     OneLectureBySlugResolverService,
     LectureHTMLContentResolverService,
-    UserResolverService,
+    UserEnrolledCoursesResolverService,
     TitleToSlugPipe
   ],
   bootstrap: [AppComponent]

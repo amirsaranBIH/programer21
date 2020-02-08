@@ -1,0 +1,22 @@
+@import '../../../styles';
+
+.file-upload {
+    padding: 4em 0;
+    display: block;
+    cursor: pointer;
+
+    .file-upload-content {
+        margin: auto;
+        width: 40%;
+
+        p {
+            @extend .sans-serif;
+            font-size: 1.75em;
+            color: $light_purple;
+        }
+    }
+}
+
+.file-upload:hover {
+    background-color: $light_grey;
+}

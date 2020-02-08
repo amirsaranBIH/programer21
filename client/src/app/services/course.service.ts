@@ -1,20 +1,27 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { AuthenticationService } from './authentication.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CourseService {
 
-  constructor(private http: HttpClient, private authService: AuthenticationService) { }
+  constructor(private http: HttpClient) { }
+
+  getAllPublicCourses() {
+    return this.http.get('/api/course/getAllPublicCourses').toPromise();
+  }
 
   getAllCourses() {
-    return this.http.get('/api/course/get-all-courses');
+    return this.http.get('/api/course/getAllCourses').toPromise();
   }
 
   getCourseById(courseId) {
-    return this.http.get(`/api/course/get-course/${courseId}`);
+    return this.http.get(`/api/course/getCourseById/${courseId}`).toPromise();
+  }
+
+  getCourseLectures(courseId) {
+    return this.http.get(`/api/course/getCourseLectures/${courseId}`).toPromise();
   }
 
   getCourseBySlug(slug) {
@@ -22,27 +29,18 @@ export class CourseService {
   }
 
   createCourse(data) {
-    return this.http.post('/api/course/new', data,
-      { headers: { Authorization: `Bearer ${this.authService.getToken}` }});
+    return this.http.post('/api/course/createCourse', data);
   }
 
   editCourse(courseId, data) {
-    return this.http.post(`/api/course/edit/${courseId}`, data,
-      { headers: { Authorization: `Bearer ${this.authService.getToken}` }});
+    return this.http.post(`/api/course/edit/${courseId}`, data);
   }
 
   deleteCourse(courseId) {
-    return this.http.get(`/api/course/delete/${courseId}`,
-      { headers: { Authorization: `Bearer ${this.authService.getToken}` }});
+    return this.http.get(`/api/course/deleteCourse/${courseId}`);
   }
 
   enrollInCourse(courseId) {
-    return this.http.get(`/api/course/enroll/${courseId}`,
-      { headers: { Authorization: `Bearer ${this.authService.getToken}` }});
-  }
-
-  finishCourse(courseIndex) {
-    return this.http.get(`/api/course/finish/${courseIndex}`,
-      { headers: { Authorization: `Bearer ${this.authService.getToken}` }});
+    return this.http.get(`/api/course/enroll/${courseId}`);
   }
 }

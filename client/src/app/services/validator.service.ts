@@ -10,14 +10,14 @@ export class ValidatorService {
 
   async IsEmailTakenValidator(control: AbstractControl) {
     const email = control.value;
-    const isEmailTaken = await this.authService.checkIfEmailIsTaken(email);
+    const isEmailTaken = await this.authService.isEmailTaken(email);
 
     return isEmailTaken ? { emailTaken: true } : null;
   }
 
   async IsEmailInUseValidator(control: AbstractControl) {
     const email = control.value;
-    const isEmailInUse = await this.authService.checkIfEmailIsTaken(email);
+    const isEmailInUse = await this.authService.isEmailTaken(email);
 
     return !isEmailInUse ? { emailNotInUse: true } : null;
   }
@@ -55,9 +55,11 @@ export class ValidatorService {
     if (password.pristine || confirmPassword.pristine) {
       return null;
     }
-
     if (password && confirmPassword && (password.value !== confirmPassword.value)) {
+      console.log(confirmPassword);
       return { passwordsNotMatching: true };
+    } else {
+      return null;
     }
   }
 }

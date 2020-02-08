@@ -1,0 +1,53 @@
+@import '../styles.scss';
+
+.header {
+    padding: 0 2em;
+    height: 50px;
+    background: linear-gradient(to right, $dark_purple 0%, $light_purple 100%);
+    color: white;
+
+    & > .navigation > ul li + li {
+        margin-left: 3em;
+    }
+
+    &--fixed {
+        z-index: 100;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        background: initial !important;
+    }
+
+    .profile-image {
+        height: 35px;
+        width: 35px;
+        margin-right: .5em;
+    }
+}
+
+.account-link {
+    z-index: 1000;
+    position: relative;
+    cursor: pointer;
+
+    .account-dropdown {
+        background-color: $dark_purple;
+        position: absolute;
+        top: 115%;
+        right: 0;
+        width: 175px;
+
+        ul {
+            li {
+                padding: 1em;
+                margin: 0 !important;
+                cursor: pointer;
+            }
+
+            li:hover {
+                background-color: $light_purple;
+            }
+        }
+    }
+}

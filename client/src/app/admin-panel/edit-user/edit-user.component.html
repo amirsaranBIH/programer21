@@ -1,0 +1,164 @@
+<div class="container">
+    <div class="edit-user">
+        <form class="form" [formGroup]="editUserForm" #ngForm="ngForm" action="signup" method="POST"
+        (ngSubmit)="onSubmit(editUserForm.value)">
+            <h2>Edit User: AmirSaran</h2>
+
+            <div class="section section--large">
+                <div class="flex">
+                    <div class="form-group">
+                        <label for="firstName" class="required">First Name</label>
+                        <div class="input-group"
+                            [ngClass]="{ 'is-invalid' : (firstName.invalid && firstName.touched) || (firstName.invalid && ngForm.submitted) }">
+                            <input type="text" id="firstName" formControlName="firstName"
+                                placeholder="What's your first name">
+                            <div class="input-help flex flex--not-even flex--align-center">
+                                <div class="input-help-status"></div>
+                                <div class="input-help-message">
+                                    <span>First name is required!</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="lastName" class="required">Last Name</label>
+                        <div class="input-group"
+                            [ngClass]="{ 'is-invalid' : (lastName.invalid && lastName.touched) || (lastName.invalid && ngForm.submitted) }">
+                            <input type="text" id="lastName" formControlName="lastName"
+                                placeholder="What's your last name">
+                            <div class="input-help flex flex--not-even flex--align-center">
+                                <div class="input-help-status"></div>
+                                <div class="input-help-message">
+                                    <span>Last name is required!</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex">
+                    <div class="form-group">
+                        <label for="username" class="required">Username</label>
+                        <div class="input-group"
+                            [ngClass]="{ 'is-invalid' : (username.invalid && username.touched) || (username.invalid && ngForm.submitted) }">
+                            <input type="text" id="username" formControlName="username"
+                                placeholder="What you want to be know as on Programer21">
+                            <div class="input-help flex flex--not-even flex--align-center">
+                                <div class="input-help-status"></div>
+                                <div class="input-help-message">
+                                    <span>Username is required!</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="email" class="required">Email</label>
+                        <div class="input-group"
+                            [ngClass]="{ 'is-invalid' : (email.invalid && email.touched) || (email.invalid && ngForm.submitted) }">
+                            <input type="email" id="email" formControlName="email" placeholder="Your email address">
+                            <div class="input-help flex flex--not-even flex--align-center">
+                                <div class="input-help-status"></div>
+                                <div class="input-help-message">
+                                    <span>Email is required!</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex">
+                    <div class="form-group">
+                        <label for="role" class="required">Role</label>
+                        <div class="input-group"
+                            [ngClass]="{ 'is-invalid' : (role.invalid && role.touched) || (role.invalid && ngForm.submitted) }">
+                            <select formControlName="role" id="role">
+                                <option value="user">User</option>
+                                <option value="administrator">Administrator</option>
+                                <option value="moderator">Moderator</option>
+                            </select>
+                            <div class="input-help flex flex--not-even flex--align-center">
+                                <div class="input-help-status"></div>
+                                <div class="input-help-message">
+                                    <span>Uset must have a role!</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="gender" class="required">Email Verified</label>
+                        <div class="input-group"
+                            [ngClass]="{ 'is-invalid' : (emailVerified.invalid && emailVerified.touched) || (emailVerified.invalid && ngForm.submitted) }">
+                            <select formControlName="emailVerified" id="emailVerified">
+                                <option value="true">Yes</option>
+                                <option value="false">No</option>
+                            </select>
+                            <div class="input-help flex flex--not-even flex--align-center">
+                                <div class="input-help-status"></div>
+                                <div class="input-help-message">
+                                    <span>Email verified can only be true or false</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <h2 class="margin-top">Additional Information</h2>
+            <div class="section section--large">
+                <div class="form-group">
+                    <label for="description">User Description</label>
+                    <div class="input-group"
+                        [ngClass]="{ 'is-invalid' : (description.invalid && description.touched) || (description.invalid && ngForm.submitted) }">
+                        <textarea name="description" id="description" cols="30" rows="5"
+                            placeholder="User Description"></textarea>
+                        <div class="input-help flex flex--not-even flex--align-center">
+                            <div class="input-help-status"></div>
+                            <div class="input-help-message">
+                                <span>Description must be contain less than 200 characters!</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex">
+                    <div class="form-group">
+                        <label for="city">City</label>
+                        <div class="input-group"
+                            [ngClass]="{ 'is-invalid' : (city.invalid && city.touched) || (city.invalid && ngForm.submitted) }">
+                            <input type="text" id="city" formControlName="city" placeholder="Enter city">
+                            <div class="input-help flex flex--not-even flex--align-center">
+                                <div class="input-help-status"></div>
+                                <div class="input-help-message">
+                                    <span>Description must be contain less than 50 characters!</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="gender">Gender</label>
+                        <div class="input-group"
+                            [ngClass]="{ 'is-invalid' : (gender.invalid && gender.touched) || (gender.invalid && ngForm.submitted) }">
+                            <select formControlName="gender" id="gender">
+                                <option value="">Select Gender</option>
+                                <option value="male">Male</option>
+                                <option value="female">Female</option>
+                                <option value="other">Other</option>
+                            </select>
+                            <div class="input-help flex flex--not-even flex--align-center">
+                                <div class="input-help-status"></div>
+                                <div class="input-help-message">
+                                    <span>Gender can only be Male, Female and Other!</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+        <div class="flex flex--not-even flex--between flex--align-center margin-top">
+            <div>
+                <button type="submit" class="button button--large button--update">Update User</button>
+            </div>
+            <div>
+                <button class="button button--large button--delete">Suspend User</button>
+            </div>
+        </div>
+    </div>
+  </div>
