@@ -7,7 +7,7 @@ import { AuthenticationService } from './authentication.service';
 })
 export class LectureService {
 
-  constructor(private http: HttpClient, private authService: AuthenticationService) { }
+  constructor(private http: HttpClient, private auth: AuthenticationService) { }
 
   getAllLectures() {
     return this.http.get('/api/lecture/get-all-lectures');

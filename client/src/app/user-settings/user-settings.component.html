@@ -3,7 +3,7 @@
         <h2>Account Information</h2>
         <div class="section section--large">
             <form class="form" [formGroup]="accountInfoForm" #ngForm="ngForm" action="signup" method="POST"
-                (ngSubmit)="onSubmit(accountInfoForm.value)">
+                (ngSubmit)="onSubmitAccountInfo(accountInfoForm.value)">
                 <div class="flex flex--not-even">
                     <div class="image-upload flex flex--column flex--align-center">
                         <img src="assets/images/default_profile_picture.png" alt="default-profile-picture">
@@ -86,7 +86,7 @@
         <h2 class="margin-top">Additional Information</h2>
         <div class="section section--large">
             <form class="form" [formGroup]="additionalInfoForm" #ngForm="ngForm" action="signup" method="POST"
-                (ngSubmit)="onSubmit(additionalInfoForm.value)">
+                (ngSubmit)="onSubmitAdditionalInfo(additionalInfoForm.value)">
                 <div class="form-group">
                     <label for="description">User Description</label>
                     <div class="input-group"
@@ -141,7 +141,7 @@
         <h2 class="margin-top">Change Password</h2>
         <div class="section section--large">
             <form class="form" [formGroup]="changePasswordForm" #ngForm="ngForm" action="signup" method="POST"
-                (ngSubmit)="onSubmit(changePasswordForm.value)">
+                (ngSubmit)="onSubmitChangePassword(changePasswordForm.value)">
                 <div class="form-group">
                     <label for="description">New Password</label>
                     <div class="input-group"

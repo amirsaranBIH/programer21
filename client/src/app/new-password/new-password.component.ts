@@ -25,4 +25,8 @@ export class NewPasswordComponent implements OnInit {
   get confirmPassword() {
     return this.newPasswordForm.get('confirmPassword');
   }
+
+  onSubmit(value) {
+    console.log(value);
+  }
 }

@@ -1,7 +1,7 @@
 <div class="container">
     <div class="new-course">
         <form class="form" [formGroup]="createCourseForm" #ngForm="ngForm" action="signup" method="POST"
-        (ngSubmit)="onSubmit(createCourseForm.value)">
+        (ngSubmit)="onSubmit()">
             <h2>Create New Course</h2>
 
             <div class="section section--large">

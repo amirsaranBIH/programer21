@@ -19,7 +19,7 @@ export class AuthenticationService {
   }
 
   public get getAuthorizationHeader() {
-    const token = localStorage.getItem(this.localStorageTokenName,);
+    const token = localStorage.getItem(this.localStorageTokenName);
 
     return token ? { Authorization: `Bearer ${token}` } : null;
   }
@@ -59,7 +59,7 @@ export class AuthenticationService {
     .toPromise().then(async (res: any) => {
       if (res.status) {
         this.setJwtToken(res.data.token);
-        this.fetchUserData();
+        await this.fetchUserData();
       }
 
       return res;

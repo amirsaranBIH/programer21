@@ -1,6 +1,6 @@
 <div class="container">
     <div class="edit-course">
-        <form class="form" [formGroup]="editCourseForm" #ngForm="ngForm" action="signup" method="POST" (ngSubmit)="onSubmit(editCourseForm.value)">
+        <form class="form" [formGroup]="editCourseForm" #ngForm="ngForm" action="signup" method="POST" (ngSubmit)="onSubmit()">
             <h2>Edit Course</h2>
 
             <div class="section section--large">
@@ -186,7 +186,7 @@
                     <div class="lecture-title flex flex--not-even flex--align-center">
                         <img *ngIf="lecture.status === 'public'" src="assets/icons/users.svg" alt="users">
                         <img *ngIf="lecture.status === 'private'" src="assets/icons/user-lock.svg" alt="user-lock">
-                        <span [ngClass]="{ 'private-lecture-title': lecture.status === 'private' }" (click)="routeToLecture(lecture)">{{ lecture.title }}</span>
+                        <span [ngClass]="{ 'private-lecture-title': lecture.status === 'private' }">{{ lecture.title }}</span>
                     </div>
                     <div class="lecture-actions flex flex--not-even flex--align-center">
                         <span routerLink="/admin-panel/edit-lecture/{{lecture.id}}" class="edit-lecture flex flex--not-even flex--align-center">

@@ -19,10 +19,13 @@ export class ForgotPasswordComponent implements OnInit {
         this.validators.EmailValidator
       ], [this.validators.IsEmailInUseValidator]],
     });
-  }
+}
 
   get email() {
     return this.forgotPasswordForm.get('email');
   }
 
+  onSubmit(value) {
+    console.log(value);
+  }
 }

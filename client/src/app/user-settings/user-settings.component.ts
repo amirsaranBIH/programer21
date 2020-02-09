@@ -114,4 +114,16 @@ export class UserSettingsComponent implements OnInit {
   uploadFile(e) {
     this.image.patchValue(e.target.files[0]);
   }
+
+  onSubmitAccountInfo(value) {
+    console.log(value);
+  }
+
+  onSubmitAdditionalInfo(value) {
+    console.log(value);
+  }
+
+  onSubmitChangePassword(value) {
+    console.log(value);
+  }
 }
