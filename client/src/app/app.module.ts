@@ -161,7 +161,7 @@ const routes: Routes = [
 ];
 
 export function fetchUserDataProviderFactory(provider: AuthenticationService) {
-  return () => provider.fetchUserSessionData();
+  return () => provider.fetchUserData();
 }
 
 @NgModule({

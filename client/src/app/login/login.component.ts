@@ -37,21 +37,17 @@ export class LoginComponent implements OnInit {
   }
 
   onSubmit(credentials) {
+    this.router.navigate(['dashboard']);
     if (this.loginForm.valid) {
-      this.authService.login(credentials).subscribe({
-        error: error => console.error(error),
-        next: (res: any) => {
-          if (res.status) {
-            if (res.data) {
-              this.authService.fetchUserSessionData().then(() => {
-                this.router.navigate(['dashboard']);
-              });
-            } else {
-              if (!this.email.hasError('required') &&
-                  !this.email.hasError('notValidEmail') &&
-                  !this.email.hasError('emailNotInUse')) {
-                this.password.setErrors({ wrongPassword: true });
-              }
+      this.authService.login(credentials).then((res: any) => {
+        if (res.status) {
+          if (res.data.isCorrectPassword) {
+            this.router.navigate(['dashboard']);
+          } else {
+            if (!this.email.hasError('required') &&
+                !this.email.hasError('notValidEmail') &&
+                !this.email.hasError('emailNotInUse')) {
+              this.password.setErrors({ wrongPassword: true });
             }
           }
         }

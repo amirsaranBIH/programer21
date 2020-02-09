@@ -56,8 +56,9 @@ export class AppComponent {
   }
 
   logout() {
-    this.auth.logout();
     this.toggleAccountDropdownMenu();
+    this.auth.userData = null;
+    this.auth.removeJwtToken();
     this.router.navigate(['/']);
   }
 }

@@ -7,6 +7,8 @@ class AuthModel extends CI_model {
 
         $this->load->database();
         $this->load->model('UserModel', 'user');
+        $this->load->helper('url');
+        $this->load->helper('file');
     }
 
     public function login($email, $password) {
@@ -31,14 +33,41 @@ class AuthModel extends CI_model {
 
         $isCorrectPassword = $this->isCorrectPassword($password, $hashedPassword);
 
-        if ($isCorrectPassword) {
+        if ($isCorrectPassword) {  
             $userData = $this->user->getUserById($row->id);
 
-            $this->setUserSession($userData);
+            $privateKey = read_file(FCPATH . 'application/keys/private_key.pem');
+
+            $userData->iss = base_url();
+            $userData->aud = base_url();
+            $userData->iat = strtotime('now');
+
+            $jwt = \Firebase\JWT\JWT::encode($userData, $privateKey, 'RS256');
         }
 
         return array(
-            'isCorrectPassword' => $isCorrectPassword
+            'isCorrectPassword' => $isCorrectPassword,
+            'token' => $jwt
+        );
+    }
+
+    public function verifyJwtToken($token) {
+        $publicKey = read_file(FCPATH . 'application/keys/public_key.pem');
+
+        try {
+            $payload = \Firebase\JWT\JWT::decode($token, $publicKey, array('RS256'));
+        } catch(Exception $e) {
+            return array(
+                'status' => false,
+                'message' => $e->getMessage()
+            );
+
+            log_message('error', $e->getMessage());
+        }
+
+        return array(
+            'status' => true,
+            'payload' => $payload
         );
     }
 

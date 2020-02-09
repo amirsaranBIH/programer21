@@ -1,6 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
+
 class Auth extends MY_Controller  {
     public function __construct(){
         parent::__construct();
@@ -19,14 +20,16 @@ class Auth extends MY_Controller  {
             return;
         }
 
-        $correctLogin = $this->auth->login($userData['email'], $userData['password']);
+        $loginResponse = $this->auth->login($userData['email'], $userData['password']);
 
-        if ($correctLogin === false) {
+        if ($loginResponse['isCorrectPassword'] === false) {
             $this->setResponseError();
             return;
         }
 
-        $this->setResponseSuccess($createdUserId);
+        $loginResponse['createdUserId'] = $createdUserId;
+
+        $this->setResponseSuccess($loginResponse);
     }
 
     public function login() {
@@ -34,26 +37,12 @@ class Auth extends MY_Controller  {
 
         $loginResponse = $this->auth->login($userData['email'], $userData['password']);
 
-        if ($loginResponse === false) {
+        if ($loginResponse['isCorrectPassword'] === false) {
             $this->setResponseError();
             return;
         }
 
-        $this->setResponseSuccess($loginResponse['isCorrectPassword']);
-    }
-
-    public function logout() {
-        session_start();
-
-        if (isset($_COOKIE[session_name()])) {
-            setcookie(session_name(), '', time()-3600, '/');
-        }
-
-        $_SESSION = array();
-
-        session_destroy();
-
-        $this->setResponseSuccess(true);
+        $this->setResponseSuccess($loginResponse);
     }
 
     public function isEmailTaken() {
@@ -81,11 +70,24 @@ class Auth extends MY_Controller  {
 
         $this->setResponseSuccess($response['emailTaken']);
     }
-    
-    public function fetchUserSessionData() {
-        session_start();
-        $response = isset($_SESSION['userData']) ? $_SESSION['userData'] : null;
 
-        $this->setResponseSuccess($response);
+    public function verifyJwtToken() {
+        $tokenHeader = $this->input->get_request_header('Authorization');
+    
+        if (!$tokenHeader) {
+            $this->setResponseError();
+            return;
+        }
+
+        $token = substr($tokenHeader, 7);
+
+        $response = $this->auth->verifyJwtToken($token);
+
+        if ($response['status'] === false) {
+            $this->setResponseError(200, $response['message']);
+            return;
+        }
+
+        $this->setResponseSuccess($response['payload']);
     }
 }

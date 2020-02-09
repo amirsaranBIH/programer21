@@ -114,7 +114,7 @@
         <div class="monthly-activity-days flex">
           <div class="monthly-activity-day text--center flex flex--column flex--not-even flex--end" *ngFor="let day of monthlyActivityDays; let i = index">
             <div class="monthly-activity-bar" [ngStyle]="{ 'height': day + '%' }"></div>
-            <span class="day text--small">{{(i + 1).toString().padStart(2, '0')}}</span>
+            <span class="day text--small">{{formatDateNumber(i + 1)}}</span>
           </div>
         </div>
       </div>

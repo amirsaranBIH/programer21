@@ -74,4 +74,8 @@ export class DashboardComponent implements OnInit {
       this.currentEnrolledCourse++;
     }
   }
+
+  formatDateNumber(day) {
+    return day < 10 ? '0' + day : day;
+  }
 }

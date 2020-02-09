@@ -82,7 +82,7 @@ export class SignupFormComponent implements OnInit {
       this.authService.signup(data).subscribe({
         error: err => console.log(err),
         complete: () => {
-          this.authService.fetchUserSessionData().then(() => {
+          this.authService.fetchUserData().then(() => {
             this.router.navigate(['/dashboard']);
           });
         }

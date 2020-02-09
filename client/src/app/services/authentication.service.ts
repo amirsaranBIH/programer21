@@ -6,41 +6,63 @@ import { environment } from 'src/environments/environment';
 @Injectable()
 export class AuthenticationService {
   public userData = null;
+  private localStorageTokenName = 'PROGRAMER21_JWT';
 
   constructor(private http: HttpClient) {}
 
-  public fetchUserSessionData() {
-    return new Promise((resolve, reject) => {
-      this.http.get(environment.HOST + '/api/auth/fetchUserSessionData').subscribe({
-        error: error => {
-          console.error(error);
-          reject(error);
-        },
-        next: (res: any) => {
-          this.userData = res.data;
-          resolve(true);
-        }
+  private setJwtToken(token) {
+    localStorage.setItem(this.localStorageTokenName, token);
+  }
+
+  public removeJwtToken() {
+    localStorage.removeItem(this.localStorageTokenName);
+  }
+
+  public get getAuthorizationHeader() {
+    const token = localStorage.getItem(this.localStorageTokenName,);
+
+    return token ? { Authorization: `Bearer ${token}` } : null;
+  }
+
+  public fetchUserData() {
+    const token = this.getAuthorizationHeader;
+
+    if (token) {
+      return new Promise((resolve, reject) => {
+        this.http.get(environment.HOST + '/api/auth/verifyJwtToken', { headers: token }).subscribe({
+          error: error => {
+            if (error.status === 401) {
+              console.error(error);
+              reject(error);
+            }
+          },
+          next: (res: any) => {
+            if (res.status) {
+              this.userData = res.data;
+            }
+
+            resolve(true);
+          }
+        });
       });
-    });
+    } else {
+      return null;
+    }
   }
 
   public signup(data): Observable<any> {
     return this.http.post(environment.HOST + '/api/auth/signup', data);
   }
 
-  public login(data): Observable<any> {
-    return this.http.post(environment.HOST + '/api/auth/login', data);
-  }
-
-  public logout() {
-    this.http.get(environment.HOST + '/api/auth/logout').subscribe({
-      error: error => console.error(error),
-      next: (res: any) => {
-        if (res.status) {
-          this.userData = null;
-          this.fetchUserSessionData();
-        }
+  public login(data): Promise<any> {
+    return this.http.post(environment.HOST + '/api/auth/login', data)
+    .toPromise().then(async (res: any) => {
+      if (res.status) {
+        this.setJwtToken(res.data.token);
+        this.fetchUserData();
       }
+
+      return res;
     });
   }
 
