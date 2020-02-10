@@ -35,6 +35,19 @@ class User extends MY_Controller  {
         $this->setResponseSuccess();
     }
 
+    public function updateUserAccountInfo($userId) {
+        $data = $this->input->post();
+
+        $res = $this->user->updateUserAccountInfo($userId, $data);
+
+        if ($res['status'] === false) {
+            $this->setResponseError(200, $res['data']);
+            return;
+        }
+
+        $this->setResponseSuccess();
+    }
+
     public function suspendUser($userId) {
         $status = $this->user->suspendUser($userId);
 
@@ -79,14 +92,47 @@ class User extends MY_Controller  {
         $this->setResponseSuccess($user);
     }
 
-    public function searchUsersByUsernameAndFullname($searchQuery) {
-        $users = $this->user->searchUsersByUsernameAndFullname($searchQuery);
+    public function getCourseActivityPercentages($userId) {
+        $percentages = $this->user->getCourseActivityPercentages($userId);
 
-        if ($users === false) {
+        if ($percentages === false) {
             $this->setResponseError();
             return;
         }
 
-        $this->setResponseSuccess($users);
+        $this->setResponseSuccess($percentages);
+    }
+
+    public function getAllLatestLecturesByUserId($userId) {
+        $lectures = $this->user->getAllLatestLecturesByUserId($userId);
+
+        if ($lectures === false) {
+            $this->setResponseError();
+            return;
+        }
+
+        $this->setResponseSuccess($lectures);
+    }
+
+    public function getMonthlyActivity($userId) {
+        $montlyActivity = $this->user->getMonthlyActivity($userId);
+
+        if ($montlyActivity === false) {
+            $this->setResponseError();
+            return;
+        }
+
+        $this->setResponseSuccess($montlyActivity);
+    }
+
+    public function nextUsernameChangeAvailableIn($userId) {
+        $nextUsernameChangeAvailableIn = $this->user->nextUsernameChangeAvailableIn($userId);
+
+        if ($nextUsernameChangeAvailableIn === false) {
+            $this->setResponseError();
+            return;
+        }
+
+        $this->setResponseSuccess($nextUsernameChangeAvailableIn);
     }
 }

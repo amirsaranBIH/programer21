@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { environment } from 'src/environments/environment';
 import { AuthenticationService } from '../services/authentication.service';
 import { ActivatedRoute } from '@angular/router';
+import * as moment from 'moment';
 
 @Component({
   templateUrl: './dashboard.component.html',
@@ -12,6 +13,8 @@ export class DashboardComponent implements OnInit {
   public monthlyActivityDays = [];
   public courseActivityPercentages = [];
   public enrolledCourses = [];
+  public latestLectures = [];
+  public monthlyActivity = {};
   public currentEnrolledCourse = 0;
   public environment = environment;
 
@@ -23,25 +26,22 @@ export class DashboardComponent implements OnInit {
   ngOnInit() {
     this.user = this.auth.userData;
     this.enrolledCourses = this.route.snapshot.data.enrolledCourses;
-    console.log(this.enrolledCourses)
-    for (let i = 0; i < 31; i++) {
-      this.monthlyActivityDays.push(Math.floor(Math.random() * 101));
-    }
+    this.courseActivityPercentages = this.route.snapshot.data.courseActivityPercentages;
+    this.latestLectures = this.route.snapshot.data.latestLectures;
+    this.monthlyActivity = this.route.snapshot.data.monthlyActivity;
 
-    this.courseActivityPercentages = [
-      {
-        percentage: 50,
-        color: 'orange'
-      },
-      {
-        percentage: 18,
-        color: '#00f'
-      },
-      {
-        percentage: 32,
-        color: 'yellow'
+    const days = this.getDaysInMonth(1, 2020);
+
+    const maxMonthlyActivity = this.getMaxMonthlyActivity();
+
+    // tslint:disable-next-line: prefer-for-of
+    for (let i = 0; i < days.length; i++) {
+      if (this.monthlyActivity.hasOwnProperty(days[i])) {
+        this.monthlyActivityDays.push((this.monthlyActivity[days[i]].lecturesFinished / maxMonthlyActivity) * 100);
+      } else {
+        this.monthlyActivityDays.push(0);
       }
-    ];
+    }
 
     this.calculateCourseActivityOffest(this.courseActivityPercentages);
   }
@@ -63,6 +63,31 @@ export class DashboardComponent implements OnInit {
     });
   }
 
+  getDaysInMonth(month, year) {
+    const date = new Date(year, month, 1);
+    const days = [];
+    while (date.getMonth() === month) {
+      days.push(moment(date).format('YYYY-MM-DD'));
+      date.setDate(date.getDate() + 1);
+    }
+    return days;
+  }
+
+  getMaxMonthlyActivity() {
+    let maxActivity = 0;
+
+    // tslint:disable-next-line: forin
+    for (const activity in this.monthlyActivity) {
+      const a: any = activity;
+
+      if (this.monthlyActivity[a].lecturesFinished > maxActivity) {
+        maxActivity = this.monthlyActivity[a].lecturesFinished;
+      }
+    }
+
+    return maxActivity;
+  }
+
   previousEnrolledCourse() {
     if (this.currentEnrolledCourse > 0) {
       this.currentEnrolledCourse--;
@@ -77,5 +102,9 @@ export class DashboardComponent implements OnInit {
 
   formatDateNumber(day) {
     return day < 10 ? '0' + day : day;
+  }
+
+  formatDate(date) {
+    return moment(date).format('MMMM D, YYYY');
   }
 }

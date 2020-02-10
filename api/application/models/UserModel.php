@@ -213,7 +213,9 @@ class UserModel extends CI_model {
         return true;
     }
 
-    public function updateUserFirstAndLastName($userId, $userData) {
+    public function updateUserAccountInfo($userId, $userData) {
+        $this->db->trans_start();
+
         $sql = "UPDATE
                     users
                 SET
@@ -233,7 +235,35 @@ class UserModel extends CI_model {
             return false;
         }
 
-        return true;
+        if (isset($_FILES['image'])) {
+            $res = $this->uploadUserImage('image');
+    
+            if (!$res['status']) {
+                log_message('error', 'There was an error while uploading course image');
+
+                return $res;
+            }
+    
+            $uploadedImagePath = '/uploads/user_images/'.$res['data']['file_name'];
+    
+            $this->setUserImage($userId, $uploadedImagePath);
+        }
+
+        $user = $this->getUserById($userId);
+
+        if ($user->email !== $userData['email']) {
+            $this->updateUserEmail($userId, $userData['email']);
+        }
+
+        if ($user->username !== $userData['username']) {
+            $this->updateUserUsername($userId, $user->username, $userData['username']);
+        }
+
+        $this->db->trans_complete();
+
+        return array(
+            'status' => true
+        );
     }
 
     public function updateUserEmail($userId, $newEmail) {
@@ -253,6 +283,52 @@ class UserModel extends CI_model {
             log_message('error', $this->db->error()['message']);
             return false;
         }
+
+        return true;
+    }
+
+    public function updateUserUsername($userId, $oldUsername, $newUsername) {
+        $this->db->trans_start();
+
+        $sql = "UPDATE
+                    users
+                SET
+                    username = ?
+                WHERE
+                    id = ?";
+
+        $query = $this->db->query($sql, array(
+            $newUsername,
+            $userId
+        ));
+
+        if (!$query) {
+            log_message('error', $this->db->error()['message']);
+            return false;
+        }
+
+        $sql = "INSERT INTO
+                    username_changes
+                (
+                    `userId`,
+                    `oldUsername`,
+                    `newUsername`
+                ) VALUES (
+                    ?, ?, ?
+                )";
+
+        $query = $this->db->query($sql, array(
+            $userId,
+            $oldUsername,
+            $newUsername
+        ));
+
+        if (!$query) {
+            log_message('error', $this->db->error()['message']);
+            return false;
+        }
+
+        $this->db->trans_complete();
 
         return true;
     }
@@ -378,8 +454,8 @@ class UserModel extends CI_model {
 
 
         $query = $this->db->query($sql, array(
-            $userId,
-            $imagePath
+            $imagePath,
+            $userId
         ));
 
         if (!$query) {
@@ -433,6 +509,7 @@ class UserModel extends CI_model {
         $sql = "SELECT
                     l.id,
                     l.title,
+                    l.slug,
                     c.color AS courseColor,
                     fl.createdAt AS finishedAt
                 FROM
@@ -470,7 +547,7 @@ class UserModel extends CI_model {
     public function getMonthlyActivity($userId) {
         $sql = "SELECT
                     COUNT(1) AS lecturesFinished,
-                    createdAt AS date
+                    DATE(createdAt) AS date
                 FROM
                     finished_lectures
                 WHERE
@@ -488,7 +565,7 @@ class UserModel extends CI_model {
         $stats = array();
 
         foreach ($query->result() as $stat) {
-            array_push($stats, $stat);
+            $stats[$stat->date] = $stat;
         }
 
         return $stats;
@@ -499,7 +576,7 @@ class UserModel extends CI_model {
                     c.id,
                     c.color,
                     c.shortName,
-                    COUNT(1) / 
+                    (COUNT(1) / 
                     (
                         SELECT 
                             COUNT(1)
@@ -507,7 +584,7 @@ class UserModel extends CI_model {
                             finished_lectures
                         WHERE
                             fl.userId = ?
-                    ) AS percentage
+                    )) * 100 AS percentage
                 FROM
                     finished_lectures fl
                 LEFT JOIN
@@ -605,6 +682,62 @@ class UserModel extends CI_model {
         }
 
         return true;
+    }
+
+    public function nextUsernameChangeAvailableIn($userId) {
+        $sql = "SELECT
+                    IFNULL(
+                        IF(
+                            DATEDIFF(
+                                DATE_ADD(MAX(createdAt), INTERVAL 30 DAY),
+                                NOW()
+                            ) <= 0,
+                            0,
+                            DATEDIFF(
+                                DATE_ADD(MAX(createdAt), INTERVAL 30 DAY),
+                                NOW()
+                            )
+                        ),
+                        0
+                    ) AS nextUsernameChangeAvailableIn
+                FROM
+                    username_changes
+                WHERE
+                    userId = ?";
+
+        $query = $this->db->query($sql, $userId);
+
+        if (!$query) {
+            log_message('error', $this->db->error()['message']);
+            return false;
+        }
+
+        return $query->first_row()->nextUsernameChangeAvailableIn;
+    }
+
+    public function uploadUserImage($fieldName) {
+        $config['upload_path']      = './uploads/user_images';
+        $config['allowed_types']    = 'gif|jpg|jpeg|png';
+        $config['max_size']         = 500;
+        $config['max_width']        = 512;
+        $config['max_height']       = 512;
+        $config['encrypt_name']     = true;
+        $config['file_ext_tolower'] = true;
+        
+        $this->load->library('upload', $config);
+
+        if ($this->upload->do_upload($fieldName)) {
+            return array(
+                'status' => true,
+                'data' => $this->upload->data()
+            );
+        } else {
+            log_message('error', $this->upload->display_errors());
+            return array(
+                'status' => false,
+                'data' => $this->upload->display_errors('', '')
+            );
+        }
     }
 
     public function getHashedPassword($plainPassword) {

@@ -7,6 +7,9 @@ import { ActivatedRoute } from '@angular/router';
   providedIn: 'root'
 })
 export class ValidatorService {
+  private unchangedUsername;
+  private nextUsernameChangeAvailableIn;
+
   constructor(private authService: AuthenticationService, private route: ActivatedRoute) { }
 
   IsEmailTakenValidator = async (control: AbstractControl) => {
@@ -37,6 +40,14 @@ export class ValidatorService {
 
     if (!isValidName) {
       return { nameNotValid: true };
+    } else {
+      return null;
+    }
+  }
+
+  CanChangeUsername(control: AbstractControl) {
+    if (this.unchangedUsername !== control.value && this.nextUsernameChangeAvailableIn !== 0) {
+      return { cantChangeUsername: true };
     } else {
       return null;
     }

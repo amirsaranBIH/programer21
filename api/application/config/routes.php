@@ -64,7 +64,12 @@ $route['api/user/getUserEnrolledCourses/(:num)'] = 'user/getUserEnrolledCourses/
 $route['api/user/getAllUsers'] = 'user/getAllUsers';
 $route['api/user/getUserById/(:num)'] = 'user/getUserById/$1';
 $route['api/user/updateUser/(:num)']['post'] = 'user/updateUser/$1';
+$route['api/user/updateUserAccountInfo/(:num)']['post'] = 'user/updateUserAccountInfo/$1';
 $route['api/user/suspendUser/(:num)'] = 'user/suspendUser/$1';
+$route['api/user/getCourseActivityPercentages/(:num)'] = 'user/getCourseActivityPercentages/$1';
+$route['api/user/getAllLatestLecturesByUserId/(:num)'] = 'user/getAllLatestLecturesByUserId/$1';
+$route['api/user/getMonthlyActivity/(:num)'] = 'user/getMonthlyActivity/$1';
+$route['api/user/nextUsernameChangeAvailableIn/(:num)'] = 'user/nextUsernameChangeAvailableIn/$1';
 
 $route['api/course/getAllPublicCourses'] = 'course/getAllPublicCourses';
 $route['api/course/getAllCourses'] = 'course/getAllCourses';

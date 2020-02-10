@@ -10,7 +10,7 @@
           <ul>
             <li (click)="routeTo('/dashboard')"><a>Dashboard</a></li>
             <li *ngIf="auth.userData.role === 'administrator'"><a (click)="routeTo('/admin-panel')">Admin Panel</a></li>
-            <li (click)="routeTo('/')"><a>Settings</a></li>
+            <li (click)="routeTo('/settings/' + auth.userData.id)"><a>Settings</a></li>
             <li (click)="logout()"><a>Logout</a></li>
           </ul>
         </nav>

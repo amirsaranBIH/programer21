@@ -41,6 +41,9 @@ import { AllPublicCoursesResolverService } from './resolvers/all-public-courses-
 import { AllUsersResolverService } from './resolvers/all-users-resolver.service';
 import { CourseLecturesResolverService } from './resolvers/course-lectures-resolver.service';
 import { UserResolverService } from './resolvers/user-resolver.service';
+import { CourseActivityPercentageResolverService } from './resolvers/course-activity-percentage-resolver.service';
+import { UserLatestLecturesResolverService } from './resolvers/user-latest-lectures-resolver.service';
+import { UserMonthlyActivityResolverService } from './resolvers/user-monthly-activity-resolver.service';
 
 const routes: Routes = [
   {
@@ -114,7 +117,10 @@ const routes: Routes = [
     path: 'dashboard',
     canActivate: [AuthGuardService],
     resolve: {
-      enrolledCourses: UserEnrolledCoursesResolverService
+      enrolledCourses: UserEnrolledCoursesResolverService,
+      courseActivityPercentages: CourseActivityPercentageResolverService,
+      latestLectures: UserLatestLecturesResolverService,
+      monthlyActivity: UserMonthlyActivityResolverService
     },
     children: [
       {
@@ -127,14 +133,12 @@ const routes: Routes = [
         resolve: {
         }
       },
-      {
-        path: 'settings',
-        component: UserSettingsComponent,
-        resolve: {
-        }
-      }
     ]
     // canActivate: [AuthGuardService]
+  },
+  {
+    path: 'settings/:user_id',
+    component: UserSettingsComponent
   },
   {
     path: 'courses',
@@ -213,8 +217,11 @@ export function fetchUserDataProviderFactory(provider: AuthenticationService) {
     AllPublicCoursesResolverService,
     UserResolverService,
     CourseLecturesResolverService,
+    UserMonthlyActivityResolverService,
+    CourseActivityPercentageResolverService,
     OneLectureResolverService,
     OneCourseResolverService,
+    UserLatestLecturesResolverService,
     OneLectureBySlugResolverService,
     LectureHTMLContentResolverService,
     UserEnrolledCoursesResolverService,

@@ -26,7 +26,31 @@ export class UserService {
     return this.http.post(environment.HOST + '/api/user/updateUser/' + userId, userData, { headers: this.auth.getAuthorizationHeader });
   }
 
+  updateUserAccountInfo(userId, userData) {
+    return this.http.post(environment.HOST + '/api/user/updateUserAccountInfo/' + userId, userData, { headers: this.auth.getAuthorizationHeader });
+  }
+
   suspendUser(userId) {
     return this.http.get(environment.HOST + '/api/user/suspendUser/' + userId, { headers: this.auth.getAuthorizationHeader });
+  }
+
+  getCourseActivityPercentages(userId) {
+    return this.http.get(environment.HOST + '/api/user/getCourseActivityPercentages/' + userId,
+    { headers: this.auth.getAuthorizationHeader }).toPromise();
+  }
+
+  getAllLatestLecturesByUserId(userId) {
+    return this.http.get(environment.HOST + '/api/user/getAllLatestLecturesByUserId/' + userId,
+    { headers: this.auth.getAuthorizationHeader }).toPromise();
+  }
+
+  getMonthlyActivity(userId) {
+    return this.http.get(environment.HOST + '/api/user/getMonthlyActivity/' + userId,
+    { headers: this.auth.getAuthorizationHeader }).toPromise();
+  }
+
+  nextUsernameChangeAvailableIn(userId) {
+    return this.http.get(environment.HOST + '/api/user/nextUsernameChangeAvailableIn/' + userId,
+    { headers: this.auth.getAuthorizationHeader }).toPromise();
   }
 }

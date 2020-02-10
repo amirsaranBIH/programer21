@@ -3,10 +3,10 @@
         <h2>Account Information</h2>
         <div class="section section--large">
             <form class="form" [formGroup]="accountInfoForm" #ngForm="ngForm" action="signup" method="POST"
-                (ngSubmit)="onSubmitAccountInfo(accountInfoForm.value)">
+                (ngSubmit)="onSubmitAccountInfo()">
                 <div class="flex flex--not-even">
                     <div class="image-upload flex flex--column flex--align-center">
-                        <img src="assets/images/default_profile_picture.png" alt="default-profile-picture">
+                        <img [src]="user.image" [alt]="user.username">
                         <label for="file-upload" class="flex flex--not-even flex--align-center">
                             <img src="assets/icons/file-upload.svg" alt="file-upload">
                             <span>Upload profile image</span>
@@ -23,7 +23,10 @@
                                 <div class="input-help flex flex--not-even flex--align-center">
                                     <div class="input-help-status"></div>
                                     <div class="input-help-message">
-                                        <span>First name is required!</span>
+                                        <span *ngIf="firstName.errors?.required">First name is required!</span>
+                                        <span *ngIf="firstName.errors?.nameNotValid && !firstName.errors?.required">First name can only have alphabetical characters!</span>
+                                        <span *ngIf="firstName.errors?.minlength && !firstName.errors?.nameNotValid">First name must be atleast {{ firstName.errors?.minlength.requiredLength }} characters long!</span>
+                                        <span *ngIf="firstName.errors?.maxlength && !firstName.errors?.nameNotValid">First name must be less than {{ firstName.errors?.maxlength.requiredLength }} characters long!</span>
                                     </div>
                                 </div>
                             </div>
@@ -37,7 +40,10 @@
                                 <div class="input-help flex flex--not-even flex--align-center">
                                     <div class="input-help-status"></div>
                                     <div class="input-help-message">
-                                        <span>Last name is required!</span>
+                                        <span *ngIf="lastName.errors?.required">Last name is required!</span>
+                                        <span *ngIf="lastName.errors?.nameNotValid && !lastName.errors?.required">Last name can only have alphabetical characters!</span>
+                                        <span *ngIf="lastName.errors?.minlength && !lastName.errors?.nameNotValid">Last name must be atleast {{ lastName.errors?.minlength.requiredLength }} characters long!</span>
+                                        <span *ngIf="lastName.errors?.maxlength && !lastName.errors?.nameNotValid">Last name must be less than {{ lastName.errors?.maxlength.requiredLength }} characters long!</span>
                                     </div>
                                 </div>
                             </div>
@@ -54,11 +60,15 @@
                             <div class="input-help flex flex--not-even flex--align-center">
                                 <div class="input-help-status"></div>
                                 <div class="input-help-message">
-                                    <span>Username is required!</span>
+                                    <span *ngIf="username.errors?.required">Username is required!</span>
+                                    <span *ngIf="username.errors?.minlength">Username must be atleast {{ username.errors?.minlength.requiredLength }} characters long!</span>
+                                    <span *ngIf="username.errors?.maxlength">Username must be less than {{ username.errors?.maxlength.requiredLength }} characters long!</span>
+                                    <span *ngIf="username.errors?.minlength">Username must be atleast {{ username.errors?.minlength.requiredLength }} characters long!</span>
+                                    <span *ngIf="username.errors?.cantChangeUsername">You need to wait {{nextUsernameChangeAvailableIn}} more {{nextUsernameChangeAvailableIn === 1 ? 'day' : 'days'}} to update username!</span>
                                 </div>
                             </div>
                         </div>
-                        <p class="can-change-username text--right">Can change again in: 28 days</p>
+                        <p class="can-change-username text--right">Can change again in: {{ canChangeUsernameIn() }}</p>
                     </div>
                     <div class="form-group">
                         <label for="email" class="required">Email</label>
@@ -69,17 +79,20 @@
                             <div class="input-help flex flex--not-even flex--align-center">
                                 <div class="input-help-status"></div>
                                 <div class="input-help-message">
-                                    <span>Email is required!</span>
+                                    <span *ngIf="email.errors?.required">Email is required!</span>
+                                    <span *ngIf="email.errors?.notValidEmail && !email.errors?.required">Email is invalid!</span>
+                                    <span *ngIf="email.errors?.emailTaken && !email.errors?.required">An account with that email has been registered!</span>
                                 </div>
                             </div>
                         </div>
                         <p class="email-verified flex flex--not-even flex--align-center flex--end">
-                            <img src="assets/icons/verified-user.svg" alt="verified-user">
-                            <span>Email verified</span>
+                            <img *ngIf="user.verified" src="assets/icons/verified-user.svg" alt="verified-user">
+                            <span *ngIf="user.verified">Email verified</span>
+                            <span class="not-verified" *ngIf="!user.verified">Email not verified</span>
                         </p>
                     </div>
                 </div>
-                <button type="submit" class="button button--update margin-top--small">Update Account</button>
+                <button type="submit" class="button button--large button--update margin-top--small" [disabled]="accountInfoForm.invalid">Update Account</button>
             </form>
         </div>
 
@@ -134,7 +147,7 @@
                         </div>
                     </div>
                 </div>
-                <button type="submit" class="button button--update margin-top--small">Update Account</button>
+                <button type="submit" class="button button--large button--update margin-top--small" [disabled]="additionalInfoForm.invalid">Update Account</button>
             </form>
         </div>
 
@@ -151,7 +164,9 @@
                         <div class="input-help flex flex--not-even flex--align-center">
                             <div class="input-help-status"></div>
                             <div class="input-help-message">
-                                <span>Password is required!</span>
+                                <span *ngIf="password.errors?.required">Password is required!</span>
+                                <span *ngIf="password.errors?.minlength">Password must be atleast {{ password.errors?.minlength.requiredLength }} characters long!</span>
+                                <span *ngIf="password.errors?.notValidPassword && !password.errors?.required && !password.errors?.minlength">Password must have a capital letter, a number and a special character!</span>
                             </div>
                         </div>
                     </div>
@@ -180,13 +195,14 @@
                             <div class="input-help flex flex--not-even flex--align-center">
                                 <div class="input-help-status"></div>
                                 <div class="input-help-message">
-                                    <span>Please confirm password!</span>
+                                    <span *ngIf="confirmPassword.errors?.required">Password is required!</span>
+                                    <span *ngIf="ngForm.errors?.passwordsNotMatching">Passwords don't match!</span>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                <button type="submit" class="button button--update margin-top--small">Change Password</button>
+                <button type="submit" class="button button--large button--update margin-top--small" [disabled]="ngForm.submitted && changePasswordForm.invalid">Change Password</button>
             </form>
         </div>
     </div>

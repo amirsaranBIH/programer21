@@ -23,6 +23,7 @@
     "bootstrap": "^4.4.1",
     "css-reset-and-normalize": "^2.1.0",
     "jquery": "^3.4.1",
+    "moment": "^2.24.0",
     "ngx-toastr": "^11.3.2",
     "rxjs": "~6.5.4",
     "tslib": "^1.10.0",

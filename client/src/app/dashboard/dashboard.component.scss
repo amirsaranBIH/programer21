@@ -67,6 +67,16 @@
                 bottom: 0;
                 left: 0;
             }
+
+            .no-course-activity {
+                display: flex;
+
+                span {
+                    margin: auto;
+                    position: relative;
+                    z-index: 10;
+                }
+            }
         }
 
         .course-activity-legend {
@@ -76,9 +86,9 @@
             .course-activity-color {
                 display: block;
                 margin-right: .2em;
-                width: 10px;
-                height: 10px;
-                background-color: orange;
+                width: 13px;
+                height: 13px;
+                background-color: $light_grey;
             }
         }
     }
@@ -142,6 +152,27 @@
                     }
                 }
             }
+
+            .no-courses {
+                background-color: $lighter_grey;
+                position: absolute;
+                top: 0;
+                right: 0;
+                bottom: 0;
+                left: 0;
+                color: $black;
+
+                div {
+                    text-align: center;
+                    margin: auto;
+
+                    img {
+                        margin: 0 auto;
+                        display: block;
+                        width: 100px;
+                    }
+                }
+            }
         }
     }
 
@@ -167,7 +198,7 @@
                 
                 .latest-lecture {
                     background-color: white;
-                    border-left: 20px solid orange;
+                    border-left: 20px solid $light_grey;
                     padding: .5em;
     
                     h3 {
@@ -181,6 +212,19 @@
     
                 .latest-lecture + .latest-lecture {
                     margin-top: 1em;
+                }
+
+                .no-latest-lectures {
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    right: 0;
+                    bottom: 0;
+                    display: flex;
+
+                    span {
+                        margin: auto;
+                    }
                 }
             }
         }

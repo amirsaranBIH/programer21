@@ -49,7 +49,7 @@ class Course extends MY_Controller  {
         $res = $this->course->createCourse($data);
 
         if ($res['status'] === false) {
-            $this->setResponseError($res['data']);
+            $this->setResponseError(200, $res['data']);
             return;
         }
 

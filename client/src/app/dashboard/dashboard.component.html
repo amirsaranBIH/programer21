@@ -19,28 +19,23 @@
       </h2>
       <div class="section">
         <div class="course-activity-graph">
+          <div class="no-course-activity" *ngIf="courseActivityPercentages.length < 1">
+            <span>No course activity yet</span>
+          </div>
           <svg  viewBox="0 0 20 20">
             <circle r="10" cx="10" cy="10" fill="white" />
-            <circle *ngFor="let p of courseActivityPercentages; let i = index" [attr.r]="5" [attr.cx]="10" [attr.cy]="10" [attr.fill]="'transparent'"
-                    [attr.stroke]="p.color"
+            <circle *ngFor="let c of courseActivityPercentages; let i = index" [attr.r]="5" [attr.cx]="10" [attr.cy]="10" [attr.fill]="'transparent'"
+                    [attr.stroke]="c.color"
                     [attr.stroke-width]="10"
-                    [attr.stroke-dasharray]="'calc(' + p.percentage + ' * 31.4 / 100) 31.4'"
-                    [attr.transform]="'rotate(' + p.offset + ', 10, 10)'"
+                    [attr.stroke-dasharray]="'calc(' + c.percentage + ' * 31.4 / 100) 31.4'"
+                    [attr.transform]="'rotate(' + c.offset + ', 10, 10)'"
                     [style.z-index]="1000" />
           </svg>
         </div>
-        <div class="course-activity-legend flex flex--not-even flex--between flex--align-center">
-          <div class="course-activity-course flex flex--align-center">
-            <span class="course-activity-color"></span>
-            <span class="course-activity-name"><a class="link" routerLink="/">HTML</a></span>
-          </div>
-          <div class="course-activity-course flex flex--align-center">
-            <span class="course-activity-color"></span>
-            <span class="course-activity-name"><a class="link" routerLink="/">CSS</a></span>
-          </div>
-          <div class="course-activity-course flex flex--align-center">
-            <span class="course-activity-color"></span>
-            <span class="course-activity-name"><a class="link" routerLink="/">JS</a></span>
+        <div class="course-activity-legend flex flex--not-even flex--between flex--align-center flex--center">
+          <div class="course-activity-course flex flex--align-center" *ngFor="let course of courseActivityPercentages">
+            <span class="course-activity-color" [style.background-color]="course.color"></span>
+            <span class="course-activity-name"><a class="link" routerLink="/dashboard/course/{{course.id}}">{{course.shortName}}</a></span>
           </div>
         </div>
       </div>
@@ -73,8 +68,14 @@
             </div>
           </div>
         </ng-container>
-        <div class="no-courses" *ngIf="enrolledCourses.length < 1">
-          No courses
+        <div class="no-courses flex" *ngIf="enrolledCourses.length < 1">
+          <div>
+            <img src="/assets/icons/frown.svg" alt="frown">
+            <p>You haven't enrolled in any courses yet.</p>
+            <div class="text--center">
+              <span class="link" routerLink="/courses">Check out courses</span>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -82,26 +83,13 @@
       <h2 class="image-heading"><img src="assets/icons/latest-lectures.svg" alt="latest-lectures"> Latest Lectures</h2>
       <div class="section">
         <div class="latest-lectures-list">
-          <li class="latest-lecture">
-            <h3 class="link"><a routerLink="/">HTML For Absolute Beginners</a></h3>
-            <span>Finished at February 29, 2020</span>
+          <li class="latest-lecture" [style.border-left-color]="lecture.courseColor" *ngFor="let lecture of latestLectures">
+            <h3 class="link"><a routerLink="/lecture/{{lecture.slug}}">{{lecture.title}}</a></h3>
+            <span>Finished at {{formatDate(lecture.finishedAt)}}</span>
           </li>
-          <li class="latest-lecture">
-            <h3 class="link"><a routerLink="/">HTML For Absolute Beginners</a></h3>
-            <span>Finished at February 29, 2020</span>
-          </li>
-          <li class="latest-lecture">
-            <h3 class="link"><a routerLink="/">HTML For Absolute Beginners</a></h3>
-            <span>Finished at February 29, 2020</span>
-          </li>
-          <li class="latest-lecture">
-            <h3 class="link"><a routerLink="/">HTML For Absolute Beginners</a></h3>
-            <span>Finished at February 29, 2020</span>
-          </li>
-          <li class="latest-lecture">
-            <h3 class="link"><a routerLink="/">HTML For Absolute Beginners</a></h3>
-            <span>Finished at February 29, 2020</span>
-          </li>
+          <div class="no-latest-lectures" *ngIf="latestLectures.length < 1">
+            <span>You haven't finished any courses lately</span>
+          </div>
         </div>
       </div>
     </div>
@@ -109,7 +97,7 @@
       <h2 class="image-heading"><img src="assets/icons/activity.svg" alt="activity"> Monthly Activity</h2>
       <div class="section flex flex--not-even flex--column">
         <div class="current-month h3">
-          <span class="image-heading flex--center"><img src="assets/icons/date.svg" alt="date"> January 2020</span>
+          <span class="image-heading flex--center"><img src="assets/icons/date.svg" alt="date"> February 2020</span>
         </div>
         <div class="monthly-activity-days flex">
           <div class="monthly-activity-day text--center flex flex--column flex--not-even flex--end" *ngFor="let day of monthlyActivityDays; let i = index">

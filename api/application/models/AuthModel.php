@@ -34,15 +34,9 @@ class AuthModel extends CI_model {
         $isCorrectPassword = $this->isCorrectPassword($password, $hashedPassword);
 
         if ($isCorrectPassword) {  
-            $userData = $this->user->getUserById($row->id);
-
-            $privateKey = read_file(FCPATH . 'application/keys/private_key.pem');
-
-            $userData->iss = base_url();
-            $userData->aud = base_url();
-            $userData->iat = strtotime('now');
-
-            $jwt = \Firebase\JWT\JWT::encode($userData, $privateKey, 'RS256');
+            $jwt = $this->generateNewJwtToken($row->id);
+        } else {
+            $jwt = null;
         }
 
         return array(
@@ -56,6 +50,8 @@ class AuthModel extends CI_model {
 
         try {
             $payload = \Firebase\JWT\JWT::decode($token, $publicKey, array('RS256'));
+
+            $userPayload = $this->user->getUserById($payload->id);
         } catch(Exception $e) {
             return array(
                 'status' => false,
@@ -67,7 +63,7 @@ class AuthModel extends CI_model {
 
         return array(
             'status' => true,
-            'payload' => $payload
+            'payload' => $userPayload
         );
     }
 
@@ -122,14 +118,18 @@ class AuthModel extends CI_model {
         return password_verify($inputedPassword, $storedPassword);
     }
 
-    public function getUserSession() {
-        session_start();
-        return isset($_SESSION['userData']) ? $_SESSION['userData'] : null;
-    }
+    public function generateNewJwtToken($userId) {
 
-    public function setUserSession($userData) {
-        if (!isset($_SESSION)) session_start();
+        $privateKey = read_file(FCPATH . 'application/keys/private_key.pem');
 
-        $_SESSION['userData'] = $userData;
+        $payload = array(
+            'iss' => base_url(),
+            'aud' => base_url(),
+            'iat' => strtotime('now'),
+            'jti' => md5(uniqid($userId, true)),
+            'id' => $userId
+        );
+
+        return \Firebase\JWT\JWT::encode($payload, $privateKey, 'RS256');
     }
 }
