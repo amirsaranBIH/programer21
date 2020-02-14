@@ -18,7 +18,11 @@ export class LectureService {
   }
 
   getLectureBySlug(slug) {
-    return this.http.get(`/api/lecture/get-lecture-by-slug/${slug}`);
+    return this.http.get(`/api/lecture/getLectureBySlug/${slug}`).toPromise();
+  }
+
+  getLectureHtmlBySlug(slug) {
+    return this.http.get(`/api/lecture/getLectureHtmlBySlug/${slug}`).toPromise();
   }
 
   getLectureHTMLContentBySlug(slug) {
@@ -26,22 +30,22 @@ export class LectureService {
   }
 
   createLecture(courseId, data) {
-    return this.http.post(`/api/lecture/createLecture/${courseId}`, data);
+    return this.http.post(`/api/lecture/createLecture/${courseId}`, data, { headers: this.auth.getAuthorizationHeader });
   }
 
   editLecture(lectureId, data) {
-    return this.http.post(`/api/lecture/updateLecture/${lectureId}`, data);
+    return this.http.post(`/api/lecture/updateLecture/${lectureId}`, data, { headers: this.auth.getAuthorizationHeader });
   }
 
   deleteLecture(lectureId) {
-    return this.http.get(`/api/lecture/deleteLecture/${lectureId}`);
+    return this.http.get(`/api/lecture/deleteLecture/${lectureId}`, { headers: this.auth.getAuthorizationHeader });
   }
 
   skipLecture(courseIndex, nextModuleIndex, nextLectureIndex) {
     return this.http.get(`/api/lecture/skip/${courseIndex}/${nextModuleIndex}/${nextLectureIndex}`);
   }
 
-  finishLecture(courseIndex, nextModuleIndex, nextLectureIndex) {
-    return this.http.get(`/api/lecture/finish/${courseIndex}/${nextModuleIndex}/${nextLectureIndex}`);
+  finishLecture(finishedLectureCourseId) {
+    return this.http.get(`/api/lecture/finishLecture/${finishedLectureCourseId}`);
   }
 }

@@ -45,7 +45,18 @@ class AuthModel extends CI_model {
         );
     }
 
-    public function verifyJwtToken($token) {
+    public function verifyJwtToken() {
+        $tokenHeader = $this->input->get_request_header('Authorization');
+
+        if (!$tokenHeader) {
+            return array(
+                'status' => false,
+                'message' => 'No Authentication header'
+            );
+        }
+
+        $token = substr($tokenHeader, 7);
+
         $publicKey = read_file(FCPATH . 'application/keys/public_key.pem');
 
         try {
@@ -114,12 +125,11 @@ class AuthModel extends CI_model {
         );
     }
 
-    private function isCorrectPassword($inputedPassword, $storedPassword) {
+    public function isCorrectPassword($inputedPassword, $storedPassword) {
         return password_verify($inputedPassword, $storedPassword);
     }
 
     public function generateNewJwtToken($userId) {
-
         $privateKey = read_file(FCPATH . 'application/keys/private_key.pem');
 
         $payload = array(

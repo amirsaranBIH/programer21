@@ -21,6 +21,10 @@ export class CourseService {
     return this.http.get(`/api/course/getCourseById/${courseId}`).toPromise();
   }
 
+  getCourseBySlug(courseSlug) {
+    return this.http.get(`/api/course/getCourseBySlug/${courseSlug}`).toPromise();
+  }
+
   getCourseLectures(courseId) {
     return this.http.get(`/api/course/getCourseLectures/${courseId}`).toPromise();
   }

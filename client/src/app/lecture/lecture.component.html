@@ -1,6 +1,7 @@
 <div class="container">
     <div class="lecture">
-        <h1>{{ lecture.title }}</h1>
-        <div [innerHTML]="htmlContent" class="lecture__content"></div>
+        <h1 class="margin-bottom">{{ lecture.title }}</h1>
+        <div [innerHTML]="htmlContent" class="lecture-content"></div>
+        <button type="button" class="button button--large button--update" (click)="finishLecture()">Finish Lecture</button>
     </div>    
 </div>

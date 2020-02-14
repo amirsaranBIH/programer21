@@ -19,6 +19,8 @@ export class AppComponent {
     this.router.events.subscribe(event => {
       switch (true) {
         case event instanceof NavigationStart: {
+          this.showAccountDropdownMenu = false;
+
           const e: any = event;
           for (let i = 0, n = this.fixedHeaderPages.length; i < n; i++) {
             this.hasFixedHeader = false;
@@ -47,11 +49,6 @@ export class AppComponent {
 
   toggleAccountDropdownMenu() {
     this.showAccountDropdownMenu = !this.showAccountDropdownMenu;
-  }
-
-  routeTo(route) {
-    this.router.navigate([route]);
-    this.toggleAccountDropdownMenu();
   }
 
   logout() {

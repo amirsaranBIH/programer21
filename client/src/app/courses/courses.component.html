@@ -18,11 +18,11 @@
       </div>
       <div class="courses-list">
           <div class="course" *ngFor="let course of courses">
-              <div class="thumbnail">
+              <div [routerLink]="['/course', course.slug]" class="thumbnail">
                   <img [src]="course.image" [alt]="course.title">
                 <span class="price">{{ course.price === 0 ? 'FREE' : ('$' + course.price) }}</span>
               </div>
-              <h2>{{course.title}}</h2>
+              <h2 [routerLink]="['/course', course.slug]">{{course.title}}</h2>
               <div class="course-info">
                   <span>{{course.numberOfLectures}} {{course.numberOfLectures === 1 ? 'lecture' : 'lectures'}}</span>
                   <span>{{course.totalErt}} {{course.totalErt === 1 ? 'hour' : 'hours'}}</span>

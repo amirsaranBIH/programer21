@@ -1,4 +1,8 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import * as moment from 'moment';
+import { AuthenticationService } from '../services/authentication.service';
+import { UserService } from '../services/user.service';
 
 @Component({
   selector: 'app-course',
@@ -6,41 +10,33 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./course.component.scss']
 })
 export class CourseComponent implements OnInit {
-  public courseLectures = [];
+  public course;
 
-  constructor() { }
+  constructor(
+    private route: ActivatedRoute,
+    private authService: AuthenticationService,
+    private userService: UserService
+  ) { }
 
   ngOnInit() {
-    this.courseLectures = [
-        {
-          title: 'The most important part of HTML',
-          description: 'HTML is the most important language to learn if you want to create a website. HTML is basically the back bone of every website on the Internet. If you get a grasp of HTML you will be at the right path of achieving valuable knowledge.',
-          ert: 10
-        },
-        {
-          title: 'The most important part of HTML',
-          description: 'HTML is the most important language to learn if you want to create a website. HTML is basically the back bone of every website on the Internet. If you get a grasp of HTML you will be at the right path of achieving valuable knowledge.',
-          ert: 12
-        },
-        {
-          title: 'The most important part of HTML',
-          description: 'HTML is the most important language to learn if you want to create a website. HTML is basically the back bone of every website on the Internet. If you get a grasp of HTML you will be at the right path of achieving valuable knowledge.',
-          ert: 13
-        },
-        {
-          title: 'The most important part of HTML',
-          description: 'HTML is the most important language to learn if you want to create a website. HTML is basically the back bone of every website on the Internet. If you get a grasp of HTML you will be at the right path of achieving valuable knowledge.',
-          ert: 13
-        },
-        {
-          title: 'The most important part of HTML',
-          description: 'HTML is the most important language to learn if you want to create a website. HTML is basically the back bone of every website on the Internet. If you get a grasp of HTML you will be at the right path of achieving valuable knowledge.',
-          ert: 13
-        }
-    ];
+    this.course = this.route.snapshot.data.course;
   }
 
   lectureShowMore(lecture) {
     lecture.showMore = !lecture.showMore;
+  }
+
+  formatDate(date) {
+    return moment(date).format('MMMM D, YYYY');
+  }
+
+  userIsEnrolledInCourse() {
+    return this.authService.userData.coursesEnrolledIn.includes(this.course.id);
+  }
+
+  enrollUserInCourse() {
+    if (!this.userIsEnrolledInCourse()) {
+      this.userService.enrollUserInCourse(this.authService.userData.id, this.course.id);
+    }
   }
 }

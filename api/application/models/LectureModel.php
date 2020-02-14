@@ -18,6 +18,7 @@ class LectureModel extends CI_model {
                     status,
                     difficulty,
                     skippable,
+                    ert,
                     creator,
                     course,
                     orderIndex,
@@ -55,6 +56,7 @@ class LectureModel extends CI_model {
                     status,
                     difficulty,
                     skippable,
+                    ert,
                     creator,
                     course,
                     orderIndex,
@@ -83,7 +85,7 @@ class LectureModel extends CI_model {
         return $lectures;
     }
 
-    public function getAllPublicLecturesForUserByCourseId($courseId, $userId) {
+    public function getAllPublicLecturesForUserByCourseSlug($courseSlug, $userId) {
         $sql = "SELECT
                     l.id,
                     l.title,
@@ -92,27 +94,41 @@ class LectureModel extends CI_model {
                     l.status,
                     l.difficulty,
                     l.skippable,
+                    l.ert,
                     l.creator,
                     l.course,
                     l.orderIndex,
                     l.createdAt,
                     l.updatedAt,
                     IF(fl.id IS NULL, 0, 1) AS finished,
-                    fl.skipped
+                    fl.skipped,
+                    IF (l.id = uc.currentLectureId, 1, 0) as isCurrentLecture,
+                    IF(l.orderIndex <= (SELECT orderIndex FROM lectures WHERE lectures.id = uc.currentLectureId), 1, 0) AS isUnlocked
                 FROM
                     lectures l
                 LEFT JOIN
                     finished_lectures fl
                 ON
                     l.id = fl.lectureId AND fl.userId = ?
+                LEFT JOIN
+                    courses c
+                ON
+                    c.id = l.course
+                LEFT JOIN
+                    user_courses uc
+                ON
+                    uc.courseId = c.id
+                AND
+                    uc.userId = ?
                 WHERE
-                    l.course = ? AND l.status = 'public'
+                    c.slug = ? AND l.status = 'public'
                 ORDER BY
                     l.orderIndex";
 
         $query = $this->db->query($sql, array(
             $userId,
-            $courseId
+            $userId,
+            $courseSlug
         ));
 
         if (!$query) {
@@ -138,6 +154,7 @@ class LectureModel extends CI_model {
                     status,
                     difficulty,
                     skippable,
+                    ert,
                     creator,
                     course,
                     orderIndex,
@@ -169,6 +186,7 @@ class LectureModel extends CI_model {
                     status,
                     difficulty,
                     skippable,
+                    ert,
                     creator,
                     course,
                     orderIndex,
@@ -186,48 +204,35 @@ class LectureModel extends CI_model {
             return false;
         }
 
-        $lecture = $query->result();
+        $lecture = $query->first_row();
 
         return $lecture;
     }
 
-    public function searchLecturesByTitle($searchQuery) {
-        $escapedSearchQuery = $this->db->escape_like_str($searchQuery);
-
+    public function getLectureHtmlBySlug($lectureSlug) {
         $sql = "SELECT
-                    id,
-                    title,
-                    slug,
-                    description,
-                    status,
-                    difficulty,
-                    skippable,
-                    creator,
-                    course,
-                    orderIndex,
-                    createdAt,
-                    updatedAt
+                    courses.slug
                 FROM
                     lectures
+                INNER JOIN
+                    courses
+                ON
+                    courses.id = lectures.course
                 WHERE
-                    title LIKE '%$escapedSearchQuery%'
-                ORDER BY
-                    orderIndex";
+                    lectures.slug = ?";
 
-        $query = $this->db->query($sql);
+        $query = $this->db->query($sql, $lectureSlug);
 
         if (!$query) {
             log_message('error', $this->db->error()['message']);
             return false;
         }
 
-        $lectures = array();
+        $courseSlug = $query->first_row()->slug;
 
-        foreach ($query->result() as $lecture) {
-            array_push($lectures, $lecture);
-        }
+        $lectureHtml = file_get_contents(FCPATH . 'lectures' . DIRECTORY_SEPARATOR . $courseSlug . DIRECTORY_SEPARATOR . $lectureSlug . '.php');
 
-        return $lectures;
+        return $lectureHtml;
     }
 
     public function createLecture($courseId, $lectureData) {
@@ -265,7 +270,7 @@ class LectureModel extends CI_model {
                     ?, ?, ?, ?, ?, ?, ?, ?
                 )";
         
-        $sessionUser = $this->auth->getUserSession();
+        $userData = $this->auth->verifyJwtToken();
 
         $query = $this->db->query($sql, array(
             $lectureData['title'],
@@ -273,7 +278,7 @@ class LectureModel extends CI_model {
             $lectureData['description'],
             $lectureData['difficulty'],
             $lectureData['skippable'],
-            $sessionUser->id,
+            $userData['payload']->id,
             $courseId,
             $nextIOrderIndex
         ));
@@ -305,12 +310,25 @@ class LectureModel extends CI_model {
             return false;
         }
 
+        $courseSlug = $this->course->getCourseById($courseId)->slug;
+
+        $status = $this->makeLectureFile($courseSlug, $lectureData['slug']);
+
+        if (!$status) {
+            log_message('error', 'Could not create lecture file');
+            return false;
+        }
+
         $this->db->trans_complete();
 
         return $newlyCreatedLectureId; // Returns ID of newly created lecture
     }
 
     public function updateLecture($lectureId, $lectureData) {
+        $lecture = $this->getLectureById($lectureId);
+
+        $courseSlug = $this->course->getCourseById($lecture->course)->slug;
+
         $sql = "UPDATE
                     lectures
                 SET
@@ -338,6 +356,14 @@ class LectureModel extends CI_model {
             return false;
         }
 
+        $status = $this->renameLectureFile($courseSlug, $lecture->slug, $lectureData['slug']);
+
+        if (!$status) {
+            log_message('error', 'Could not rename lecture file');
+            return false;
+        }
+
+
         return true;
     }
 
@@ -355,5 +381,14 @@ class LectureModel extends CI_model {
         }
 
         return true;
+    }
+
+    public function makeLectureFile($courseSlug, $lectureSlug) {
+        return fopen(FCPATH . 'lectures' . DIRECTORY_SEPARATOR . $courseSlug . DIRECTORY_SEPARATOR . $lectureSlug. '.php', 'w');
+    }
+
+    public function renameLectureFile($courseSlug, $oldLectureSlug, $newLectureSlug) {
+        return rename(FCPATH . 'lectures' . DIRECTORY_SEPARATOR . $courseSlug . DIRECTORY_SEPARATOR . $oldLectureSlug. '.php', 
+                        FCPATH . 'lectures' . DIRECTORY_SEPARATOR . $courseSlug . DIRECTORY_SEPARATOR . $newLectureSlug. '.php');
     }
 }

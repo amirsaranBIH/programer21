@@ -7,6 +7,7 @@ class CourseModel extends CI_model {
 
         $this->load->database();
         $this->load->model('AuthModel', 'auth');
+        $this->load->model('LectureModel', 'lecture');
     }
 
     public function getAllCourses() {
@@ -59,7 +60,7 @@ class CourseModel extends CI_model {
                     createdAt,
                     updatedAt,
                     (SELECT COUNT(1) FROM course_lectures WHERE course_lectures.courseId = courses.id) AS numberOfLectures,
-                    (SELECT SUM(ert) FROM lectures WHERE lectures.course = courses.id) AS totalErt
+                    (SELECT IF(SUM(ert) IS NULL, 0, SUM(ert)) FROM lectures WHERE lectures.course = courses.id) AS totalErt
                 FROM
                     courses
                 WHERE
@@ -127,7 +128,9 @@ class CourseModel extends CI_model {
                     shortName,
                     color,
                     createdAt,
-                    updatedAt
+                    updatedAt,
+                    (SELECT IF(SUM(ert) IS NULL, 0, SUM(ert)) FROM lectures WHERE lectures.course = courses.id) AS totalErt,
+                    (SELECT COUNT(1) FROM user_courses WHERE user_courses.courseId = courses.id) AS enrolledStudents
                 FROM
                     courses
                 WHERE
@@ -142,44 +145,10 @@ class CourseModel extends CI_model {
 
         $course = $query->first_row();
 
+        $course->supportedLanguages = $this->getSupportedLanguages($course->id);
+        $course->courseLectures = $this->lecture->getAllPublicLecturesByCourseId($course->id);
+
         return $course;
-    }
-
-    public function searchCoursesByTitle($searchQuery) {
-        $escapedSearchQuery = $this->db->escape_like_str($searchQuery);
-
-        $sql = "SELECT
-                    id,
-                    title,
-                    slug,
-                    description,
-                    image,
-                    status,
-                    difficulty,
-                    price,
-                    shortName,
-                    color,
-                    createdAt,
-                    updatedAt
-                FROM
-                    courses
-                WHERE
-                    title LIKE '%$escapedSearchQuery%'";
-
-        $query = $this->db->query($sql);
-
-        if (!$query) {
-            log_message('error', $this->db->error()['message']);
-            return false;
-        }
-
-        $courses = array();
-
-        foreach ($query->result() as $course) {
-            array_push($courses, $course);
-        }
-
-        return $courses;
     }
 
     public function createCourse($courseData) {
@@ -199,7 +168,7 @@ class CourseModel extends CI_model {
                 ) VALUES
                 ( ?, ?, ?, ?, ?, ?, ?, ? )";
 
-        $sessionUser = $this->auth->getUserSession();
+        $userData = $this->auth->verifyJwtToken();
 
         $query = $this->db->query($sql, array(
             $courseData['title'],
@@ -209,7 +178,7 @@ class CourseModel extends CI_model {
             $courseData['price'],
             $courseData['shortName'],
             $courseData['color'],
-            $sessionUser->id
+            $userData['payload']->id
         ));
 
         if (!$query) {
@@ -240,6 +209,13 @@ class CourseModel extends CI_model {
             $this->setCourseImage($newlyCreatedCourseId, $uploadedImagePath);
         }
 
+        $status = $this->makeCourseFolder($courseData['slug']);
+
+        if (!$status) {
+            log_message('error', 'Could not create lecture folder of course');
+            return false;
+        }
+
         $this->db->trans_complete();
 
         return array(
@@ -250,6 +226,8 @@ class CourseModel extends CI_model {
 
     public function updateCourse($courseId, $courseData) {
         $this->db->trans_start();
+
+        $oldCourseSlug = $this->getCourseById($courseId)->slug;
 
         $sql = "UPDATE
                     courses
@@ -301,6 +279,13 @@ class CourseModel extends CI_model {
             $uploadedImagePath = '/uploads/course_images/'.$res['data']['file_name'];
     
             $this->setCourseImage($courseId, $uploadedImagePath);
+        }
+
+        $status = $this->renameCourseFolder($oldCourseSlug, $courseData['slug']);
+
+        if (!$status) {
+            log_message('error', 'Could not rename lecture folder of course');
+            return false;
         }
 
         $this->db->trans_complete();
@@ -429,7 +414,7 @@ class CourseModel extends CI_model {
             return false;
         }
 
-        $courseStatus = $query->result()['status'];
+        $courseStatus = $query->first_row()->status;
 
         return $courseStatus === 'public';
     }
@@ -457,5 +442,14 @@ class CourseModel extends CI_model {
                 'data' => $this->upload->display_errors('', '')
             );
         }
+    }
+
+    public function makeCourseFolder($courseSlug) {
+        return mkdir(FCPATH . 'lectures' . DIRECTORY_SEPARATOR . $courseSlug);
+    }
+
+    public function renameCourseFolder($oldCourseSlug, $newCourseSlug) {
+        return rename(FCPATH . 'lectures' . DIRECTORY_SEPARATOR . $oldCourseSlug, 
+                        FCPATH . 'lectures' . DIRECTORY_SEPARATOR . $newCourseSlug);
     }
 }

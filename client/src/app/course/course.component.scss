@@ -98,4 +98,19 @@
             margin-top: 1em;
         }
     }
+
+    .no-lectures {
+        color: $black;
+
+        div {
+            text-align: center;
+            margin: auto;
+
+            img {
+                margin: 0 auto;
+                display: block;
+                width: 75px;
+            }
+        }
+    }
 }

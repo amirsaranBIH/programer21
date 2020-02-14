@@ -9,7 +9,7 @@ export class LectureHTMLContentResolverService implements Resolve<any> {
   constructor(private lectureService: LectureService) { }
 
   resolve(route: ActivatedRouteSnapshot) {
-    return this.lectureService.getLectureHTMLContentBySlug(route.paramMap.get('slug'));
+    return this.lectureService.getLectureHtmlBySlug(route.paramMap.get('slug')).then((res: any) => res.data);
   }
 
 }

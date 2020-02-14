@@ -37,11 +37,36 @@ class User extends MY_Controller  {
 
     public function updateUserAccountInfo($userId) {
         $data = $this->input->post();
-
         $res = $this->user->updateUserAccountInfo($userId, $data);
 
-        if ($res['status'] === false) {
+        if ($res === false) {
             $this->setResponseError(200, $res['data']);
+            return;
+        }
+
+        $this->setResponseSuccess();
+    }
+
+    public function updateUserAdditionalInfo($userId) {
+        $data = json_decode(file_get_contents('php://input'), true);
+
+        $status = $this->user->updateUserAdditionalInfo($userId, $data);
+
+        if ($status === false) {
+            $this->setResponseError();
+            return;
+        }
+
+        $this->setResponseSuccess();
+    }
+
+    public function updateUserPassword($userId) {
+        $data = json_decode(file_get_contents('php://input'), true);
+
+        $res = $this->user->updateUserPassword($userId, $data);
+
+        if ($res['status'] === false) {
+            $this->setResponseError(200, $res['message']);
             return;
         }
 
@@ -68,6 +93,17 @@ class User extends MY_Controller  {
         }
 
         $this->setResponseSuccess($courses);
+    }
+
+    public function getUserCourseBySlug($courseSlug, $userId) {
+        $course = $this->user->getUserCourseBySlug($courseSlug, $userId);
+
+        if ($course === false) {
+            $this->setResponseError();
+            return;
+        }
+
+        $this->setResponseSuccess($course);
     }
 
     public function getAllUsers() {
@@ -134,5 +170,16 @@ class User extends MY_Controller  {
         }
 
         $this->setResponseSuccess($nextUsernameChangeAvailableIn);
+    }
+
+    public function enrollUserInCourse($userId, $courseId) {
+        $status = $this->user->enrollUserInCourse($userId, $courseId);
+
+        if ($status === false) {
+            $this->setResponseError();
+            return;
+        }
+
+        $this->setResponseSuccess();
     }
 }

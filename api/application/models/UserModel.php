@@ -7,6 +7,7 @@ class UserModel extends CI_model {
 
         $this->load->database();
         $this->load->model('CourseModel', 'course');
+        $this->load->model('AuthModel', 'auth');
     }
     // finishedCourses: 1,
     // enrolledCourses: 3,
@@ -65,7 +66,6 @@ class UserModel extends CI_model {
                     suspended,
                     createdAt,
                     updatedAt,
-                    (SELECT COUNT(1) FROM user_courses WHERE user_courses.userId = users.id) AS enrolledCourses,
                     (SELECT COUNT(1) FROM user_courses WHERE user_courses.userId = users.id AND user_courses.status = 'finished') AS finishedCourses,
                     IF(emailVerifiedAt IS NULL, 0, 1) AS verified
                 FROM
@@ -81,6 +81,8 @@ class UserModel extends CI_model {
         }
 
         $user = $query->first_row();
+
+        $user->coursesEnrolledIn = $this->getCoursesUserIsEnrolledIn($userId);
 
         return $user;
     }
@@ -333,7 +335,7 @@ class UserModel extends CI_model {
         return true;
     }
 
-    public function updateUserAdditionalInformation($userId, $userData) {
+    public function updateUserAdditionalInfo($userId, $userData) {
         $sql = "UPDATE
                     users
                 SET
@@ -358,7 +360,26 @@ class UserModel extends CI_model {
         return true;
     }
 
-    public function updateUserPassword($userId, $newPlainPassword) {
+    public function updateUserPassword($userId, $passwordData) {
+        $sql = "SELECT
+                    password
+                FROM
+                    users
+                WHERE
+                    id = ?";
+
+        $query = $this->db->query($sql, $userId);
+
+        $storedPassword = $query->first_row()->password;
+        $isCorrectPassword = $this->auth->isCorrectPassword($passwordData['password'], $storedPassword);
+
+        if (!$isCorrectPassword) {
+            return array(
+                'status' => false,
+                'message' => 'Password not correct'
+            ); 
+        }
+
         $sql = "UPDATE
                     users
                 SET
@@ -366,7 +387,7 @@ class UserModel extends CI_model {
                 WHERE
                     id = ?";
 
-        $hashedPassword = $this->getHashedPassword($newPlainPassword);
+        $hashedPassword = $this->getHashedPassword($passwordData['newPassword']);
 
         $query = $this->db->query($sql, array(
             $hashedPassword,
@@ -466,6 +487,56 @@ class UserModel extends CI_model {
         return true;
     }
 
+    public function getUserCourseBySlug($courseSlug, $userId) {
+        $sql = "SELECT
+                    c.id,
+                    c.title,
+                    c.slug,
+                    c.description,
+                    c.image,
+                    c.status,
+                    c.difficulty,
+                    c.price,
+                    c.shortName,
+                    c.color,
+                    c.createdAt,
+                    c.updatedAt,
+                    (SELECT IF(SUM(ert) IS NULL, 0, SUM(ert)) FROM lectures WHERE lectures.course = c.id) AS totalErt,
+                    l.slug AS currentLectureSlug
+                FROM
+                    courses c
+                LEFT JOIN
+                    user_courses uc
+                ON
+                    uc.courseId = c.id
+                AND
+                    uc.userId = ?
+                LEFT JOIN
+                    lectures l
+                ON
+                    uc.currentLectureId = l.id
+                WHERE
+                    c.slug = ?";
+
+        $query = $this->db->query($sql, array(
+            $userId,
+            $courseSlug
+        ));
+
+        if (!$query) {
+            log_message('error', $this->db->error()['message']);
+            return false;
+        }
+
+        $course = $query->first_row();
+
+        $course->supportedLanguages = $this->course->getSupportedLanguages($course->id);
+        $course->courseLectures = $this->lecture->getAllPublicLecturesForUserByCourseSlug($courseSlug, $userId);
+        $course->coursePercentageFinished = $this->getUserCoursePercentageFinished($course->id, $userId);
+
+        return $course;
+    }
+
     public function getUserEnrolledCourses($userId) {
         $sql = "SELECT
                     c.id,
@@ -503,6 +574,40 @@ class UserModel extends CI_model {
         }
 
         return $courses;
+    }
+
+    public function getUserCoursePercentageFinished($courseId, $userId) {
+        $sql = "SELECT
+                    (COUNT(1) / (SELECT COUNT(1) FROM lectures WHERE course = ?)) * 100 AS coursePercentageFinished
+                FROM
+                    finished_lectures
+                LEFT JOIN
+                    lectures
+                ON
+                    lectures.id = finished_lectures.lectureId
+                LEFT JOIN
+                    courses
+                ON
+                    courses.id = lectures.course
+                WHERE
+                    courses.id = ?
+                AND
+                    finished_lectures.userId = ?";
+
+        $query = $this->db->query($sql, array(
+            $courseId,
+            $courseId,
+            $userId
+        ));
+
+        if (!$query) {
+            log_message('error', $this->db->error()['message']);
+            return false;
+        }
+
+        $coursePercentageFinished = $query->first_row()->coursePercentageFinished;
+
+        return $coursePercentageFinished;
     }
 
     public function getAllLatestLecturesByUserId($userId) {
@@ -713,6 +818,30 @@ class UserModel extends CI_model {
         }
 
         return $query->first_row()->nextUsernameChangeAvailableIn;
+    }
+
+    public function getCoursesUserIsEnrolledIn($userId) {
+        $sql = "SELECT
+                    courseId
+                FROM
+                    user_courses
+                WHERE
+                    userId = ?";
+
+        $query = $this->db->query($sql, $userId);
+
+        if (!$query) {
+            log_message('error', $this->db->error()['message']);
+            return false;
+        }
+
+        $courses = array();
+
+        foreach ($query->result() as $course) {
+            array_push($courses, $course->courseId);
+        }
+
+        return $courses;
     }
 
     public function uploadUserImage($fieldName) {

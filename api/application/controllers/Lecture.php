@@ -56,4 +56,26 @@ class Lecture extends MY_Controller  {
 
         $this->setResponseSuccess($lecture);
     }
+
+    public function getLectureBySlug($lectureSlug) {
+        $lecture = $this->lecture->getLectureBySlug($lectureSlug);
+
+        if ($lecture === false) {
+            $this->setResponseError();
+            return;
+        }
+
+        $this->setResponseSuccess($lecture);
+    }
+
+    public function getLectureHtmlBySlug($lectureSlug) {
+        $lecture = $this->lecture->getLectureHtmlBySlug($lectureSlug);
+
+        if ($lecture === false) {
+            $this->setResponseError();
+            return;
+        }
+
+        $this->setResponseSuccess($lecture);
+    }
 }

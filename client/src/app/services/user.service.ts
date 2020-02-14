@@ -27,11 +27,27 @@ export class UserService {
   }
 
   updateUserAccountInfo(userId, userData) {
-    return this.http.post(environment.HOST + '/api/user/updateUserAccountInfo/' + userId, userData, { headers: this.auth.getAuthorizationHeader });
+    return this.http.post(environment.HOST + '/api/user/updateUserAccountInfo/' + userId, userData,
+    { headers: this.auth.getAuthorizationHeader });
+  }
+
+  updateUserAdditionalInfo(userId, userData) {
+    return this.http.post(environment.HOST + '/api/user/updateUserAdditionalInfo/' + userId, userData,
+    { headers: this.auth.getAuthorizationHeader });
+  }
+
+  updateUserPassword(userId, userData) {
+    return this.http.post(environment.HOST + '/api/user/updateUserPassword/' + userId, userData,
+    { headers: this.auth.getAuthorizationHeader });
   }
 
   suspendUser(userId) {
     return this.http.get(environment.HOST + '/api/user/suspendUser/' + userId, { headers: this.auth.getAuthorizationHeader });
+  }
+
+  getUserCourseBySlug(courseSlug) {
+    return this.http.get(`/api/user/getUserCourseBySlug/${courseSlug}/${this.auth.userData.id}`, 
+    { headers: this.auth.getAuthorizationHeader }).toPromise();
   }
 
   getCourseActivityPercentages(userId) {
@@ -51,6 +67,11 @@ export class UserService {
 
   nextUsernameChangeAvailableIn(userId) {
     return this.http.get(environment.HOST + '/api/user/nextUsernameChangeAvailableIn/' + userId,
+    { headers: this.auth.getAuthorizationHeader }).toPromise();
+  }
+
+  enrollUserInCourse(userId, courseId) {
+    return this.http.get(environment.HOST + '/api/user/enrollUserInCourse/' + userId + '/' + courseId,
     { headers: this.auth.getAuthorizationHeader }).toPromise();
   }
 }

@@ -9,7 +9,7 @@ export class OneLectureBySlugResolverService implements Resolve<any> {
   constructor(private lectureService: LectureService) { }
 
   resolve(route: ActivatedRouteSnapshot) {
-    return this.lectureService.getLectureBySlug(route.paramMap.get('slug'));
+    return this.lectureService.getLectureBySlug(route.paramMap.get('slug')).then((res: any) => res.data);
   }
 
 }

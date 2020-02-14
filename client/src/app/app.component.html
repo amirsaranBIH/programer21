@@ -8,9 +8,9 @@
         <span (click)="toggleAccountDropdownMenu()">{{auth.userData.firstName}} {{auth.userData.lastName}} <i class="fa" [ngClass]="{'fa-angle-down' : !showAccountDropdownMenu, 'fa-angle-up': showAccountDropdownMenu}"></i></span>
         <nav class="account-dropdown" *ngIf="showAccountDropdownMenu">
           <ul>
-            <li (click)="routeTo('/dashboard')"><a>Dashboard</a></li>
-            <li *ngIf="auth.userData.role === 'administrator'"><a (click)="routeTo('/admin-panel')">Admin Panel</a></li>
-            <li (click)="routeTo('/settings/' + auth.userData.id)"><a>Settings</a></li>
+            <li routerLink="/dashboard"><a>Dashboard</a></li>
+            <li *ngIf="auth.userData.role === 'administrator'"><a routerLink="/admin-panel">Admin Panel</a></li>
+            <li [routerLink]="['/settings/', auth.userData.id]"><a>Settings</a></li>
             <li (click)="logout()"><a>Logout</a></li>
           </ul>
         </nav>

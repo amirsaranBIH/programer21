@@ -72,16 +72,7 @@ class Auth extends MY_Controller  {
     }
 
     public function verifyJwtToken() {
-        $tokenHeader = $this->input->get_request_header('Authorization');
-    
-        if (!$tokenHeader) {
-            $this->setResponseError();
-            return;
-        }
-
-        $token = substr($tokenHeader, 7);
-
-        $response = $this->auth->verifyJwtToken($token);
+        $response = $this->auth->verifyJwtToken();
 
         if ($response['status'] === false) {
             $this->setResponseError(200, $response['message']);

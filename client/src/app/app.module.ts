@@ -44,6 +44,9 @@ import { UserResolverService } from './resolvers/user-resolver.service';
 import { CourseActivityPercentageResolverService } from './resolvers/course-activity-percentage-resolver.service';
 import { UserLatestLecturesResolverService } from './resolvers/user-latest-lectures-resolver.service';
 import { UserMonthlyActivityResolverService } from './resolvers/user-monthly-activity-resolver.service';
+import { OneCourseBySlugResolverService } from './resolvers/one-course-by-slug-resolver.service';
+import { FormatSupportedLanguagesPipe } from './pipes/format-supported-languages.pipe';
+import { OneUserCourseBySlugResolverService } from './resolvers/one-user-course-by-slug-resolver.service';
 
 const routes: Routes = [
   {
@@ -128,16 +131,17 @@ const routes: Routes = [
         component: DashboardComponent
       },
       {
-        path: 'course/:course_id',
+        path: 'course/:course_slug',
         component: UserCourseComponent,
         resolve: {
+          course: OneUserCourseBySlugResolverService
         }
       },
     ]
-    // canActivate: [AuthGuardService]
   },
   {
     path: 'settings/:user_id',
+    canActivate: [AuthGuardService],
     component: UserSettingsComponent
   },
   {
@@ -148,19 +152,20 @@ const routes: Routes = [
     }
   },
   {
-    path: 'course/:course_id',
+    path: 'course/:course_slug',
     component: CourseComponent,
     resolve: {
+      course: OneCourseBySlugResolverService
     }
   },
   {
     path: 'lecture/:slug',
+    canActivate: [AuthGuardService],
     component: LectureComponent,
     resolve: {
-      // lecture: OneLectureBySlugResolverService,
-      // html_content: LectureHTMLContentResolverService
+      lecture: OneLectureBySlugResolverService,
+      html_content: LectureHTMLContentResolverService
     },
-    canActivate: [AuthGuardService]
   },
 ];
 
@@ -188,6 +193,7 @@ export function fetchUserDataProviderFactory(provider: AuthenticationService) {
     LectureComponent,
     TitleToSlugPipe,
     GetSummaryPipe,
+    FormatSupportedLanguagesPipe,
     UserCourseComponent,
     UserSettingsComponent,
     EditUserComponent,
@@ -217,6 +223,8 @@ export function fetchUserDataProviderFactory(provider: AuthenticationService) {
     AllPublicCoursesResolverService,
     UserResolverService,
     CourseLecturesResolverService,
+    OneCourseBySlugResolverService,
+    OneUserCourseBySlugResolverService,
     UserMonthlyActivityResolverService,
     CourseActivityPercentageResolverService,
     OneLectureResolverService,

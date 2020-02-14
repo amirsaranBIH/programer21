@@ -2,34 +2,36 @@
     <div class="course">
         <div class="flex margin-bottom">
             <div class="course-main-info">
-                <h1 class="h2">HTML For Absolute Beginners</h1>
-                <hr class="hr--small" [ngStyle]="{ 'background-color': 'orange' }">
+                <h1 class="h2">{{ course.title }}</h1>
+                <hr class="hr--small" [ngStyle]="{ 'background-color': course.color }">
                 <div class="course-info">
-                    <span>50 lectures</span>
-                    <span>12 hours</span>
-                    <span>Beginner</span>
+                    <span>{{course.courseLectures.length}} {{course.courseLectures.length === 1 ? 'lecture' : 'lectures'}}</span>
+                    <span>{{course.totalErt}} {{course.totalErt === 1 ? 'hour' : 'hours'}}</span>
+                    <span class="text--capitalize">{{ course.difficulty }}</span>
                 </div>
-                <p>HTML is the most important language to learn if you want to create a website. HTML is basically the back bone of every website on the Internet. If you get a grasp of HTML you will be at the right path of achieving valuable knowledge.</p>
-                <p class="course-supported-languages h3">Bosnian, English</p>
-                <p>Last updated at January 9, 2020</p>
+                <p>{{ course.description }}</p>
+                <p class="course-supported-languages h3">{{ course.supportedLanguages | formatSupportedLanguages }}</p>
+                <p>Last updated at {{ formatDate(course.updatedAt) }}</p>
             </div>
             <div class="course-payment-info">
                 <div class="thumbnail">
-                    <img src="assets/images/sss.gif" alt="sss">
+                    <img [src]="course.image" [alt]="course.slug">
                     <div class="thumbnail-info flex flex--not-even flex--align-center flex--between">
-                        <span class="price">FREE</span>
-                        <span class="students-enrolled">53 students enrolled</span>
+                        <span class="price">{{ course.price === 0 ? 'FREE' : ('$' + course.price) }}</span>
+                        <span class="students-enrolled">{{ course.enrolledStudents }} {{course.enrolledStudents === 1 ? 'student' : 'students'}} enrolled</span>
                     </div>
                 </div>
-                <p>30-Day Money-Back Guarantee</p>
-                <div class="flex flex--not-even flex--align-center flex--between">
-                    <div>PAYPAL</div>
-                    <button class="button button--large sans-serif">ENROLL NOW</button>
+                <p *ngIf="course.price !== 0">30-Day Money-Back Guarantee</p>
+                <div class="flex flex--not-even flex--align-center flex--between margin-top--small">
+                    <div>
+                        <img *ngIf="course.price !== 0" src="/assets/paypal-payment.png" alt="paypal-payment">
+                    </div>
+                    <button (click)="enrollUserInCourse()" [disabled]="userIsEnrolledInCourse()" class="button button--large sans-serif">{{ userIsEnrolledInCourse() ? 'ENROLLED IN COURSE' : 'ENROLL NOW' }}</button>
                 </div>
             </div>
         </div>
         <div class="course-lectures-list">
-            <div class="course-lecture" *ngFor="let lecture of courseLectures">
+            <div class="course-lecture" *ngFor="let lecture of course.courseLectures">
                 <div class="flex flex--not-even flex--between flex--align-center">
                     <div class="lecture-title flex flex--not-even flex--align-center">
                         <img (click)="lectureShowMore(lecture)" [ngClass]="{ 'rotate-arrow': lecture.showMore }" src="assets/icons/arrow-down.svg" alt="arrow-down">
@@ -41,6 +43,12 @@
                     <p>{{ lecture.description }}</p>
                 </div>
             </div>
+            <div class="no-lectures margin-top--large" *ngIf="course.courseLectures.length < 1">
+                <div>
+                  <img src="/assets/icons/frown.svg" alt="frown">
+                  <p>There are no lectures created for this course.</p>
+                </div>
+              </div>
         </div>
     </div>
 </div>

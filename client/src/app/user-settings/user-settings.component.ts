@@ -166,11 +166,21 @@ export class UserSettingsComponent implements OnInit {
   }
 
   onSubmitAdditionalInfo(value) {
-    console.log(value);
+    this.userService.updateUserAdditionalInfo(this.user.id, value).subscribe({
+      error: (err) => console.error(err),
+      complete: () => {}
+    });
   }
 
   onSubmitChangePassword(value) {
-    console.log(value);
+    this.userService.updateUserPassword(this.user.id, value).subscribe({
+      error: (err) => console.error(err),
+      next: (res: any) => {
+        if (!res.status) {
+          this.password.setErrors({ wrongPassword: true });
+        }
+      }
+    });
   }
 
   canChangeUsernameIn() {

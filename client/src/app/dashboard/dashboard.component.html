@@ -52,7 +52,7 @@
       </div>
       <div class="enrolled-courses-list">
         <ng-container *ngIf="enrolledCourses.length > 0">
-          <div routerLink="/" class="enrolled-course" [ngStyle]="{'background-image': 'url(' + environment.HOST + enrolledCourses[currentEnrolledCourse].image + ')'}">
+          <div [routerLink]="['/dashboard/course/', enrolledCourses[currentEnrolledCourse].slug]" class="enrolled-course" [ngStyle]="{'background-image': 'url(' + environment.HOST + enrolledCourses[currentEnrolledCourse].image + ')'}">
             <h3 class="h2">{{ enrolledCourses[currentEnrolledCourse].title }}</h3>
           </div>
           <div class="enrolled-courses-controls flex flex--align-center">

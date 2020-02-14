@@ -92,4 +92,16 @@ class Course extends MY_Controller  {
 
         $this->setResponseSuccess($course);
     }
+
+    public function getCourseBySlug($courseSlug) {
+
+        $course = $this->course->getCourseBySlug($courseSlug);
+
+        if ($course === false) {
+            $this->setResponseError();
+            return;
+        }
+
+        $this->setResponseSuccess($course);
+    }
 }

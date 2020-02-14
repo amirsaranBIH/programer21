@@ -104,7 +104,7 @@
                     <label for="description">User Description</label>
                     <div class="input-group"
                         [ngClass]="{ 'is-invalid' : (description.invalid && description.touched) || (description.invalid && ngForm.submitted) }">
-                        <textarea name="description" id="description" cols="30" rows="5"
+                        <textarea formControlName="description" id="description" cols="30" rows="5"
                             placeholder="User Description"></textarea>
                         <div class="input-help flex flex--not-even flex--align-center">
                             <div class="input-help-status"></div>
@@ -159,14 +159,14 @@
                     <label for="description">New Password</label>
                     <div class="input-group"
                         [ngClass]="{ 'is-invalid' : (newPassword.invalid && newPassword.touched) || (newPassword.invalid && ngForm.submitted) }">
-                        <input type="text" id="newPassword" formControlName="newPassword"
+                        <input type="password" id="newPassword" formControlName="newPassword"
                             placeholder="Enter new password" autocomplete="new-password">
                         <div class="input-help flex flex--not-even flex--align-center">
                             <div class="input-help-status"></div>
                             <div class="input-help-message">
-                                <span *ngIf="password.errors?.required">Password is required!</span>
-                                <span *ngIf="password.errors?.minlength">Password must be atleast {{ password.errors?.minlength.requiredLength }} characters long!</span>
-                                <span *ngIf="password.errors?.notValidPassword && !password.errors?.required && !password.errors?.minlength">Password must have a capital letter, a number and a special character!</span>
+                                <span *ngIf="newPassword.errors?.required">Password is required!</span>
+                                <span *ngIf="newPassword.errors?.minlength">Password must be atleast {{ newPassword.errors?.minlength.requiredLength }} characters long!</span>
+                                <span *ngIf="newPassword.errors?.notValidPassword && !newPassword.errors?.required && !newPassword.errors?.minlength">Password must have a capital letter, a number and a special character!</span>
                             </div>
                         </div>
                     </div>
@@ -181,7 +181,8 @@
                             <div class="input-help flex flex--not-even flex--align-center">
                                 <div class="input-help-status"></div>
                                 <div class="input-help-message">
-                                    <span>Password is required!</span>
+                                    <span *ngIf="password.errors?.required">Password is required!</span>
+                                    <span *ngIf="password.errors?.wrongPassword">Password not correct!</span>
                                 </div>
                             </div>
                         </div>
