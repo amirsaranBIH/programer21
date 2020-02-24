@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import * as moment from 'moment';
 
 @Component({
@@ -12,13 +12,11 @@ export class UserCourseComponent implements OnInit {
   public course;
 
   constructor(
-    private route: ActivatedRoute,
-    private router: Router
+    private route: ActivatedRoute
   ) { }
 
   ngOnInit() {
     this.course = this.route.snapshot.data.course;
-    console.log(this.course);
   }
 
   lectureShowMore(lecture) {
@@ -29,12 +27,10 @@ export class UserCourseComponent implements OnInit {
     return moment(date).format('MMMM D, YYYY');
   }
 
-  startNextLecture() {
-    this.router.navigate(['/lecture', this.course.currentLectureSlug]);
-  }
-
   getLectureButtonText(lecture) {
-    return lecture.isCurrentLecture && lecture.isUnlocked ? 'Start Lecture' : (lecture.isUnlocked ? 'View Lecture' : 'Not Unlocked');
+    return lecture.isCurrentLecture
+            && lecture.isUnlocked
+            && this.course.userCourseStatus === 'learning' ? 'Start Lecture' : (lecture.isUnlocked ? 'View Lecture' : 'Not Unlocked');
   }
 
   getLectureSkipButtonText(lecture) {

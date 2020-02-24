@@ -23,6 +23,9 @@
         .course {
             .thumbnail {
                 position: relative;
+                min-height: 320px;
+                background-size: cover;
+                background-position: center;
 
                 .price {
                     position: absolute;

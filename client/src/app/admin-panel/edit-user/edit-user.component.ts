@@ -43,6 +43,7 @@ export class EditUserComponent implements OnInit {
         Validators.required,
         Validators.minLength(3),
         Validators.maxLength(16),
+        this.validators.UsernameValidator
       ]],
       role: [this.user.role, [
         Validators.required,
@@ -54,6 +55,7 @@ export class EditUserComponent implements OnInit {
       ]],
       email: [this.user.email, [
         Validators.required,
+        Validators.maxLength(100),
         this.validators.EmailValidator
       ], [this.validators.IsEmailTakenWhileEditing.bind(this)]],
       description: [this.user.description, [
@@ -105,9 +107,11 @@ export class EditUserComponent implements OnInit {
   }
 
   onSubmit(value) {
-    this.userService.updateUser(this.route.snapshot.params.user_id, value).subscribe({
-      error: (err) => console.log(err)
-    });
+    if (this.editUserForm.valid) {
+      this.userService.updateUser(this.route.snapshot.params.user_id, value).subscribe({
+        error: (err) => console.log(err)
+      });
+    }
   }
 
   suspendUser() {

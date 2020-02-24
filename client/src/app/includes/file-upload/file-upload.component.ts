@@ -34,7 +34,6 @@ export class FileUploadComponent implements OnInit {
   }
 
   drag(e) {
-    console.log('woorksl')
     e.preventDefault();
   }
 

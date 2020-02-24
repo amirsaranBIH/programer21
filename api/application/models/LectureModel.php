@@ -7,6 +7,7 @@ class LectureModel extends CI_model {
 
         $this->load->database();
         $this->load->model('AuthModel', 'auth');
+        $this->load->model('CourseModel', 'course');
     }
 
     public function getAllLecturesByCourseId($courseId) {
@@ -270,7 +271,7 @@ class LectureModel extends CI_model {
                     ?, ?, ?, ?, ?, ?, ?, ?
                 )";
         
-        $userData = $this->auth->verifyJwtToken();
+        $userData = $this->auth->getCurrentUser();
 
         $query = $this->db->query($sql, array(
             $lectureData['title'],
@@ -374,6 +375,127 @@ class LectureModel extends CI_model {
                     id = ?";
 
         $query = $this->db->query($sql, $lectureId);
+
+        if (!$query) {
+            log_message('error', $this->db->error()['message']);
+            return false;
+        }
+
+        return true;
+    }
+
+    public function finishLecture($lectureId, $finishedLectureCourseId) {
+        $this->db->trans_start();
+
+        $sql = "SELECT
+                    l.id,
+                    l.slug
+                FROM
+                    lectures l
+                LEFT JOIN
+                    user_courses uc
+                ON
+                    l.id = uc.currentLectureId
+                WHERE 
+                    l.orderIndex > (
+                        SELECT 
+                            l.orderIndex 
+                        FROM 
+                            lectures l
+                        INNER JOIN 
+                            user_courses uc
+                        ON 
+                            uc.courseId = ? 
+                        WHERE 
+                            l.id = uc.currentLectureId
+                    )
+                AND
+                    l.course = ?
+                ORDER BY 
+                    orderIndex
+                LIMIT 1";
+
+        $query = $this->db->query($sql, array(
+            $finishedLectureCourseId,
+            $finishedLectureCourseId
+        ));
+
+        if (!$query) {
+            log_message('error', $this->db->error()['message']);
+            return false;
+        }
+
+        $nextLecture = $query->first_row();
+
+        $response = null;
+
+        if ($nextLecture) {
+            $nextLectureId = $nextLecture->id;
+    
+            $sql = "UPDATE
+                        user_courses
+                    SET
+                        currentLectureId = ?
+                    WHERE
+                        courseId = ?";
+    
+            $query = $this->db->query($sql, array(
+                $nextLectureId,
+                $finishedLectureCourseId
+            ));
+    
+            if (!$query) {
+                log_message('error', $this->db->error()['message']);
+                return false;
+            }
+
+            $this->db->trans_complete();
+
+            $response = $nextLecture->slug;
+        } else {
+            $status = $this->course->finishCourse($finishedLectureCourseId);
+
+            if (!$status) {
+                log_message('error', 'Could not finish course');
+                return false;
+            }
+
+            $this->db->trans_complete();
+
+            $response = -1;
+        }
+
+        $status = $this->addLectureToLatestFinishedLectures($lectureId);
+    
+        if (!$status) {
+            log_message('error', 'Could not add lecture to latest finished lectures');
+            return false;
+        }
+
+        $this->db->trans_complete();
+
+        return $response;
+    }
+
+    public function addLectureToLatestFinishedLectures($lectureId, $skipped = false) {
+        $sql = "INSERT INTO
+                    finished_lectures
+                (
+                    `lectureId`,
+                    `userId`,
+                    `skipped`
+                ) VALUES 
+                (
+                    ?, ?, ?
+                )";
+
+        $userData = $this->auth->getCurrentUser();
+
+        $query = $this->db->query($sql, array(
+            $lectureId,
+            $userData['payload']->id,
+            $skipped
+        ));
 
         if (!$query) {
             log_message('error', $this->db->error()['message']);

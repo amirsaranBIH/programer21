@@ -78,4 +78,15 @@ class Lecture extends MY_Controller  {
 
         $this->setResponseSuccess($lecture);
     }
+
+    public function finishLecture($lectureId, $finishedLectureCourseId) {
+        $status = $this->lecture->finishLecture($lectureId, $finishedLectureCourseId);
+
+        if ($status === false) {
+            $this->setResponseError();
+            return;
+        }
+
+        $this->setResponseSuccess($status);
+    }
 }

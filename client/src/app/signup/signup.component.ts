@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { AuthenticationService } from '../services/authentication.service';
 
 @Component({
   templateUrl: './signup.component.html',
@@ -6,9 +8,12 @@ import { Component, OnInit } from '@angular/core';
 })
 export class SignupComponent implements OnInit {
 
-  constructor() {}
+  constructor(private router: Router, private authService: AuthenticationService) {}
 
   ngOnInit() {
+    if (this.authService.userData !== null) {
+      this.router.navigate(['/']);
+    }
   }
 
 }

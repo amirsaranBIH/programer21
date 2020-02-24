@@ -52,6 +52,7 @@
                                 <div class="input-help-status"></div>
                                 <div class="input-help-message">
                                     <span *ngIf="username.errors?.required">Username is required!</span>
+                                    <span *ngIf="username.errors?.usernameNotValid && !username.errors?.required">Username can only contain alphanumeric characters and underscores!</span>
                                     <span *ngIf="username.errors?.minlength">Username must be atleast {{ username.errors?.minlength.requiredLength }} characters long!</span>
                                     <span *ngIf="username.errors?.maxlength">Username must be less than {{ username.errors?.maxlength.requiredLength }} characters long!</span>
                                 </div>
@@ -67,6 +68,7 @@
                                 <div class="input-help-status"></div>
                                 <div class="input-help-message">
                                     <span *ngIf="email.errors?.required">Email is required!</span>
+                                    <span *ngIf="email.errors?.maxlength && !email.errors?.notValidEmail">Email must be less than {{ email.errors?.maxlength.requiredLength }} characters long!</span>
                                     <span *ngIf="email.errors?.notValidEmail && !email.errors?.required">Email is invalid!</span>
                                     <span *ngIf="email.errors?.emailTaken && !email.errors?.required">An account with that email has been registered!</span>
                                 </div>
@@ -87,7 +89,8 @@
                             <div class="input-help flex flex--not-even flex--align-center">
                                 <div class="input-help-status"></div>
                                 <div class="input-help-message">
-                                    <span>Uset must have a role!</span>
+                                    <span *ngIf="role.errors?.required">User must have a role!</span>
+                                    <span *ngIf="role.errors?.pattern">User role can only be user, moderator and administrator!</span>
                                 </div>
                             </div>
                         </div>
@@ -122,7 +125,7 @@
                         <div class="input-help flex flex--not-even flex--align-center">
                             <div class="input-help-status"></div>
                             <div class="input-help-message">
-                                <span>Description must be contain less than 200 characters!</span>
+                                <span>Description must be contain less than {{ description.errors?.maxlength.requiredLength }} characters!</span>
                             </div>
                         </div>
                     </div>
@@ -136,7 +139,7 @@
                             <div class="input-help flex flex--not-even flex--align-center">
                                 <div class="input-help-status"></div>
                                 <div class="input-help-message">
-                                    <span>Description must be contain less than 50 characters!</span>
+                                    <span>City must be contain less than {{ city.errors?.maxlength.requiredLength }} characters!</span>
                                 </div>
                             </div>
                         </div>
@@ -154,7 +157,7 @@
                             <div class="input-help flex flex--not-even flex--align-center">
                                 <div class="input-help-status"></div>
                                 <div class="input-help-message">
-                                    <span>Gender can only be Male, Female and Other!</span>
+                                    <span>Gender can only be male, female and other!</span>
                                 </div>
                             </div>
                         </div>

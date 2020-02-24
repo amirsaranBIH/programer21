@@ -97,7 +97,7 @@
       <h2 class="image-heading"><img src="assets/icons/activity.svg" alt="activity"> Monthly Activity</h2>
       <div class="section flex flex--not-even flex--column">
         <div class="current-month h3">
-          <span class="image-heading flex--center"><img src="assets/icons/date.svg" alt="date"> February 2020</span>
+          <span class="image-heading flex--center"><img src="assets/icons/date.svg" alt="date"> {{ currentMonth }}</span>
         </div>
         <div class="monthly-activity-days flex">
           <div class="monthly-activity-day text--center flex flex--column flex--not-even flex--end" *ngFor="let day of monthlyActivityDays; let i = index">

@@ -144,8 +144,6 @@ export class UserSettingsComponent implements OnInit {
   }
 
   onSubmitAccountInfo() {
-    console.log(this.username);
-
     if (this.accountInfoForm.invalid) {
       return false;
     }

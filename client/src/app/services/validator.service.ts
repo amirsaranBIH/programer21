@@ -26,20 +26,25 @@ export class ValidatorService {
     return isEmailTaken ? { emailTaken: true } : null;
   }
 
-  IsEmailInUseValidator = async (control: AbstractControl) => {
-    const email = control.value;
-    const isEmailInUse = await this.authService.isEmailTaken(email);
-
-    return !isEmailInUse ? { emailNotInUse: true } : null;
-  }
-
   NameValidator(control: AbstractControl) {
-    const VALID_NAME_REGEX = /^[a-zA-Z]+$/;
+    const VALID_NAME_REGEX = /^[a-zšđčćž]+$/i;
 
     const isValidName = VALID_NAME_REGEX.test(control.value);
 
     if (!isValidName) {
       return { nameNotValid: true };
+    } else {
+      return null;
+    }
+  }
+
+  UsernameValidator(control: AbstractControl) {
+    const VALID_USERNAME_REGEX = /^[A-Za-z0-9_]+$/;
+
+    const isValidUsername = VALID_USERNAME_REGEX.test(control.value);
+
+    if (!isValidUsername) {
+      return { usernameNotValid: true };
     } else {
       return null;
     }

@@ -29,7 +29,7 @@ export class AuthenticationService {
 
     if (token) {
       return new Promise((resolve, reject) => {
-        this.http.get(environment.HOST + '/api/auth/verifyJwtToken', { headers: token }).subscribe({
+        this.http.get(environment.HOST + '/api/auth/getCurrentUser', { headers: token }).subscribe({
           error: error => {
             if (error.status === 401) {
               console.error(error);

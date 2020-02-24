@@ -40,8 +40,9 @@
             <div class="input-help-status"></div>
             <div class="input-help-message">
               <span *ngIf="username.errors?.required">Username is required!</span>
-              <span *ngIf="username.errors?.minlength">Username must be atleast {{ username.errors?.minlength.requiredLength }} characters long!</span>
-              <span *ngIf="username.errors?.maxlength">Username must be less than {{ username.errors?.maxlength.requiredLength }} characters long!</span>
+              <span *ngIf="username.errors?.usernameNotValid && !username.errors?.required">Username can only contain alphanumeric characters and underscores!</span>
+              <span *ngIf="username.errors?.minlength && !username.errors?.usernameNotValid">Username must be atleast {{ username.errors?.minlength.requiredLength }} characters long!</span>
+              <span *ngIf="username.errors?.maxlength && !username.errors?.usernameNotValid">Username must be less than {{ username.errors?.maxlength.requiredLength }} characters long!</span>
             </div>
           </div>
         </div>
@@ -54,6 +55,7 @@
             <div class="input-help-status"></div>
             <div class="input-help-message">
               <span *ngIf="email.errors?.required">Email is required!</span>
+              <span *ngIf="email.errors?.maxlength && !email.errors?.notValidEmail">Email must be less than {{ email.errors?.maxlength.requiredLength }} characters long!</span>
               <span *ngIf="email.errors?.notValidEmail && !email.errors?.required">Email is invalid!</span>
               <span *ngIf="email.errors?.emailTaken && !email.errors?.required">An account with that email has been registered!</span>
             </div>
@@ -77,7 +79,7 @@
       <div class="form-group">
         <label for="confirmPassword">Confirm Password</label>
         <div class="input-group" [ngClass]="{ 'is-invalid' : (confirmPassword.invalid && confirmPassword.touched) || (confirmPassword.invalid && ngForm.submitted) }">
-          <input type="password" id="confirmPassword" formControlName="confirmPassword" placeholder="Confirm the strongest password">
+          <input type="password" id="confirmPassword" formControlName="confirmPassword" placeholder="Confirm your strongest password">
           <div class="input-help flex flex--not-even flex--align-center">
             <div class="input-help-status"></div>
             <div class="input-help-message">

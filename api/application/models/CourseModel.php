@@ -168,7 +168,7 @@ class CourseModel extends CI_model {
                 ) VALUES
                 ( ?, ?, ?, ?, ?, ?, ?, ? )";
 
-        $userData = $this->auth->verifyJwtToken();
+        $userData = $this->auth->getCurrentUser();
 
         $query = $this->db->query($sql, array(
             $courseData['title'],
@@ -398,25 +398,29 @@ class CourseModel extends CI_model {
         return $supportedLanguages;
     }
 
-    public function isCoursePublic($courseId) {
-        $sql = "SELECT
-                    status
-                FROM
-                    courses
-                WHERE 
-                    id = ?";
+    public function finishCourse($courseId) {
+        $sql = "UPDATE
+                    user_courses
+                SET
+                    status = 'finished'
+                WHERE
+                    courseId = ?
+                AND
+                    userId = ?";
 
+        $userData = $this->auth->getCurrentUser();
 
-        $query = $this->db->query($sql, $courseId);
+        $query = $this->db->query($sql, array(
+            $courseId,
+            $userData['payload']->id
+        ));
 
         if (!$query) {
             log_message('error', $this->db->error()['message']);
             return false;
         }
 
-        $courseStatus = $query->first_row()->status;
-
-        return $courseStatus === 'public';
+        return true;
     }
 
     public function uploadCourseImage($fieldName) {

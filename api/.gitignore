@@ -17,6 +17,9 @@ user_guide_src/cilexer/pycilexer.egg-info/*
 /vendor/
 
 /application/keys/*.pem
+/lectures/*
+/uploads/course_images/*
+/lectures/user_images/*
 
 # IDE Files
 #-------------------------

@@ -15,7 +15,9 @@
 
     .user-details {
         -ms-grid-row: 1;
+        grid-row: 1;
         -ms-grid-column: 1;
+        grid-column: 1;
         grid-area: user-details;
         @extend .sans-serif;
 
@@ -46,7 +48,9 @@
 
     .course-activity {
         -ms-grid-row: 3;
+        grid-row: 3;
         -ms-grid-column: 1;
+        grid-column: 1;
         grid-area: course-activity;
 
         .section {
@@ -91,12 +95,18 @@
                 background-color: $light_grey;
             }
         }
+
+        .course-activity-course + .course-activity-course {
+            margin-left: .5em;
+        }
     }
 
     .enrolled-courses {
         -ms-grid-row: 1;
+        grid-row: 1;
         -ms-grid-row-span: 3;
         -ms-grid-column: 3;
+        grid-column: 3;
         -ms-grid-column-span: 3;
         grid-area: enrolled-courses;
 
@@ -178,7 +188,9 @@
 
     .latest-lectures {
         -ms-grid-row: 5;
+        grid-row: 5;
         -ms-grid-column: 1;
+        grid-column: 1;
         grid-area: latest-lectures;
         
         .section {
@@ -232,7 +244,9 @@
 
     .monthly-activity {
         -ms-grid-row: 5;
+        grid-row: 5;
         -ms-grid-column: 3;
+        grid-column: 3;
         -ms-grid-column-span: 3;
         grid-area: monthly-activity;
 

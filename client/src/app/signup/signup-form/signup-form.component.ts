@@ -14,7 +14,12 @@ export class SignupFormComponent implements OnInit {
 
   @Input() buttonText = 'Create Account';
 
-  constructor(private authService: AuthenticationService, private router: Router, private fb: FormBuilder, private validators: ValidatorService) {}
+  constructor(
+    private authService: AuthenticationService,
+    private router: Router,
+    private fb: FormBuilder,
+    private validators: ValidatorService
+  ) {}
 
   ngOnInit() {
     this.signupForm = this.fb.group({
@@ -34,9 +39,11 @@ export class SignupFormComponent implements OnInit {
         Validators.required,
         Validators.minLength(3),
         Validators.maxLength(16),
+        this.validators.UsernameValidator
       ]],
       email: ['', [
         Validators.required,
+        Validators.maxLength(100),
         this.validators.EmailValidator
       ], [this.validators.IsEmailTakenValidator]],
       password: ['', [

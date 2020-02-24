@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   templateUrl: './home.component.html',
@@ -7,23 +8,24 @@ import { Component, OnInit } from '@angular/core';
 export class HomeComponent implements OnInit {
   public carouselCourses = [];
 
-  constructor() {}
+  constructor(private route: ActivatedRoute) {}
 
   ngOnInit() {
-    this.carouselCourses = [
-      {
-        image: 'assets/images/default_course_image.png',
-        courseDetailLink: '/asd1'
-      },
-      {
-        image: 'assets/images/sss.gif',
-        courseDetailLink: '/asd2'
-      },
-      {
-        image: 'assets/images/default_course_image.png',
-        courseDetailLink: '/asd3'
-      },
-    ];
+    this.carouselCourses = this.route.snapshot.data.courses;
+    // this.carouselCourses = [
+    //   {
+    //     image: 'assets/images/default_course_image.png',
+    //     courseDetailLink: '/asd1'
+    //   },
+    //   {
+    //     image: 'assets/images/sss.gif',
+    //     courseDetailLink: '/asd2'
+    //   },
+    //   {
+    //     image: 'assets/images/default_course_image.png',
+    //     courseDetailLink: '/asd3'
+    //   },
+    // ];
   }
 
   courseCarouselPrevious() {

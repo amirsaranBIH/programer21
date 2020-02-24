@@ -502,7 +502,8 @@ class UserModel extends CI_model {
                     c.createdAt,
                     c.updatedAt,
                     (SELECT IF(SUM(ert) IS NULL, 0, SUM(ert)) FROM lectures WHERE lectures.course = c.id) AS totalErt,
-                    l.slug AS currentLectureSlug
+                    l.slug AS currentLectureSlug,
+                    uc.status AS userCourseStatus
                 FROM
                     courses c
                 LEFT JOIN
@@ -578,7 +579,7 @@ class UserModel extends CI_model {
 
     public function getUserCoursePercentageFinished($courseId, $userId) {
         $sql = "SELECT
-                    (COUNT(1) / (SELECT COUNT(1) FROM lectures WHERE course = ?)) * 100 AS coursePercentageFinished
+                    TRUNCATE((COUNT(1) / (SELECT COUNT(1) FROM lectures WHERE course = ?)) * 100, 0) AS coursePercentageFinished
                 FROM
                     finished_lectures
                 LEFT JOIN
@@ -658,7 +659,7 @@ class UserModel extends CI_model {
                 WHERE
                     userId = ? AND skipped = 0 AND MONTH(createdAt) = MONTH(NOW())
                 GROUP BY
-                    createdAt";
+                    date";
 
         $query = $this->db->query($sql, $userId);
 

@@ -19,11 +19,16 @@ export class LoginComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    if (this.authService.userData !== null) {
+      this.router.navigate(['/']);
+    }
+
     this.loginForm = this.fb.group({
       email: ['', [
         Validators.required,
+        Validators.maxLength(100),
         this.validators.EmailValidator
-      ], [this.validators.IsEmailInUseValidator]],
+      ]],
       password: ['', [Validators.required]]
     });
   }
@@ -37,18 +42,15 @@ export class LoginComponent implements OnInit {
   }
 
   onSubmit(credentials) {
-    this.router.navigate(['dashboard']);
     if (this.loginForm.valid) {
       this.authService.login(credentials).then((res: any) => {
         if (res.status) {
-          if (res.data.isCorrectPassword) {
-            this.router.navigate(['dashboard']);
-          } else {
-            if (!this.email.hasError('required') &&
-                !this.email.hasError('notValidEmail') &&
-                !this.email.hasError('emailNotInUse')) {
-              this.password.setErrors({ wrongPassword: true });
-            }
+          this.router.navigate(['dashboard']);
+        } else {
+          if (!this.email.hasError('required') &&
+              !this.email.hasError('notValidEmail') &&
+              !this.email.hasError('emailNotInUse')) {
+            this.password.setErrors({ wrongPassword: true });
           }
         }
       });

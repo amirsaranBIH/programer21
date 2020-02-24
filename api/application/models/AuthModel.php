@@ -9,6 +9,7 @@ class AuthModel extends CI_model {
         $this->load->model('UserModel', 'user');
         $this->load->helper('url');
         $this->load->helper('file');
+        $this->load->helper('error');
     }
 
     public function login($email, $password) {
@@ -23,8 +24,7 @@ class AuthModel extends CI_model {
         $query = $this->db->query($sql, $email);
 
         if (!$query) {
-            log_message('error', $this->db->error()['message']);
-            return false;
+            return handleError($this->db->error()['message']);
         }
 
         $row = $query->first_row();
@@ -35,17 +35,20 @@ class AuthModel extends CI_model {
 
         if ($isCorrectPassword) {  
             $jwt = $this->generateNewJwtToken($row->id);
-        } else {
-            $jwt = null;
-        }
 
-        return array(
-            'isCorrectPassword' => $isCorrectPassword,
-            'token' => $jwt
-        );
+            return array(
+                'status' => true,
+                'token' => $jwt
+            );
+        } else {
+            return array(
+                'status' => false,
+                'message' => 'Password wrong'
+            );
+        }
     }
 
-    public function verifyJwtToken() {
+    public function getCurrentUser() {
         $tokenHeader = $this->input->get_request_header('Authorization');
 
         if (!$tokenHeader) {

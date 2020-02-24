@@ -58,7 +58,7 @@ $route['api/auth/signup']['post'] = 'auth/signup';
 $route['api/auth/login']['post'] = 'auth/login';
 $route['api/auth/isEmailTaken']['post'] = 'auth/isEmailTaken';
 $route['api/auth/isEmailTakenWhileEditing/(:num)']['post'] = 'auth/isEmailTakenWhileEditing/$1';
-$route['api/auth/verifyJwtToken'] = 'auth/verifyJwtToken';
+$route['api/auth/getCurrentUser'] = 'auth/getCurrentUser';
 
 $route['api/user/getUserEnrolledCourses/(:num)'] = 'user/getUserEnrolledCourses/$1';
 $route['api/user/getAllUsers'] = 'user/getAllUsers';
@@ -90,3 +90,4 @@ $route['api/lecture/getLectureHtmlBySlug/(:any)'] = 'lecture/getLectureHtmlBySlu
 $route['api/lecture/createLecture/(:num)']['post'] = 'lecture/createLecture/$1';
 $route['api/lecture/updateLecture/(:num)']['post'] = 'lecture/updateLecture/$1';
 $route['api/lecture/deleteLecture/(:num)'] = 'lecture/deleteLecture/$1';
+$route['api/lecture/finishLecture/(:num)/(:num)'] = 'lecture/finishLecture/$1/$2';

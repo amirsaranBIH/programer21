@@ -42,10 +42,12 @@ export class LectureService {
   }
 
   skipLecture(courseIndex, nextModuleIndex, nextLectureIndex) {
-    return this.http.get(`/api/lecture/skip/${courseIndex}/${nextModuleIndex}/${nextLectureIndex}`);
+    return this.http.get(`/api/lecture/skip/${courseIndex}/${nextModuleIndex}/${nextLectureIndex}`,
+    { headers: this.auth.getAuthorizationHeader });
   }
 
-  finishLecture(finishedLectureCourseId) {
-    return this.http.get(`/api/lecture/finishLecture/${finishedLectureCourseId}`);
+  finishLecture(lectureId, finishedLectureCourseId) {
+    return this.http.get(`/api/lecture/finishLecture/${lectureId}/${finishedLectureCourseId}`,
+    { headers: this.auth.getAuthorizationHeader }).toPromise();
   }
 }

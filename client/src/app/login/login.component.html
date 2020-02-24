@@ -10,7 +10,9 @@
           <div class="input-help flex flex--not-even flex--align-center">
             <div class="input-help-status"></div>
             <div class="input-help-message">
-              <span>Email is required!</span>
+              <span *ngIf="email.errors?.required">Email is required!</span>
+              <span *ngIf="email.errors?.maxlength && !email.errors?.notValidEmail">Email must be less than {{ email.errors?.maxlength.requiredLength }} characters long!</span>
+              <span *ngIf="email.errors?.notValidEmail && !email.errors?.required">Email is invalid!</span>
             </div>
           </div>
         </div>

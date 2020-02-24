@@ -15,7 +15,7 @@
                     <p>Last updated at {{ formatDate(course.updatedAt) }}</p>
                 </div>
                 <div class="cta">
-                    <button class="button button--large" (click)="startNextLecture()">Start Next Lecture</button>
+                    <button *ngIf="course.userCourseStatus === 'learning'" class="button button--large" [routerLink]="['/lecture', course.currentLectureSlug]">Start Next Lecture</button>
                 </div>
             </div>
             <div class="course-payment-info">

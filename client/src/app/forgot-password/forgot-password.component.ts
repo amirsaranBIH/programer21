@@ -17,7 +17,7 @@ export class ForgotPasswordComponent implements OnInit {
       email: ['', [
         Validators.required,
         this.validators.EmailValidator
-      ], [this.validators.IsEmailInUseValidator]],
+      ]],
     });
 }
 

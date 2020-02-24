@@ -17,6 +17,7 @@ export class DashboardComponent implements OnInit {
   public monthlyActivity = {};
   public currentEnrolledCourse = 0;
   public environment = environment;
+  public currentMonth = moment().format('MMMM, YYYY');
 
   constructor(
     public auth: AuthenticationService,
@@ -30,7 +31,8 @@ export class DashboardComponent implements OnInit {
     this.latestLectures = this.route.snapshot.data.latestLectures;
     this.monthlyActivity = this.route.snapshot.data.monthlyActivity;
 
-    const days = this.getDaysInMonth(1, 2020);
+    const today = new Date();
+    const days = this.getDaysInMonth(today.getMonth(), today.getFullYear());
 
     const maxMonthlyActivity = this.getMaxMonthlyActivity();
 

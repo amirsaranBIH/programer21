@@ -52,7 +52,7 @@ const routes: Routes = [
   {
     path: '',
     resolve: {
-      // courses: AllCoursesResolverService
+      courses: AllPublicCoursesResolverService
     },
     component: HomeComponent
   },

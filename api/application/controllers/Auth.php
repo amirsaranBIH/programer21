@@ -37,8 +37,8 @@ class Auth extends MY_Controller  {
 
         $loginResponse = $this->auth->login($userData['email'], $userData['password']);
 
-        if ($loginResponse['isCorrectPassword'] === false) {
-            $this->setResponseError();
+        if ($loginResponse['status'] === false) {
+            $this->setResponseError(200, $loginResponse['message']);
             return;
         }
 
@@ -71,8 +71,8 @@ class Auth extends MY_Controller  {
         $this->setResponseSuccess($response['emailTaken']);
     }
 
-    public function verifyJwtToken() {
-        $response = $this->auth->verifyJwtToken();
+    public function getCurrentUser() {
+        $response = $this->auth->getCurrentUser();
 
         if ($response['status'] === false) {
             $this->setResponseError(200, $response['message']);
