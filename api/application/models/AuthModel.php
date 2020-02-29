@@ -145,4 +145,45 @@ class AuthModel extends CI_model {
 
         return \Firebase\JWT\JWT::encode($payload, $privateKey, 'RS256');
     }
+
+    public function changePassword($newPassword, $token) {
+        $sql = "SELECT
+                    id
+                FROM
+                    users
+                WHERE
+                    token = ?";
+
+        $query = $this->db->query($sql, $token);
+
+        $user = $query->first_row();
+
+        if (!$user) {
+            return handleError('Trying to reset password with invalid token');
+        }
+
+        $sql = "UPDATE
+                    users
+                SET
+                    password = ?
+                WHERE
+                    id = ?";
+
+        $hashedPassowrd = $this->user->getHashedPassword($newPassword);
+
+        $query = $this->db->query($sql, array(
+            $hashedPassowrd,
+            $user->id
+        ));
+        
+        if (!$query) {
+            return handleError($this->db->error()['message']);
+        }
+
+        $this->user->setNewTokenForUser($user->id);
+
+        return array(
+            'status' => true
+        );
+    }
 }

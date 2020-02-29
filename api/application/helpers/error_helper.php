@@ -2,10 +2,8 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 
-if ( ! function_exists('handleError'))
-{
-    function handleError($errorMessage)
-    {
+if (!function_exists('handleError')) {
+    function handleError($errorMessage) {
         log_message('error', $errorMessage);
         return array(
             'status' => false,

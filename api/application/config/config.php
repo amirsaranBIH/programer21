@@ -25,6 +25,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 */
 $config['base_url'] = 'http://localhost:3000/';
 
+$config['host'] = 'http://localhost:4200/';
+
 /*
 |--------------------------------------------------------------------------
 | Index File

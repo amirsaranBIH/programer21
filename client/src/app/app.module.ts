@@ -11,7 +11,7 @@ import { LoginComponent } from './login/login.component';
 import { SignupComponent } from './signup/signup.component';
 import { HomeComponent } from './home/home.component';
 import { AuthenticationService } from './services/authentication.service';
-import { AuthGuardService } from './services/auth-guard.service';
+import { AuthGuardService } from './guards/auth-guard.service';
 import { AdminPanelComponent } from './admin-panel/admin-panel.component';
 import { NewLectureComponent } from './admin-panel/new-lecture/new-lecture.component';
 import { NewCourseComponent } from './admin-panel/new-course/new-course.component';
@@ -47,6 +47,8 @@ import { UserMonthlyActivityResolverService } from './resolvers/user-monthly-act
 import { OneCourseBySlugResolverService } from './resolvers/one-course-by-slug-resolver.service';
 import { FormatSupportedLanguagesPipe } from './pipes/format-supported-languages.pipe';
 import { OneUserCourseBySlugResolverService } from './resolvers/one-user-course-by-slug-resolver.service';
+import { LoggedOutGuardService } from './guards/logged-out-guard.service';
+import { NotFoundComponent } from './not-found/not-found.component';
 
 const routes: Routes = [
   {
@@ -58,19 +60,23 @@ const routes: Routes = [
   },
   {
     path: 'login',
-    component: LoginComponent
+    component: LoginComponent,
+    canActivate: [LoggedOutGuardService]
   },
   {
     path: 'signup',
-    component: SignupComponent
+    component: SignupComponent,
+    canActivate: [LoggedOutGuardService]
   },
   {
     path: 'forgot-password',
-    component: ForgotPasswordComponent
+    component: ForgotPasswordComponent,
+    canActivate: [LoggedOutGuardService]
   },
   {
-    path: 'new-password',
-    component: NewPasswordComponent
+    path: 'new-password/:token',
+    component: NewPasswordComponent,
+    canActivate: [LoggedOutGuardService]
   },
   {
     path: 'admin-panel',
@@ -167,6 +173,14 @@ const routes: Routes = [
       html_content: LectureHTMLContentResolverService
     },
   },
+  {
+    path: '404',
+    component: NotFoundComponent
+  },
+  {
+    path: '**',
+    redirectTo: '404'
+  }
 ];
 
 export function fetchUserDataProviderFactory(provider: AuthenticationService) {
@@ -218,6 +232,7 @@ export function fetchUserDataProviderFactory(provider: AuthenticationService) {
       multi: true
     },
     AuthGuardService,
+    LoggedOutGuardService,
     AllCoursesResolverService,
     AllUsersResolverService,
     AllPublicCoursesResolverService,

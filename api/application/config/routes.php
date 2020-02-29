@@ -59,6 +59,8 @@ $route['api/auth/login']['post'] = 'auth/login';
 $route['api/auth/isEmailTaken']['post'] = 'auth/isEmailTaken';
 $route['api/auth/isEmailTakenWhileEditing/(:num)']['post'] = 'auth/isEmailTakenWhileEditing/$1';
 $route['api/auth/getCurrentUser'] = 'auth/getCurrentUser';
+$route['api/auth/forgotPassword']['post'] = 'auth/forgotPassword';
+$route['api/auth/newPassword']['post'] = 'auth/newPassword';
 
 $route['api/user/getUserEnrolledCourses/(:num)'] = 'user/getUserEnrolledCourses/$1';
 $route['api/user/getAllUsers'] = 'user/getAllUsers';

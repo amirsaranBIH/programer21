@@ -12,7 +12,7 @@ export class AppComponent {
   public isDevelopment = !environment.production;
   public showAccountDropdownMenu = false;
   public loading = false;
-  public fixedHeaderPages = [ '/', '/login', '/signup', '/forgot-password', '/new-password' ];
+  public fixedHeaderPages = [ '/', '/login', '/signup', '/forgot-password', '/new-password', '/404' ];
   public hasFixedHeader = false;
 
   constructor(public auth: AuthenticationService, private router: Router) {

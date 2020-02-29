@@ -29,7 +29,7 @@ export class AuthenticationService {
 
     if (token) {
       return new Promise((resolve, reject) => {
-        this.http.get(environment.HOST + '/api/auth/getCurrentUser', { headers: token }).subscribe({
+        this.http.get('/api/auth/getCurrentUser', { headers: token }).subscribe({
           error: error => {
             if (error.status === 401) {
               console.error(error);
@@ -51,11 +51,11 @@ export class AuthenticationService {
   }
 
   public signup(data): Observable<any> {
-    return this.http.post(environment.HOST + '/api/auth/signup', data);
+    return this.http.post('/api/auth/signup', data);
   }
 
   public login(data): Promise<any> {
-    return this.http.post(environment.HOST + '/api/auth/login', data)
+    return this.http.post('/api/auth/login', data)
     .toPromise().then(async (res: any) => {
       if (res.status) {
         this.setJwtToken(res.data.token);
@@ -67,7 +67,7 @@ export class AuthenticationService {
   }
 
   public async isEmailTaken(email: string): Promise<boolean> {
-    return await this.http.post(environment.HOST + '/api/auth/isEmailTaken', { email })
+    return await this.http.post('/api/auth/isEmailTaken', { email })
       .toPromise()
       .then((res: any) => {
         if (res.status) {
@@ -77,12 +77,20 @@ export class AuthenticationService {
   }
 
   public async isEmailTakenWhileEditing(userId, email: string): Promise<boolean> {
-    return await this.http.post(environment.HOST + '/api/auth/isEmailTakenWhileEditing/' + userId, { email })
+    return await this.http.post('/api/auth/isEmailTakenWhileEditing/' + userId, { email })
       .toPromise()
       .then((res: any) => {
         if (res.status) {
           return res.data;
         }
       });
+  }
+
+  public forgotPassword(email: string) {
+    return this.http.post('/api/auth/forgotPassword', { email }).toPromise();
+  }
+
+  public newPassword(newPassword, token) {
+    return this.http.post('/api/auth/newPassword', { newPassword, token }).toPromise();
   }
 }

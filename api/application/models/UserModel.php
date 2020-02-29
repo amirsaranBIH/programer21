@@ -9,9 +9,7 @@ class UserModel extends CI_model {
         $this->load->model('CourseModel', 'course');
         $this->load->model('AuthModel', 'auth');
     }
-    // finishedCourses: 1,
-    // enrolledCourses: 3,
-    // verified: true
+
     public function getAllUsers() {
         $sql = "SELECT
                     id,
@@ -121,22 +119,22 @@ class UserModel extends CI_model {
         return $user;
     }
 
-    public function getUserTokenById($userId) {
+    public function getUserTokenByEmail($email) {
         $sql = "SELECT
                     token
                 FROM
                     users
                 WHERE
-                    id = ?";
+                    email = ?";
 
-        $query = $this->db->query($sql, $userId);
+        $query = $this->db->query($sql, $email);
 
         if (!$query) {
             log_message('error', $this->db->error()['message']);
             return false;
         }
 
-        $token = $query->first_row()['token'];
+        $token = $query->first_row()->token;
 
         return $token;
     }

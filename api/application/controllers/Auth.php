@@ -8,6 +8,7 @@ class Auth extends MY_Controller  {
 
         $this->load->model('UserModel', 'user');
         $this->load->model('AuthModel', 'auth');
+        $this->load->model('MailModel', 'mail');
     }
 
     public function signup() {
@@ -80,5 +81,38 @@ class Auth extends MY_Controller  {
         }
 
         $this->setResponseSuccess($response['payload']);
+    }
+
+    public function forgotPassword() {
+        $data = json_decode(file_get_contents('php://input'), true);
+
+        $isEmailTaken = $this->auth->isEmailTaken($data['email']);
+
+        if (!$isEmailTaken) {
+            $this->setResponseError(200, 'Account with email of ' . $data['email'] . ' is not registered!');
+            return;
+        }
+
+        $response = $this->mail->sendForgotPasswordMail($data['email']);
+
+        if (!$response) {
+            $this->setResponseError(200, $response['message']);
+            return;
+        }
+
+        $this->setResponseSuccess();
+    }
+
+    public function newPassword() {
+        $data = json_decode(file_get_contents('php://input'), true);
+
+        $response = $this->auth->changePassword($data['newPassword'], $data['token']);
+
+        if (!$response['status']) {
+            $this->setResponseError(200, $response['message']);
+            return;
+        }
+
+        $this->setResponseSuccess();
     }
 }

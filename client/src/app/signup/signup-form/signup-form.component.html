@@ -78,13 +78,13 @@
       </div>
       <div class="form-group">
         <label for="confirmPassword">Confirm Password</label>
-        <div class="input-group" [ngClass]="{ 'is-invalid' : (confirmPassword.invalid && confirmPassword.touched) || (confirmPassword.invalid && ngForm.submitted) }">
+        <div class="input-group" [ngClass]="{ 'is-invalid' : ((confirmPassword.errors?.required || ngForm.errors?.passwordsNotMatching) && confirmPassword.touched) || (confirmPassword.invalid && ngForm.submitted) }">
           <input type="password" id="confirmPassword" formControlName="confirmPassword" placeholder="Confirm your strongest password">
           <div class="input-help flex flex--not-even flex--align-center">
             <div class="input-help-status"></div>
             <div class="input-help-message">
               <span *ngIf="confirmPassword.errors?.required">Password is required!</span>
-              <span *ngIf="ngForm.errors?.passwordsNotMatching">Passwords don't match!</span>
+              <span *ngIf="ngForm.errors?.passwordsNotMatching && !confirmPassword.errors?.required">Passwords don't match!</span>
             </div>
           </div>
         </div>
