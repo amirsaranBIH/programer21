@@ -61,6 +61,7 @@ $route['api/auth/isEmailTakenWhileEditing/(:num)']['post'] = 'auth/isEmailTakenW
 $route['api/auth/getCurrentUser'] = 'auth/getCurrentUser';
 $route['api/auth/forgotPassword']['post'] = 'auth/forgotPassword';
 $route['api/auth/newPassword']['post'] = 'auth/newPassword';
+$route['api/auth/verifyEmail/(:any)'] = 'auth/verifyEmail/$1';
 
 $route['api/user/getUserEnrolledCourses/(:num)'] = 'user/getUserEnrolledCourses/$1';
 $route['api/user/getAllUsers'] = 'user/getAllUsers';
@@ -83,6 +84,7 @@ $route['api/course/createCourse']['post'] = 'course/createCourse';
 $route['api/course/updateCourse/(:num)']['post'] = 'course/updateCourse/$1';
 $route['api/course/getCourseById/(:num)'] = 'course/getCourseById/$1';
 $route['api/course/getCourseBySlug/(:any)'] = 'course/getCourseBySlug/$1';
+$route['api/course/getCourseIdBySlug/(:any)'] = 'course/getCourseIdBySlug/$1';
 $route['api/course/getCourseLectures/(:num)'] = 'course/getCourseLectures/$1';
 $route['api/course/deleteCourse/(:num)'] = 'course/deleteCourse/$1';
 

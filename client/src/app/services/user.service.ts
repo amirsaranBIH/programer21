@@ -11,7 +11,7 @@ export class UserService {
   constructor(private http: HttpClient, private auth: AuthenticationService) { }
 
   getUserEnrolledCourses(userId) {
-    return this.http.get('/api/user/getUserEnrolledCourses/' + userId).toPromise();
+    return this.http.get('/api/user/getUserEnrolledCourses/' + userId, { headers: this.auth.getAuthorizationHeader }).toPromise();
   }
 
   getAllUsers() {
@@ -27,18 +27,15 @@ export class UserService {
   }
 
   updateUserAccountInfo(userId, userData) {
-    return this.http.post('/api/user/updateUserAccountInfo/' + userId, userData,
-    { headers: this.auth.getAuthorizationHeader });
+    return this.http.post('/api/user/updateUserAccountInfo/' + userId, userData, { headers: this.auth.getAuthorizationHeader });
   }
 
   updateUserAdditionalInfo(userId, userData) {
-    return this.http.post('/api/user/updateUserAdditionalInfo/' + userId, userData,
-    { headers: this.auth.getAuthorizationHeader });
+    return this.http.post('/api/user/updateUserAdditionalInfo/' + userId, userData, { headers: this.auth.getAuthorizationHeader });
   }
 
   updateUserPassword(userId, userData) {
-    return this.http.post('/api/user/updateUserPassword/' + userId, userData,
-    { headers: this.auth.getAuthorizationHeader });
+    return this.http.post('/api/user/updateUserPassword/' + userId, userData, { headers: this.auth.getAuthorizationHeader });
   }
 
   suspendUser(userId) {

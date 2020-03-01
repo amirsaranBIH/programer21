@@ -186,4 +186,40 @@ class AuthModel extends CI_model {
             'status' => true
         );
     }
+
+    public function verifyEmail($token) {
+        $sql = "SELECT
+                    id
+                FROM
+                    users
+                WHERE
+                    token = ?";
+
+        $query = $this->db->query($sql, $token);
+
+        $user = $query->first_row();
+
+        if (!$user) {
+            return handleError('Trying to reset password with invalid token');
+        }
+
+        $sql = "UPDATE
+                    users
+                SET
+                    emailVerifiedAt = NOW()
+                WHERE
+                    id = ?";
+
+        $query = $this->db->query($sql, $user->id);
+        
+        if (!$query) {
+            return handleError($this->db->error()['message']);
+        }
+
+        $this->user->setNewTokenForUser($user->id);
+
+        return array(
+            'status' => true
+        );
+    }
 }

@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { AuthenticationService } from './services/authentication.service';
 import { environment } from 'src/environments/environment';
 import { Router, NavigationEnd, NavigationStart, NavigationCancel, NavigationError } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-root',
@@ -15,7 +16,11 @@ export class AppComponent {
   public fixedHeaderPages = [ '/', '/login', '/signup', '/forgot-password', '/new-password', '/404' ];
   public hasFixedHeader = false;
 
-  constructor(public auth: AuthenticationService, private router: Router) {
+  constructor(
+    public auth: AuthenticationService,
+    private router: Router,
+    private toastr: ToastrService
+  ) {
     this.router.events.subscribe(event => {
       switch (true) {
         case event instanceof NavigationStart: {
@@ -52,6 +57,7 @@ export class AppComponent {
   }
 
   logout() {
+    this.toastr.success('Successfully logged out from your account', 'Success');
     this.toggleAccountDropdownMenu();
     this.auth.userData = null;
     this.auth.removeJwtToken();

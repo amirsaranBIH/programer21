@@ -8,6 +8,7 @@ class Course extends MY_Controller  {
 
         $this->load->model('CourseModel', 'course');
         $this->load->model('LectureModel', 'lecture');
+        $this->load->model('AuthModel', 'auth');
     }
 
     public function getAllPublicCourses() {
@@ -22,6 +23,15 @@ class Course extends MY_Controller  {
     }
 
     public function getAllCourses() {
+        $authResponse = $this->auth->getCurrentUser();
+        if (!$authResponse['status']) {
+            return $this->setResponseError(200, $authResponse['message']);
+        }
+
+        if ($authResponse['payload']->role !== 'administrator') {
+            return $this->setResponseError(200, 'You must have administrative permissions to do that');
+        }
+
         $courses = $this->course->getAllCourses();
 
         if ($courses === false) {
@@ -33,6 +43,15 @@ class Course extends MY_Controller  {
     }
 
     public function getCourseLectures($courseId) {
+        $authResponse = $this->auth->getCurrentUser();
+        if (!$authResponse['status']) {
+            return $this->setResponseError(200, $authResponse['message']);
+        }
+
+        if ($authResponse['payload']->role !== 'administrator') {
+            return $this->setResponseError(200, 'You must have administrative permissions to do that');
+        }
+        
         $courseLectures = $this->lecture->getAllLecturesByCourseId($courseId);
 
         if ($courseLectures === false) {
@@ -44,6 +63,15 @@ class Course extends MY_Controller  {
     }
 
     public function createCourse() {
+        $authResponse = $this->auth->getCurrentUser();
+        if (!$authResponse['status']) {
+            return $this->setResponseError(200, $authResponse['message']);
+        }
+
+        if ($authResponse['payload']->role !== 'administrator') {
+            return $this->setResponseError(200, 'You must have administrative permissions to do that');
+        }
+
         $data = $this->input->post();
 
         $res = $this->course->createCourse($data);
@@ -57,6 +85,15 @@ class Course extends MY_Controller  {
     }
 
     public function updateCourse($courseId) {
+        $authResponse = $this->auth->getCurrentUser();
+        if (!$authResponse['status']) {
+            return $this->setResponseError(200, $authResponse['message']);
+        }
+
+        if ($authResponse['payload']->role !== 'administrator') {
+            return $this->setResponseError(200, 'You must have administrative permissions to do that');
+        }
+
         $data = $this->input->post();
 
         $res = $this->course->updateCourse($courseId, $data);
@@ -70,6 +107,15 @@ class Course extends MY_Controller  {
     }
 
     public function deleteCourse($courseId) {
+        $authResponse = $this->auth->getCurrentUser();
+        if (!$authResponse['status']) {
+            return $this->setResponseError(200, $authResponse['message']);
+        }
+
+        if ($authResponse['payload']->role !== 'administrator') {
+            return $this->setResponseError(200, 'You must have administrative permissions to do that');
+        }
+
         $status = $this->course->deleteCourse($courseId);
 
         if ($status === false) {
@@ -81,7 +127,14 @@ class Course extends MY_Controller  {
     }
 
     public function getCourseById($courseId) {
-        $data = $this->input->post();
+        $authResponse = $this->auth->getCurrentUser();
+        if (!$authResponse['status']) {
+            return $this->setResponseError(200, $authResponse['message']);
+        }
+
+        if ($authResponse['payload']->role !== 'administrator') {
+            return $this->setResponseError(200, 'You must have administrative permissions to do that');
+        }
 
         $course = $this->course->getCourseById($courseId);
 
@@ -94,7 +147,6 @@ class Course extends MY_Controller  {
     }
 
     public function getCourseBySlug($courseSlug) {
-
         $course = $this->course->getCourseBySlug($courseSlug);
 
         if ($course === false) {
@@ -103,5 +155,21 @@ class Course extends MY_Controller  {
         }
 
         $this->setResponseSuccess($course);
+    }
+
+    public function getCourseIdBySlug($courseSlug) {
+        $authResponse = $this->auth->getCurrentUser();
+        if (!$authResponse['status']) {
+            return $this->setResponseError(200, $authResponse['message']);
+        }
+
+        $response = $this->course->getCourseIdBySlug($courseSlug);
+
+        if (!$response['status']) {
+            $this->setResponseError(200, $response['message']);
+            return;
+        }
+
+        $this->setResponseSuccess($response['courseId']);
     }
 }

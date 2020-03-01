@@ -23,12 +23,19 @@ class Auth extends MY_Controller  {
 
         $loginResponse = $this->auth->login($userData['email'], $userData['password']);
 
-        if ($loginResponse['isCorrectPassword'] === false) {
-            $this->setResponseError();
+        if (!$loginResponse['status']) {
+            $this->setResponseError(200, $loginResponse['message']);
             return;
         }
 
         $loginResponse['createdUserId'] = $createdUserId;
+
+        $sendVerificationEmailResponse = $this->mail->sendEmailVerificationMail($userData['email']);
+
+        if (!$sendVerificationEmailResponse['status']) {
+            $this->setResponseError(200, $sendVerificationEmailResponse['message']);
+            return;
+        }
 
         $this->setResponseSuccess($loginResponse);
     }
@@ -60,6 +67,11 @@ class Auth extends MY_Controller  {
     }
 
     public function isEmailTakenWhileEditing($userId) {
+        $authResponse = $this->auth->getCurrentUser();
+        if (!$authResponse['status']) {
+            return $this->setResponseError(200, $authResponse['message']);
+        }
+
         $data = json_decode(file_get_contents('php://input'), true);
 
         $response = $this->auth->isEmailTakenWhileEditing($userId, $data['email']);
@@ -95,7 +107,7 @@ class Auth extends MY_Controller  {
 
         $response = $this->mail->sendForgotPasswordMail($data['email']);
 
-        if (!$response) {
+        if (!$response['status']) {
             $this->setResponseError(200, $response['message']);
             return;
         }
@@ -107,6 +119,17 @@ class Auth extends MY_Controller  {
         $data = json_decode(file_get_contents('php://input'), true);
 
         $response = $this->auth->changePassword($data['newPassword'], $data['token']);
+
+        if (!$response['status']) {
+            $this->setResponseError(200, $response['message']);
+            return;
+        }
+
+        $this->setResponseSuccess();
+    }
+
+    public function verifyEmail($token) {
+        $response = $this->auth->verifyEmail($token);
 
         if (!$response['status']) {
             $this->setResponseError(200, $response['message']);

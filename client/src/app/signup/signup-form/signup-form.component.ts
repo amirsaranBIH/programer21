@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { AuthenticationService } from 'src/app/services/authentication.service';
 import { ValidatorService } from 'src/app/services/validator.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-signup-form',
@@ -18,7 +19,8 @@ export class SignupFormComponent implements OnInit {
     private authService: AuthenticationService,
     private router: Router,
     private fb: FormBuilder,
-    private validators: ValidatorService
+    private validators: ValidatorService,
+    private toastr: ToastrService
   ) {}
 
   ngOnInit() {
@@ -86,13 +88,11 @@ export class SignupFormComponent implements OnInit {
 
   onSubmit(data) {
     if (this.signupForm.valid) {
-      this.authService.signup(data).subscribe({
-        error: err => console.log(err),
-        complete: () => {
-          this.authService.fetchUserData().then(() => {
-            this.router.navigate(['/dashboard']);
-          });
-        }
+      this.authService.signup(data).then(() => {
+        this.authService.fetchUserData().then(() => {
+          this.toastr.success('Successfully created account', 'Success');
+          this.router.navigate(['/dashboard']);
+        });
       });
     }
   }

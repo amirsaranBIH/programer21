@@ -1,0 +1,13 @@
+<div class="gradient-background">
+    <img class="background-triangles-bottom" src="assets/triangles.png" alt="triangles">
+    <div class="not-found fixed-section" *ngIf="emailVerifiedStatus">
+      <h1 class="margin-bottom" >Successfully verified email!</h1>
+      <button type="button" class="button" routerLink="/dashboard">Go to your dashboard</button>
+    </div>
+    <div class="not-found fixed-section" *ngIf="!emailVerifiedStatus">
+      <h1 class="margin-bottom">Something went wrong</h1>
+      <button type="button" class="button" routerLink="/">Go to home page</button>
+    </div>
+  </div>
+  
+

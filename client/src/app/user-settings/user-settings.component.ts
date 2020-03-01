@@ -4,7 +4,6 @@ import { ValidatorService } from '../services/validator.service';
 import { AuthenticationService } from '../services/authentication.service';
 import { UserService } from '../services/user.service';
 import { ActivatedRoute } from '@angular/router';
-import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-user-settings',
@@ -22,10 +21,9 @@ export class UserSettingsComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private validators: ValidatorService,
-    private route: ActivatedRoute,
+    private route: ActivatedRoute, // this is binded to email validator
     private authService: AuthenticationService,
-    private userService: UserService,
-    private toastr: ToastrService
+    private userService: UserService
   ) { }
 
   ngOnInit() {

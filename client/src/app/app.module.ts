@@ -49,6 +49,11 @@ import { FormatSupportedLanguagesPipe } from './pipes/format-supported-languages
 import { OneUserCourseBySlugResolverService } from './resolvers/one-user-course-by-slug-resolver.service';
 import { LoggedOutGuardService } from './guards/logged-out-guard.service';
 import { NotFoundComponent } from './not-found/not-found.component';
+import { RoleGuardService } from './guards/role-guard.service';
+import { UserGuardService } from './guards/user-guard.service';
+import { UserCourseGuardService } from './guards/user-course-guard.service';
+import { VerifyEmailComponent } from './verify-email/verify-email.component';
+import { VerifyEmailResolverService } from './resolvers/verify-email-resolver.service';
 
 const routes: Routes = [
   {
@@ -79,8 +84,18 @@ const routes: Routes = [
     canActivate: [LoggedOutGuardService]
   },
   {
+    path: 'verify-email/:token',
+    component: VerifyEmailComponent,
+    resolve: {
+      emailVerified: VerifyEmailResolverService,
+    }
+  },
+  {
     path: 'admin-panel',
-    canActivate: [AuthGuardService],
+    canActivate: [AuthGuardService, RoleGuardService],
+    data: {
+      rolesAccepted: [ 'administrator', 'moderator' ]
+    },
     children: [
       {
         path: '',
@@ -90,7 +105,10 @@ const routes: Routes = [
           users: AllUsersResolverService
         }
       },
-      { path: 'new-course', component: NewCourseComponent },
+      {
+        path: 'new-course',
+        component: NewCourseComponent
+      },
       {
         path: 'edit-user/:user_id',
         component: EditUserComponent,
@@ -138,6 +156,7 @@ const routes: Routes = [
       },
       {
         path: 'course/:course_slug',
+        canActivate: [UserCourseGuardService],
         component: UserCourseComponent,
         resolve: {
           course: OneUserCourseBySlugResolverService
@@ -147,7 +166,7 @@ const routes: Routes = [
   },
   {
     path: 'settings/:user_id',
-    canActivate: [AuthGuardService],
+    canActivate: [AuthGuardService, UserGuardService],
     component: UserSettingsComponent
   },
   {
@@ -212,7 +231,8 @@ export function fetchUserDataProviderFactory(provider: AuthenticationService) {
     UserSettingsComponent,
     EditUserComponent,
     ForgotPasswordComponent,
-    NewPasswordComponent
+    NewPasswordComponent,
+    VerifyEmailComponent
   ],
   imports: [
     BrowserAnimationsModule,
@@ -233,6 +253,9 @@ export function fetchUserDataProviderFactory(provider: AuthenticationService) {
     },
     AuthGuardService,
     LoggedOutGuardService,
+    RoleGuardService,
+    UserGuardService,
+    UserCourseGuardService,
     AllCoursesResolverService,
     AllUsersResolverService,
     AllPublicCoursesResolverService,
@@ -242,6 +265,7 @@ export function fetchUserDataProviderFactory(provider: AuthenticationService) {
     OneUserCourseBySlugResolverService,
     UserMonthlyActivityResolverService,
     CourseActivityPercentageResolverService,
+    VerifyEmailResolverService,
     OneLectureResolverService,
     OneCourseResolverService,
     UserLatestLecturesResolverService,

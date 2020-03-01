@@ -50,8 +50,16 @@ export class AuthenticationService {
     }
   }
 
-  public signup(data): Observable<any> {
-    return this.http.post('/api/auth/signup', data);
+  public signup(data): Promise<any> {
+    return this.http.post('/api/auth/signup', data)
+    .toPromise().then(async (res: any) => {
+      if (res.status) {
+        this.setJwtToken(res.data.token);
+        await this.fetchUserData();
+      }
+
+      return res;
+    });
   }
 
   public login(data): Promise<any> {
@@ -77,7 +85,7 @@ export class AuthenticationService {
   }
 
   public async isEmailTakenWhileEditing(userId, email: string): Promise<boolean> {
-    return await this.http.post('/api/auth/isEmailTakenWhileEditing/' + userId, { email })
+    return await this.http.post('/api/auth/isEmailTakenWhileEditing/' + userId, { email }, { headers: this.getAuthorizationHeader })
       .toPromise()
       .then((res: any) => {
         if (res.status) {
@@ -92,5 +100,9 @@ export class AuthenticationService {
 
   public newPassword(newPassword, token) {
     return this.http.post('/api/auth/newPassword', { newPassword, token }).toPromise();
+  }
+
+  public verifyEmail(token) {
+    return this.http.get(`/api/auth/verifyEmail/${token}`).toPromise();
   }
 }

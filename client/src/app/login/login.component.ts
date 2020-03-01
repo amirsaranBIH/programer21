@@ -3,6 +3,7 @@ import { AuthenticationService } from '../services/authentication.service';
 import { Router } from '@angular/router';
 import { FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { ValidatorService } from '../services/validator.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   templateUrl: './login.component.html',
@@ -15,7 +16,8 @@ export class LoginComponent implements OnInit {
     private authService: AuthenticationService,
     private router: Router,
     private fb: FormBuilder,
-    private validators: ValidatorService
+    private validators: ValidatorService,
+    private toastr: ToastrService
   ) { }
 
   ngOnInit() {
@@ -41,6 +43,7 @@ export class LoginComponent implements OnInit {
     if (this.loginForm.valid) {
       this.authService.login(credentials).then((res: any) => {
         if (res.status) {
+          this.toastr.success('Successfully logged in into your account', 'Success');
           this.router.navigate(['dashboard']);
         } else {
           if (!this.email.hasError('required') &&

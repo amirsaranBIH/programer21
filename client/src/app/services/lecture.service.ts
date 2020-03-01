@@ -10,23 +10,19 @@ export class LectureService {
   constructor(private http: HttpClient, private auth: AuthenticationService) { }
 
   getAllLectures() {
-    return this.http.get('/api/lecture/get-all-lectures');
+    return this.http.get('/api/lecture/get-all-lectures', { headers: this.auth.getAuthorizationHeader });
   }
 
   getLectureById(lectureId) {
-    return this.http.get(`/api/lecture/getLectureById/${lectureId}`).toPromise();
+    return this.http.get(`/api/lecture/getLectureById/${lectureId}`, { headers: this.auth.getAuthorizationHeader }).toPromise();
   }
 
   getLectureBySlug(slug) {
-    return this.http.get(`/api/lecture/getLectureBySlug/${slug}`).toPromise();
+    return this.http.get(`/api/lecture/getLectureBySlug/${slug}`, { headers: this.auth.getAuthorizationHeader }).toPromise();
   }
 
   getLectureHtmlBySlug(slug) {
-    return this.http.get(`/api/lecture/getLectureHtmlBySlug/${slug}`).toPromise();
-  }
-
-  getLectureHTMLContentBySlug(slug) {
-    return this.http.get(`/api/lecture/get-lecture-html-content-by-slug/${slug}`);
+    return this.http.get(`/api/lecture/getLectureHtmlBySlug/${slug}`, { headers: this.auth.getAuthorizationHeader }).toPromise();
   }
 
   createLecture(courseId, data) {

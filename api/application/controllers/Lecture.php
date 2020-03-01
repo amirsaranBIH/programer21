@@ -7,9 +7,19 @@ class Lecture extends MY_Controller  {
         header('Content-type: application/json');
 
         $this->load->model('LectureModel', 'lecture');
+        $this->load->model('AuthModel', 'auth');
     }
 
     public function createLecture($courseId) {
+        $authResponse = $this->auth->getCurrentUser();
+        if (!$authResponse['status']) {
+            return $this->setResponseError(200, $authResponse['message']);
+        }
+
+        if ($authResponse['payload']->role !== 'administrator') {
+            return $this->setResponseError(200, 'You must have administrative permissions to do that');
+        }
+
         $data = json_decode(file_get_contents('php://input'), true);
         
         $newlyCreatedLectureId = $this->lecture->createLecture($courseId, $data);
@@ -23,6 +33,15 @@ class Lecture extends MY_Controller  {
     }
 
     public function updateLecture($lectureId) {
+        $authResponse = $this->auth->getCurrentUser();
+        if (!$authResponse['status']) {
+            return $this->setResponseError(200, $authResponse['message']);
+        }
+
+        if ($authResponse['payload']->role !== 'administrator') {
+            return $this->setResponseError(200, 'You must have administrative permissions to do that');
+        }
+
         $data = json_decode(file_get_contents('php://input'), true);
         
         $status = $this->lecture->updateLecture($lectureId, $data);
@@ -36,6 +55,15 @@ class Lecture extends MY_Controller  {
     }
 
     public function deleteLecture($lectureId) {
+        $authResponse = $this->auth->getCurrentUser();
+        if (!$authResponse['status']) {
+            return $this->setResponseError(200, $authResponse['message']);
+        }
+
+        if ($authResponse['payload']->role !== 'administrator') {
+            return $this->setResponseError(200, 'You must have administrative permissions to do that');
+        }
+
         $status = $this->lecture->deleteLecture($lectureId);
 
         if ($status === false) {
@@ -47,6 +75,15 @@ class Lecture extends MY_Controller  {
     }
 
     public function getLectureById($lectureId) {
+        $authResponse = $this->auth->getCurrentUser();
+        if (!$authResponse['status']) {
+            return $this->setResponseError(200, $authResponse['message']);
+        }
+
+        if ($authResponse['payload']->role !== 'administrator') {
+            return $this->setResponseError(200, 'You must have administrative permissions to do that');
+        }
+
         $lecture = $this->lecture->getLectureById($lectureId);
 
         if ($lecture === false) {
@@ -80,6 +117,11 @@ class Lecture extends MY_Controller  {
     }
 
     public function finishLecture($lectureId, $finishedLectureCourseId) {
+        $authResponse = $this->auth->getCurrentUser();
+        if (!$authResponse['status']) {
+            return $this->setResponseError(200, $authResponse['message']);
+        }
+
         $status = $this->lecture->finishLecture($lectureId, $finishedLectureCourseId);
 
         if ($status === false) {

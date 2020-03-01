@@ -151,6 +151,32 @@ class CourseModel extends CI_model {
         return $course;
     }
 
+    public function getCourseIdBySlug($courseSlug) {
+        $sql = "SELECT
+                    id
+                FROM
+                    courses
+                WHERE
+                    slug = ?";
+
+        $query = $this->db->query($sql, $courseSlug);
+
+        if (!$query) {
+            return handleError($this->db->error()['message']);
+        }
+
+        $course = $query->first_row();
+
+        if (!$course) {
+            return handleError('Tried to get course with slug that does not exist');
+        }
+
+        return array(
+            'status' => true,
+            'courseId' => $course->id
+        );
+    }
+
     public function createCourse($courseData) {
         $this->db->trans_start();
 

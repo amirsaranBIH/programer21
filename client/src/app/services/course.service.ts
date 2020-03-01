@@ -18,15 +18,19 @@ export class CourseService {
   }
 
   getCourseById(courseId) {
-    return this.http.get(`/api/course/getCourseById/${courseId}`).toPromise();
+    return this.http.get(`/api/course/getCourseById/${courseId}`, { headers: this.auth.getAuthorizationHeader }).toPromise();
   }
 
   getCourseBySlug(courseSlug) {
     return this.http.get(`/api/course/getCourseBySlug/${courseSlug}`).toPromise();
   }
 
+  getCourseIdBySlug(courseSlug): Promise<any> {
+    return this.http.get(`/api/course/getCourseIdBySlug/${courseSlug}`, { headers: this.auth.getAuthorizationHeader }).toPromise();
+  }
+
   getCourseLectures(courseId) {
-    return this.http.get(`/api/course/getCourseLectures/${courseId}`).toPromise();
+    return this.http.get(`/api/course/getCourseLectures/${courseId}`, { headers: this.auth.getAuthorizationHeader }).toPromise();
   }
 
   createCourse(data) {

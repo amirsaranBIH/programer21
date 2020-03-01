@@ -55,8 +55,7 @@ class MailModel extends CI_model {
         $message = file_get_contents($htmlTemplateFile);
 
         if (!$message) {
-            log_message('error', 'Could not find ' . $htmlTemplateFile);
-            return handleError('There was an error while trying to send mail');
+            return handleError('Could not find ' . $htmlTemplateFile);
         }
 
         $token = $this->user->getUserTokenByEmail($email);
@@ -71,6 +70,36 @@ class MailModel extends CI_model {
             return handleError('There was an error while trying to send mail');
         }
 
-        return true;
+        return array(
+            'status' => true
+        );
+    }
+
+    public function sendEmailVerificationMail($email) {
+        $subject = "Programer21 Email Verification Request";
+
+        $htmlTemplateFile = FCPATH . 'mail-templates' . DIRECTORY_SEPARATOR . 'verify-email.html';
+
+        $message = file_get_contents($htmlTemplateFile);
+
+        if (!$message) {
+            return handleError('Could not find ' . $htmlTemplateFile);
+        }
+
+        $token = $this->user->getUserTokenByEmail($email);
+
+        $message = $this->formatEmailMessage($message, array(
+            '{%link_url%}' => $this->config->item('host') . 'verify-email/' . $token
+        ));
+
+        $mailResponse = $this->sendMail($email, $subject, $message);
+
+        if (!$mailResponse) {
+            return handleError('There was an error while trying to send mail');
+        }
+
+        return array(
+            'status' => true
+        );
     }
 }

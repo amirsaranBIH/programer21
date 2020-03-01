@@ -9,7 +9,7 @@
         <div class="course-carousel">
           <div class="course-carousel--courses">
             <div class="course" *ngFor="let course of carouselCourses">
-              <img [routerLink]="[course.courseDetailLink]" [src]="course.image" alt="default_course_image">
+              <img [routerLink]="['course', course.slug]" [src]="course.image" alt="default_course_image">
             </div>
           </div>
           <img (click)="courseCarouselPrevious()" class="carousel-arrow carousel-arrow--left" src="assets/icons/arrow-left.svg" alt="arrow-left">
