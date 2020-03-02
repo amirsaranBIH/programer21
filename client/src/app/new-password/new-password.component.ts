@@ -50,8 +50,6 @@ export class NewPasswordComponent implements OnInit {
         if (res.status) {
           this.toastr.success('Password successfully reset', 'Success');
           this.router.navigate(['login']);
-        } else {
-          this.toastr.error('There was an error while trying to reset password', 'Error');
         }
       });
     }

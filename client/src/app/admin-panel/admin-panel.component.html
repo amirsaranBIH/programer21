@@ -8,7 +8,7 @@
       <div class="courses-and-lectures">
         <div class="courses">
           <ng-container *ngIf="courses.length > 0">
-            <div class="course" [ngStyle]="{'background-image': 'url(' + environment.HOST + courses[currentCourse].image + ')'}">
+            <div routerLink="/admin-panel/edit-course/{{courses[currentCourse]?.id}}" class="course" [ngStyle]="{'background-image': 'url(' + environment.HOST + courses[currentCourse].image + ')'}">
               <div class="course-info">
                 <h3 class="h2">{{ courses[currentCourse].title }}</h3>
                 <div class="info">

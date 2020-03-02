@@ -24,7 +24,7 @@ class CourseModel extends CI_model {
                     color,
                     createdAt,
                     updatedAt,
-                    (SELECT COUNT(1) FROM course_lectures WHERE course_lectures.courseId = courses.id) AS numberOfLectures,
+                    (SELECT COUNT(1) FROM lectures WHERE course = courses.id) AS numberOfLectures,
                     (SELECT IF(SUM(ert) IS NULL, 0, SUM(ert)) FROM lectures WHERE lectures.course = courses.id) AS totalErt
                 FROM
                     courses";
@@ -32,8 +32,7 @@ class CourseModel extends CI_model {
         $query = $this->db->query($sql);
 
         if (!$query) {
-            log_message('error', $this->db->error()['message']);
-            return false;
+            return handleError($this->db->error()['message']);
         }
 
         $courses = array();
@@ -42,7 +41,7 @@ class CourseModel extends CI_model {
             array_push($courses, $course);
         }
 
-        return $courses;
+        return handleSuccess($courses);
     }
 
     public function getAllPublicCourses() {
@@ -59,7 +58,7 @@ class CourseModel extends CI_model {
                     color,
                     createdAt,
                     updatedAt,
-                    (SELECT COUNT(1) FROM course_lectures WHERE course_lectures.courseId = courses.id) AS numberOfLectures,
+                    (SELECT COUNT(1) FROM lectures WHERE course = courses.id) AS numberOfLectures,
                     (SELECT IF(SUM(ert) IS NULL, 0, SUM(ert)) FROM lectures WHERE lectures.course = courses.id) AS totalErt
                 FROM
                     courses
@@ -69,8 +68,7 @@ class CourseModel extends CI_model {
         $query = $this->db->query($sql);
 
         if (!$query) {
-            log_message('error', $this->db->error()['message']);
-            return false;
+            return handleError($this->db->error()['message']);
         }
 
         $courses = array();
@@ -79,7 +77,7 @@ class CourseModel extends CI_model {
             array_push($courses, $course);
         }
 
-        return $courses;
+        return handleSuccess($courses);
     }
 
     public function getCourseById($courseId) {
@@ -104,15 +102,24 @@ class CourseModel extends CI_model {
         $query = $this->db->query($sql, $courseId);
 
         if (!$query) {
-            log_message('error', $this->db->error()['message']);
-            return false;
+            return handleError($this->db->error()['message']);
         }
 
         $course = $query->first_row();
 
-        $course->supportedLanguages = $this->getSupportedLanguages($courseId);
+        if (!$course) {
+            return handleError('There is no course with the id: ' . $courseId, true, true);
+        }
 
-        return $course;
+        $supportedLanguagesResponse = $this->getSupportedLanguages($courseId);
+
+        if (!$supportedLanguagesResponse['status']) {
+            return handleError($supportedLanguagesResponse['message'], false);
+        }
+
+        $course->supportedLanguages = $supportedLanguagesResponse['data'];
+
+        return handleSuccess($course);
     }
 
     public function getCourseBySlug($courseSlug) {
@@ -139,16 +146,30 @@ class CourseModel extends CI_model {
         $query = $this->db->query($sql, $courseSlug);
 
         if (!$query) {
-            log_message('error', $this->db->error()['message']);
-            return false;
+            return handleError($this->db->error()['message']);
         }
 
         $course = $query->first_row();
 
-        $course->supportedLanguages = $this->getSupportedLanguages($course->id);
-        $course->courseLectures = $this->lecture->getAllPublicLecturesByCourseId($course->id);
+        if (!$course) {
+            return handleError('There is no course with the slug: ' . $courseSlug, true, true);
+        }
 
-        return $course;
+        $supportedLanguagesResponse = $this->getSupportedLanguages($course->id);
+
+        if (!$supportedLanguagesResponse['status']) {
+            return handleError($supportedLanguagesResponse['message'], false);
+        }
+
+        $courseLecturesResponse = $this->lecture->getAllPublicLecturesByCourseId($course->id);
+
+        if (!$courseLecturesResponse['status']) {
+            return handleError($courseLecturesResponse['message'], false);
+        }
+
+        $course->courseLectures = $courseLecturesResponse['data'];
+
+        return handleSuccess($course);
     }
 
     public function getCourseIdBySlug($courseSlug) {
@@ -168,13 +189,10 @@ class CourseModel extends CI_model {
         $course = $query->first_row();
 
         if (!$course) {
-            return handleError('Tried to get course with slug that does not exist');
+            return handleError('Tried to get course with slug that does not exist: ' . $courseSlug, true, true);
         }
 
-        return array(
-            'status' => true,
-            'courseId' => $course->id
-        );
+        return handleSuccess($course->id);
     }
 
     public function createCourse($courseData) {
@@ -194,7 +212,13 @@ class CourseModel extends CI_model {
                 ) VALUES
                 ( ?, ?, ?, ?, ?, ?, ?, ? )";
 
-        $userData = $this->auth->getCurrentUser();
+        $userDataResponse = $this->auth->getCurrentUser();
+
+        if (!$userDataResponse['status']) {
+            return handleError($userDataResponse['message']);
+        }
+
+        $userData = $userDataResponse['data'];
 
         $query = $this->db->query($sql, array(
             $courseData['title'],
@@ -208,52 +232,54 @@ class CourseModel extends CI_model {
         ));
 
         if (!$query) {
-            log_message('error', $this->db->error()['message']);
-            return false;
+            return handleError($this->db->error()['message']);
         }
 
         $newlyCreatedCourseId = $this->db->insert_id();
 
-        $status = $this->setCourseSupportedLanguages($newlyCreatedCourseId, json_decode($courseData['supportedLanguages']), false);
+        $setCourseSupportedLanguagesResponse = $this->setCourseSupportedLanguages($newlyCreatedCourseId, json_decode($courseData['supportedLanguages']), false);
 
-        if (!$status) {
-            log_message('error', $this->db->error()['message']);
-            return false;
+        if (!$setCourseSupportedLanguagesResponse['status']) {
+            return handleError($setCourseSupportedLanguagesResponse['message'], false);
         }
 
         if (isset($_FILES['image'])) {
             $res = $this->uploadCourseImage('image');
     
             if (!$res['status']) {
-                log_message('error', 'There was an error while uploading course image');
-
-                return $res;
+                return handleError($res['message'], false);
             }
     
             $uploadedImagePath = '/uploads/course_images/'.$res['data']['file_name'];
     
-            $this->setCourseImage($newlyCreatedCourseId, $uploadedImagePath);
+            $setCourseImageResponse = $this->setCourseImage($newlyCreatedCourseId, $uploadedImagePath);
+
+            if (!$setCourseImageResponse['status']) {
+                return handleError($setCourseImageResponse['message'], false);
+            }
         }
 
-        $status = $this->makeCourseFolder($courseData['slug']);
+        $makeCourseFolderResponse = $this->makeCourseFolder($courseData['slug']);
 
-        if (!$status) {
-            log_message('error', 'Could not create lecture folder of course');
-            return false;
+        if (!$makeCourseFolderResponse['status']) {
+            return handleError($makeCourseFolderResponse['message'], false);
         }
 
         $this->db->trans_complete();
 
-        return array(
-            'status' => true,
-            'newlyCreatedCourseId' => $newlyCreatedCourseId // Returns ID of newly created course
-        );
+        return handleSuccess($newlyCreatedCourseId); // Returns ID of newly created course
     }
 
     public function updateCourse($courseId, $courseData) {
         $this->db->trans_start();
 
-        $oldCourseSlug = $this->getCourseById($courseId)->slug;
+        $oldCourseResponse = $this->getCourseById($courseId);
+
+        if (!$oldCourseResponse['status']) {
+            return handleError($oldCourseResponse['message'], false);
+        }
+
+        $oldCourse = $oldCourseResponse['data'];
 
         $sql = "UPDATE
                     courses
@@ -282,46 +308,68 @@ class CourseModel extends CI_model {
         ));
 
         if (!$query) {
-            log_message('error', $this->db->error()['message']);
-            return false;
+            return handleError($this->db->error()['message']);
         }
 
-        $status = $this->setCourseSupportedLanguages($courseId, json_decode($courseData['supportedLanguages']));
+        $setCourseSupportedLanguagesResponse = $this->setCourseSupportedLanguages($courseId, json_decode($courseData['supportedLanguages']));
 
-        if (!$status) {
-            log_message('error', 'There was an error while setting course supported languages');
-            return false;
+        if (!$setCourseSupportedLanguagesResponse['status']) {
+            return handleError($setCourseSupportedLanguagesResponse['message'], false);
         }
 
         if (isset($_FILES['image'])) {
-            $res = $this->uploadCourseImage('image');
+            $uploadCourseImageResponse = $this->uploadCourseImage('image');
     
-            if (!$res['status']) {
-                log_message('error', 'There was an error while uploading course image');
-
-                return $res;
+            if (!$uploadCourseImageResponse['status']) {
+                return handleError($uploadCourseImageResponse['message'], false);
             }
     
-            $uploadedImagePath = '/uploads/course_images/'.$res['data']['file_name'];
-    
-            $this->setCourseImage($courseId, $uploadedImagePath);
+            $uploadedImagePath = '/uploads/course_images/'.$uploadCourseImageResponse['data']['file_name'];
+
+            $setCourseImageResponse = $this->setCourseImage($courseId, $uploadedImagePath);
+
+            if (!$setCourseImageResponse['status']) {
+                return handleError($setCourseImageResponse['message'], false);
+            }
+
+            $deleteOldImageResponse = $this->deleteOldImage($oldCourse->image);
+
+            if (!$deleteOldImageResponse['status']) {
+                return handleError($deleteOldImageResponse['message'], false);
+            }
         }
 
-        $status = $this->renameCourseFolder($oldCourseSlug, $courseData['slug']);
+        $renameCourseFolderResponse = $this->renameCourseFolder($oldCourse->slug, $courseData['slug']);
 
-        if (!$status) {
-            log_message('error', 'Could not rename lecture folder of course');
-            return false;
+        if (!$renameCourseFolderResponse['status']) {
+            return handleError($renameCourseFolderResponse['message'], false);
         }
 
         $this->db->trans_complete();
 
-        return array(
-            'status' => true
-        );
+        return handleSuccess(true);
     }
 
     public function deleteCourse($courseId) {
+        $sql = "SELECT
+                    slug
+                FROM
+                    courses
+                WHERE
+                    id = ?";
+
+        $query = $this->db->query($sql, $courseId);
+
+        if (!$query) {
+            return handleError($this->db->error()['message']);
+        }
+
+        $course = $query->first_row();
+
+        if (!$course) {
+            return handleError('Trying to get course slug with invalid course id: ' . $courseId);
+        }
+
         $sql = "DELETE FROM
                     courses
                 WHERE
@@ -330,8 +378,13 @@ class CourseModel extends CI_model {
         $query = $this->db->query($sql, $courseId);
 
         if (!$query) {
-            log_message('error', $this->db->error()['message']);
-            return false;
+            return handleError($this->db->error()['message']);
+        }
+
+        $deleteCourseFolderResponse = $this->deleteCourseFolder($course->slug);
+
+        if (!$deleteCourseFolderResponse['status']) {
+            return handleError($deleteCourseFolderResponse['message'], false);
         }
 
         return true;
@@ -351,11 +404,10 @@ class CourseModel extends CI_model {
         ));
 
         if (!$query) {
-            log_message('error', $this->db->error()['message']);
-            return false;
+            return handleError($this->db->error()['message']);
         }
 
-        return true;
+        return handleSuccess(true);
     }
 
     public function setCourseSupportedLanguages($courseId, $supportedLanguages, $isUpdating = true) {
@@ -370,8 +422,7 @@ class CourseModel extends CI_model {
             $query = $this->db->query($sql, $courseId);
     
             if (!$query) {
-                log_message('error', $this->db->error()['message']);
-                return false;
+                return handleError($this->db->error()['message']);
             }
         }
         
@@ -390,14 +441,13 @@ class CourseModel extends CI_model {
             ));
 
             if (!$query2) {
-                log_message('error', $this->db->error()['message']);
-                return false;
+                return handleError($this->db->error()['message']);
             }
         }
 
         $this->db->trans_complete();
 
-        return true;
+        return handleSuccess(true);
     }
 
     public function getSupportedLanguages($courseId) {
@@ -411,8 +461,7 @@ class CourseModel extends CI_model {
         $query = $this->db->query($sql, $courseId);
 
         if (!$query) {
-            log_message('error', $this->db->error()['message']);
-            return false;
+            return handleError($this->db->error()['message']);
         }
 
         $supportedLanguages = array();
@@ -421,7 +470,7 @@ class CourseModel extends CI_model {
             array_push($supportedLanguages, $supportedLanguage->language);
         }
 
-        return $supportedLanguages;
+        return handleSuccess($supportedLanguages);
     }
 
     public function finishCourse($courseId) {
@@ -434,19 +483,50 @@ class CourseModel extends CI_model {
                 AND
                     userId = ?";
 
-        $userData = $this->auth->getCurrentUser();
+        $userDataResponse = $this->auth->getCurrentUser();
+
+        if (!$userDataResponse['status']) {
+            return handleError($userDataResponse['message']);
+        }
+
+        $userData = $userDataResponse['data'];
 
         $query = $this->db->query($sql, array(
             $courseId,
-            $userData['payload']->id
+            $userData->id
         ));
 
         if (!$query) {
-            log_message('error', $this->db->error()['message']);
-            return false;
+            return handleError($this->db->error()['message']);
         }
 
-        return true;
+        return handleSuccess(true);
+    }
+
+    public function isCoursePublic($courseId) {
+        $sql = "SELECT
+                    status
+                FROM
+                    courses
+                WHERE 
+                    id = ?";
+
+
+        $query = $this->db->query($sql, $courseId);
+
+        if (!$query) {
+            return handleError($this->db->error()['message']);
+        }
+        
+        $row = $query->first_row();
+
+        if (!$row) {
+            return handleError('Trying to access course that does not exist: ' . $courseId);
+        }
+
+        $courseStatus = $row->status;
+
+        return handleSuccess($courseStatus === 'public');
     }
 
     public function uploadCourseImage($fieldName) {
@@ -461,25 +541,62 @@ class CourseModel extends CI_model {
         $this->load->library('upload', $config);
 
         if ($this->upload->do_upload($fieldName)) {
-            return array(
-                'status' => true,
-                'data' => $this->upload->data()
-            );
+            return handleSuccess($this->upload->data());
         } else {
-            log_message('error', $this->upload->display_errors());
-            return array(
-                'status' => false,
-                'data' => $this->upload->display_errors('', '')
-            );
+            return handleError($this->upload->display_errors('', ''));
         }
     }
 
     public function makeCourseFolder($courseSlug) {
-        return mkdir(FCPATH . 'lectures' . DIRECTORY_SEPARATOR . $courseSlug);
+        $response = mkdir(FCPATH . 'lectures' . DIRECTORY_SEPARATOR . $courseSlug);
+
+        return $response ? handleSuccess($response) : handleError($response);
     }
 
     public function renameCourseFolder($oldCourseSlug, $newCourseSlug) {
-        return rename(FCPATH . 'lectures' . DIRECTORY_SEPARATOR . $oldCourseSlug, 
+        if (!file_exists(FCPATH . 'lectures' . DIRECTORY_SEPARATOR . $oldCourseSlug)) {
+            return handleError('Course folder does not exist: ' . $oldCourseSlug);
+        }
+
+        $response = rename(FCPATH . 'lectures' . DIRECTORY_SEPARATOR . $oldCourseSlug, 
                         FCPATH . 'lectures' . DIRECTORY_SEPARATOR . $newCourseSlug);
+
+        return $response ? handleSuccess($response) : handleError($response);
+    }
+
+    public function deleteCourseFolder($courseSlug) {
+        $courseFolder = FCPATH . 'lectures' . DIRECTORY_SEPARATOR . $courseSlug;
+
+        if (!file_exists($courseFolder)) {
+            return handleError('Course folder does not exist: ' . $courseSlug);
+        }
+
+        $courseLectureFiles = scandir($courseFolder);
+
+        foreach ($courseLectureFiles as $lectureFileName) {
+            if ($lectureFileName !== '.' && $lectureFileName !== '..') {
+                $lectureDeleteStatus = $this->lecture->deleteLectureFile($courseSlug, basename($lectureFileName, '.html'));
+    
+                if (!$lectureDeleteStatus['status']) {
+                    return handleError($lectureDeleteStatus['message']);
+                }
+            }
+        }
+
+        $response = rmdir($courseFolder);
+
+        return $response ? handleSuccess($response) : handleError($response);
+    }
+
+    public function deleteOldImage($imagePath) {
+        $fullImagePath = FCPATH . ltrim($imagePath, '/'); 
+
+        if (!file_exists($fullImagePath)) {
+            return handleError('Course image does not exist: ' . $fullImagePath);
+        }
+
+        $response = unlink($fullImagePath);
+
+        return $response ? handleSuccess($response) : handleError($response);
     }
 }

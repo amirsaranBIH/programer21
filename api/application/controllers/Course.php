@@ -12,14 +12,14 @@ class Course extends MY_Controller  {
     }
 
     public function getAllPublicCourses() {
-        $courses = $this->course->getAllPublicCourses();
+        $coursesResponse = $this->course->getAllPublicCourses();
 
-        if ($courses === false) {
-            $this->setResponseError();
+        if (!$coursesResponse['status']) {
+            $this->setResponseError(200, $coursesResponse['message']);
             return;
         }
 
-        $this->setResponseSuccess($courses);
+        $this->setResponseSuccess($coursesResponse['data']);
     }
 
     public function getAllCourses() {
@@ -28,18 +28,18 @@ class Course extends MY_Controller  {
             return $this->setResponseError(200, $authResponse['message']);
         }
 
-        if ($authResponse['payload']->role !== 'administrator') {
+        if ($authResponse['data']->role !== 'administrator') {
             return $this->setResponseError(200, 'You must have administrative permissions to do that');
         }
 
-        $courses = $this->course->getAllCourses();
+        $coursesResponse = $this->course->getAllCourses();
 
-        if ($courses === false) {
-            $this->setResponseError();
+        if (!$coursesResponse['status']) {
+            $this->setResponseError(200, $coursesResponse['message']);
             return;
         }
 
-        $this->setResponseSuccess($courses);
+        $this->setResponseSuccess($coursesResponse['data']);
     }
 
     public function getCourseLectures($courseId) {
@@ -48,18 +48,18 @@ class Course extends MY_Controller  {
             return $this->setResponseError(200, $authResponse['message']);
         }
 
-        if ($authResponse['payload']->role !== 'administrator') {
+        if ($authResponse['data']->role !== 'administrator') {
             return $this->setResponseError(200, 'You must have administrative permissions to do that');
         }
         
-        $courseLectures = $this->lecture->getAllLecturesByCourseId($courseId);
+        $courseLecturesResponse = $this->lecture->getAllLecturesByCourseId($courseId);
 
-        if ($courseLectures === false) {
-            $this->setResponseError();
+        if (!$courseLecturesResponse['status']) {
+            $this->setResponseError(200, $courseLecturesResponse['message']);
             return;
         }
 
-        $this->setResponseSuccess($courseLectures);
+        $this->setResponseSuccess($courseLecturesResponse['data']);
     }
 
     public function createCourse() {
@@ -68,20 +68,20 @@ class Course extends MY_Controller  {
             return $this->setResponseError(200, $authResponse['message']);
         }
 
-        if ($authResponse['payload']->role !== 'administrator') {
+        if ($authResponse['data']->role !== 'administrator') {
             return $this->setResponseError(200, 'You must have administrative permissions to do that');
         }
 
         $data = $this->input->post();
 
-        $res = $this->course->createCourse($data);
+        $createCourseResponse = $this->course->createCourse($data);
 
-        if ($res['status'] === false) {
-            $this->setResponseError(200, $res['data']);
+        if (!$createCourseResponse['status']) {
+            $this->setResponseError(200, $createCourseResponse['message']);
             return;
         }
 
-        $this->setResponseSuccess($res['newlyCreatedCourseId']);
+        $this->setResponseSuccess($createCourseResponse['data']);
     }
 
     public function updateCourse($courseId) {
@@ -90,20 +90,20 @@ class Course extends MY_Controller  {
             return $this->setResponseError(200, $authResponse['message']);
         }
 
-        if ($authResponse['payload']->role !== 'administrator') {
+        if ($authResponse['data']->role !== 'administrator') {
             return $this->setResponseError(200, 'You must have administrative permissions to do that');
         }
 
         $data = $this->input->post();
 
-        $res = $this->course->updateCourse($courseId, $data);
+        $updateCourseResponse = $this->course->updateCourse($courseId, $data);
 
-        if ($res['status'] === false) {
-            $this->setResponseError(200, $res['data']);
+        if (!$updateCourseResponse['status']) {
+            $this->setResponseError(200, $updateCourseResponse['message']);
             return;
         }
 
-        $this->setResponseSuccess();
+        $this->setResponseSuccess($updateCourseResponse['data']);
     }
 
     public function deleteCourse($courseId) {
@@ -112,18 +112,18 @@ class Course extends MY_Controller  {
             return $this->setResponseError(200, $authResponse['message']);
         }
 
-        if ($authResponse['payload']->role !== 'administrator') {
+        if ($authResponse['data']->role !== 'administrator') {
             return $this->setResponseError(200, 'You must have administrative permissions to do that');
         }
 
-        $status = $this->course->deleteCourse($courseId);
+        $deleteCourseResponse = $this->course->deleteCourse($courseId);
 
-        if ($status === false) {
-            $this->setResponseError();
+        if (!$deleteCourseResponse['status']) {
+            $this->setResponseError(200, $deleteCourseResponse['message']);
             return;
         }
 
-        $this->setResponseSuccess();
+        $this->setResponseSuccess($deleteCourseResponse['data']);
     }
 
     public function getCourseById($courseId) {
@@ -132,29 +132,29 @@ class Course extends MY_Controller  {
             return $this->setResponseError(200, $authResponse['message']);
         }
 
-        if ($authResponse['payload']->role !== 'administrator') {
+        if ($authResponse['data']->role !== 'administrator') {
             return $this->setResponseError(200, 'You must have administrative permissions to do that');
         }
 
-        $course = $this->course->getCourseById($courseId);
+        $getCourseResponse = $this->course->getCourseById($courseId);
 
-        if ($course === false) {
-            $this->setResponseError();
+        if (!$getCourseResponse['status']) {
+            $this->setResponseError(200, $getCourseResponse['message']);
             return;
         }
 
-        $this->setResponseSuccess($course);
+        $this->setResponseSuccess($getCourseResponse['data']);
     }
 
     public function getCourseBySlug($courseSlug) {
-        $course = $this->course->getCourseBySlug($courseSlug);
+        $getCourseResponse = $this->course->getCourseBySlug($courseSlug);
 
-        if ($course === false) {
-            $this->setResponseError();
+        if (!$getCourseResponse) {
+            $this->setResponseError(200, $getCourseResponse['message']);
             return;
         }
 
-        $this->setResponseSuccess($course);
+        $this->setResponseSuccess($getCourseResponse['data']);
     }
 
     public function getCourseIdBySlug($courseSlug) {
@@ -163,13 +163,13 @@ class Course extends MY_Controller  {
             return $this->setResponseError(200, $authResponse['message']);
         }
 
-        $response = $this->course->getCourseIdBySlug($courseSlug);
+        $getCourseIdResponse = $this->course->getCourseIdBySlug($courseSlug);
 
-        if (!$response['status']) {
-            $this->setResponseError(200, $response['message']);
+        if (!$getCourseIdResponse['status']) {
+            $this->setResponseError(200, $getCourseIdResponse['message']);
             return;
         }
 
-        $this->setResponseSuccess($response['courseId']);
+        $this->setResponseSuccess($getCourseIdResponse['data']);
     }
 }

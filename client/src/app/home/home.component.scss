@@ -29,11 +29,20 @@
         }
     }
 
+    .course:only-child {
+        width: 100%;
+
+        img {
+            width: 100%;
+            height: 350px;
+        }
+    }
+
     .course:first-child {
         position: relative;
         z-index: 3;
     }
-    
+
     .course:nth-child(2) {
         position: absolute;
         bottom: 40px;
@@ -41,8 +50,8 @@
         z-index: 2;
         opacity: .75;
     }
-    
-    .course:last-child {
+
+    .course:not(:only-child):last-child {
         position: absolute;
         bottom: 80px;
         left: 80px;

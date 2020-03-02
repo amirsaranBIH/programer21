@@ -16,20 +16,20 @@ class Lecture extends MY_Controller  {
             return $this->setResponseError(200, $authResponse['message']);
         }
 
-        if ($authResponse['payload']->role !== 'administrator') {
+        if ($authResponse['data']->role !== 'administrator') {
             return $this->setResponseError(200, 'You must have administrative permissions to do that');
         }
 
         $data = json_decode(file_get_contents('php://input'), true);
         
-        $newlyCreatedLectureId = $this->lecture->createLecture($courseId, $data);
+        $newlyCreatedLectureResponse = $this->lecture->createLecture($courseId, $data);
 
-        if ($newlyCreatedLectureId === false) {
-            $this->setResponseError();
+        if (!$newlyCreatedLectureResponse['status']) {
+            $this->setResponseError(200, $newlyCreatedLectureResponse['message']);
             return;
         }
 
-        $this->setResponseSuccess($newlyCreatedLectureId);
+        $this->setResponseSuccess($newlyCreatedLectureResponse['data']);
     }
 
     public function updateLecture($lectureId) {
@@ -38,16 +38,16 @@ class Lecture extends MY_Controller  {
             return $this->setResponseError(200, $authResponse['message']);
         }
 
-        if ($authResponse['payload']->role !== 'administrator') {
+        if ($authResponse['data']->role !== 'administrator') {
             return $this->setResponseError(200, 'You must have administrative permissions to do that');
         }
 
         $data = json_decode(file_get_contents('php://input'), true);
         
-        $status = $this->lecture->updateLecture($lectureId, $data);
+        $updateLectureResponse = $this->lecture->updateLecture($lectureId, $data);
 
-        if ($status === false) {
-            $this->setResponseError();
+        if (!$updateLectureResponse['status']) {
+            $this->setResponseError(200, $updateLectureResponse['message']);
             return;
         }
 
@@ -60,14 +60,14 @@ class Lecture extends MY_Controller  {
             return $this->setResponseError(200, $authResponse['message']);
         }
 
-        if ($authResponse['payload']->role !== 'administrator') {
+        if ($authResponse['data']->role !== 'administrator') {
             return $this->setResponseError(200, 'You must have administrative permissions to do that');
         }
 
-        $status = $this->lecture->deleteLecture($lectureId);
+        $deleteLectureResponse = $this->lecture->deleteLecture($lectureId);
 
-        if ($status === false) {
-            $this->setResponseError();
+        if (!$deleteLectureResponse['status']) {
+            $this->setResponseError(200, $deleteLectureResponse['message']);
             return;
         }
 
@@ -80,40 +80,50 @@ class Lecture extends MY_Controller  {
             return $this->setResponseError(200, $authResponse['message']);
         }
 
-        if ($authResponse['payload']->role !== 'administrator') {
+        if ($authResponse['data']->role !== 'administrator') {
             return $this->setResponseError(200, 'You must have administrative permissions to do that');
         }
 
-        $lecture = $this->lecture->getLectureById($lectureId);
+        $getLectureResponse = $this->lecture->getLectureById($lectureId);
 
-        if ($lecture === false) {
-            $this->setResponseError();
+        if (!$getLectureResponse['status']) {
+            $this->setResponseError(200, $getLectureResponse['message']);
             return;
         }
 
-        $this->setResponseSuccess($lecture);
+        $this->setResponseSuccess($getLectureResponse['data']);
     }
 
     public function getLectureBySlug($lectureSlug) {
-        $lecture = $this->lecture->getLectureBySlug($lectureSlug);
+        $authResponse = $this->auth->getCurrentUser();
+        if (!$authResponse['status']) {
+            return $this->setResponseError(200, $authResponse['message']);
+        }
 
-        if ($lecture === false) {
-            $this->setResponseError();
+        $getLectureResponse = $this->lecture->getLectureBySlug($lectureSlug);
+
+        if (!$getLectureResponse['status']) {
+            $this->setResponseError(200, $getLectureResponse['message']);
             return;
         }
 
-        $this->setResponseSuccess($lecture);
+        $this->setResponseSuccess($getLectureResponse['data']);
     }
 
     public function getLectureHtmlBySlug($lectureSlug) {
-        $lecture = $this->lecture->getLectureHtmlBySlug($lectureSlug);
+        $authResponse = $this->auth->getCurrentUser();
+        if (!$authResponse['status']) {
+            return $this->setResponseError(200, $authResponse['message']);
+        }
+        
+        $getLectureHtmlResponse = $this->lecture->getLectureHtmlBySlug($lectureSlug);
 
-        if ($lecture === false) {
-            $this->setResponseError();
+        if (!$getLectureHtmlResponse['status']) {
+            $this->setResponseError(200, $getLectureHtmlResponse['message']);
             return;
         }
 
-        $this->setResponseSuccess($lecture);
+        $this->setResponseSuccess($getLectureHtmlResponse['data']);
     }
 
     public function finishLecture($lectureId, $finishedLectureCourseId) {
@@ -122,13 +132,13 @@ class Lecture extends MY_Controller  {
             return $this->setResponseError(200, $authResponse['message']);
         }
 
-        $status = $this->lecture->finishLecture($lectureId, $finishedLectureCourseId);
+        $finishLectureResponse = $this->lecture->finishLecture($lectureId, $finishedLectureCourseId);
 
-        if ($status === false) {
-            $this->setResponseError();
+        if (!$finishLectureResponse['status']) {
+            $this->setResponseError(200, $finishLectureResponse['message']);
             return;
         }
 
-        $this->setResponseSuccess($status);
+        $this->setResponseSuccess($finishLectureResponse['data']);
     }
 }

@@ -35,8 +35,7 @@ class UserModel extends CI_model {
         $query = $this->db->query($sql);
 
         if (!$query) {
-            log_message('error', $this->db->error()['message']);
-            return false;
+            return handleError($this->db->error()['message']);
         }
 
         $users = array();
@@ -45,7 +44,7 @@ class UserModel extends CI_model {
             array_push($users, $user);
         }
 
-        return $users;
+        return handleSuccess($users);
     }
 
     public function getUserById($userId) {
@@ -74,49 +73,20 @@ class UserModel extends CI_model {
         $query = $this->db->query($sql, $userId);
 
         if (!$query) {
-            log_message('error', $this->db->error()['message']);
-            return false;
+            return handleError($this->db->error()['message']);
         }
 
         $user = $query->first_row();
 
-        $user->coursesEnrolledIn = $this->getCoursesUserIsEnrolledIn($userId);
+        $enrolledCoursesResponse = $this->getCoursesUserIsEnrolledIn($userId);
 
-        return $user;
-    }
-
-    public function getUserByUsername($username) {
-        $sql = "SELECT
-                    firstName,
-                    lastName,
-                    username,
-                    email,
-                    emailVerifiedAt,
-                    role,
-                    description,
-                    city,
-                    gender,
-                    suspended,
-                    createdAt,
-                    updatedAt,
-                    (SELECT COUNT(1) FROM user_courses WHERE user_courses.userId = users.id) AS enrolledCourses,
-                    (SELECT COUNT(1) FROM user_courses WHERE user_courses.userId = users.id AND user_courses.status = 'finished') AS finishedCourses,
-                    IF(emailVerifiedAt IS NULL, 0, 1) AS verified
-                FROM
-                    users
-                WHERE
-                    username = ?";
-
-        $query = $this->db->query($sql, $username);
-
-        if (!$query) {
-            log_message('error', $this->db->error()['message']);
-            return false;
+        if (!$enrolledCoursesResponse['status']) {
+            return handleError($enrolledCoursesResponse['message'], false);
         }
 
-        $user = $query->first_row();
+        $user->coursesEnrolledIn = $enrolledCoursesResponse['data'];
 
-        return $user;
+        return handleSuccess($user);
     }
 
     public function getUserTokenByEmail($email) {
@@ -130,13 +100,12 @@ class UserModel extends CI_model {
         $query = $this->db->query($sql, $email);
 
         if (!$query) {
-            log_message('error', $this->db->error()['message']);
-            return false;
+            return handleError($this->db->error()['message']);
         }
 
         $token = $query->first_row()->token;
 
-        return $token;
+        return handleSuccess($token);
     }
 
     public function createUser($userData) {
@@ -165,11 +134,10 @@ class UserModel extends CI_model {
         ));
 
         if (!$query) {
-            log_message('error', $this->db->error()['message']);
-            return false;
+            return handleError($this->db->error()['message']);
         }
 
-        return $this->db->insert_id(); // Returns id of newly created user
+        return handleSuccess($this->db->insert_id()); // Returns id of newly created user
     }
 
     public function updateUser($userId, $userData) {
@@ -200,21 +168,34 @@ class UserModel extends CI_model {
         ));
 
         if (!$query) {
-            log_message('error', $this->db->error()['message']);
-            return false;
+            return handleError($this->db->error()['message']);
         }
 
         if ($userData['emailVerified'] === '1') {
-            $this->verifyUserEmail($userId);
+            $verificationResponse = $this->verifyUserEmail($userId);
         } else {
-            $this->unverifyUserEmail($userId);
+            $verificationResponse = $this->unverifyUserEmail($userId);
         }
 
-        return true;
+        if (!$verificationResponse['status']) {
+            return handleError($verificationResponse['message'], false);
+        }
+
+        return handleSuccess(true);
     }
 
     public function updateUserAccountInfo($userId, $userData) {
         $this->db->trans_start();
+
+        // $oldImage = $this->getUserById($userId)->image;
+        $userResponse = $this->getUserById($userId);
+
+        if (!$userResponse['status']) {
+            return handleError($userResponse['message'], false);
+        }
+
+        $user = $userResponse['data'];
+        $oldImage = $user->image;
 
         $sql = "UPDATE
                     users
@@ -231,39 +212,52 @@ class UserModel extends CI_model {
         ));
 
         if (!$query) {
-            log_message('error', $this->db->error()['message']);
-            return false;
+            return handleError($this->db->error()['message']);
         }
 
         if (isset($_FILES['image'])) {
-            $res = $this->uploadUserImage('image');
-    
-            if (!$res['status']) {
-                log_message('error', 'There was an error while uploading course image');
+            $uploadResponse = $this->uploadUserImage('image');
 
-                return $res;
+            if (!$uploadResponse['status']) {
+                return handleError($uploadResponse['message'], false, true);
             }
     
-            $uploadedImagePath = '/uploads/user_images/'.$res['data']['file_name'];
+            $uploadedImagePath = '/uploads/user_images/'.$uploadResponse['data']['file_name'];
     
-            $this->setUserImage($userId, $uploadedImagePath);
+            $setUserImageResponse = $this->setUserImage($userId, $uploadedImagePath);
+
+            if (!$setUserImageResponse['status']) {
+                return handleError($setUserImageResponse['message'], false);
+            }
+
+            if ($oldImage !== 'assets/images/default/user.png') {
+                $deleteOldImageResponse = $this->deleteOldImage($oldImage);
+    
+                if (!$deleteOldImageResponse['status']) {
+                    return handleError($deleteOldImageResponse['message'], false);
+                }
+            }
         }
 
-        $user = $this->getUserById($userId);
-
         if ($user->email !== $userData['email']) {
-            $this->updateUserEmail($userId, $userData['email']);
+            $updateUserEmailResponse = $this->updateUserEmail($userId, $userData['email']);
+
+            if (!$updateUserEmailResponse['status']) {
+                return handleError($updateUserEmailResponse['message'], false);
+            }
         }
 
         if ($user->username !== $userData['username']) {
-            $this->updateUserUsername($userId, $user->username, $userData['username']);
+            $updateUserUsernameResponse = $this->updateUserUsername($userId, $user->username, $userData['username']);
+
+            if (!$updateUserUsernameResponse['status']) {
+                return handleError($updateUserUsernameResponse['message'], false);
+            }
         }
 
         $this->db->trans_complete();
 
-        return array(
-            'status' => true
-        );
+        return handleSuccess(true);
     }
 
     public function updateUserEmail($userId, $newEmail) {
@@ -280,11 +274,10 @@ class UserModel extends CI_model {
         ));
 
         if (!$query) {
-            log_message('error', $this->db->error()['message']);
-            return false;
+            return handleError($this->db->error()['message']);
         }
 
-        return true;
+        return handleSuccess(true);
     }
 
     public function updateUserUsername($userId, $oldUsername, $newUsername) {
@@ -303,8 +296,7 @@ class UserModel extends CI_model {
         ));
 
         if (!$query) {
-            log_message('error', $this->db->error()['message']);
-            return false;
+            return handleError($this->db->error()['message']);
         }
 
         $sql = "INSERT INTO
@@ -324,13 +316,12 @@ class UserModel extends CI_model {
         ));
 
         if (!$query) {
-            log_message('error', $this->db->error()['message']);
-            return false;
+            return handleError($this->db->error()['message']);
         }
 
         $this->db->trans_complete();
 
-        return true;
+        return handleSuccess(true);
     }
 
     public function updateUserAdditionalInfo($userId, $userData) {
@@ -351,11 +342,10 @@ class UserModel extends CI_model {
         ));
 
         if (!$query) {
-            log_message('error', $this->db->error()['message']);
-            return false;
+            return handleError($this->db->error()['message']);
         }
 
-        return true;
+        return handleSuccess(true);
     }
 
     public function updateUserPassword($userId, $passwordData) {
@@ -372,10 +362,7 @@ class UserModel extends CI_model {
         $isCorrectPassword = $this->auth->isCorrectPassword($passwordData['password'], $storedPassword);
 
         if (!$isCorrectPassword) {
-            return array(
-                'status' => false,
-                'message' => 'Password not correct'
-            ); 
+            return handleError('Password not correct', false, true);
         }
 
         $sql = "UPDATE
@@ -393,11 +380,10 @@ class UserModel extends CI_model {
         ));
 
         if (!$query) {
-            log_message('error', $this->db->error()['message']);
-            return false;
+            return handleError($this->db->error()['message']);
         }
 
-        return true;
+        return handleSuccess(true);
     }
 
     public function verifyUserEmail($userId) {
@@ -412,17 +398,16 @@ class UserModel extends CI_model {
         $query = $this->db->query($sql, $userId);
 
         if (!$query) {
-            log_message('error', $this->db->error()['message']);
-            return false;
+            return handleError($this->db->error()['message']);
         }
         
-        $status = $this->setNewTokenForUser($userId);
+        $newTokenResponse = $this->setNewTokenForUser($userId);
 
-        if (!$status) {
-            return false;
+        if (!$newTokenResponse['status']) {
+            return handleError($newTokenResponse['message'], false);
         }
 
-        return true;
+        return handleSuccess(true);
     }
 
     public function unverifyUserEmail($userId) {
@@ -437,11 +422,10 @@ class UserModel extends CI_model {
         $query = $this->db->query($sql, $userId);
 
         if (!$query) {
-            log_message('error', $this->db->error()['message']);
-            return false;
+            return handleError($this->db->error()['message']);
         }
 
-        return true;
+        return handleSuccess(true);
     }
 
     public function suspendUser($userId) {
@@ -456,11 +440,10 @@ class UserModel extends CI_model {
         $query = $this->db->query($sql, $userId);
 
         if (!$query) {
-            log_message('error', $this->db->error()['message']);
-            return false;
+            return handleError($this->db->error()['message']);
         }
 
-        return true;
+        return handleSuccess(true);
     }
 
     public function setUserImage($userId, $imagePath) {
@@ -478,11 +461,10 @@ class UserModel extends CI_model {
         ));
 
         if (!$query) {
-            log_message('error', $this->db->error()['message']);
-            return false;
+            return handleError($this->db->error()['message']);
         }
 
-        return true;
+        return handleSuccess(true);
     }
 
     public function getUserCourseBySlug($courseSlug, $userId) {
@@ -523,17 +505,38 @@ class UserModel extends CI_model {
         ));
 
         if (!$query) {
-            log_message('error', $this->db->error()['message']);
-            return false;
+            return handleError($this->db->error()['message']);
         }
 
         $course = $query->first_row();
 
-        $course->supportedLanguages = $this->course->getSupportedLanguages($course->id);
-        $course->courseLectures = $this->lecture->getAllPublicLecturesForUserByCourseSlug($courseSlug, $userId);
-        $course->coursePercentageFinished = $this->getUserCoursePercentageFinished($course->id, $userId);
+        $supportedLanguagesResponse = $this->course->getSupportedLanguages($course->id);
 
-        return $course;
+        if (!$supportedLanguagesResponse['status']) {
+            return handleError($supportedLanguagesResponse['message'], false);
+        }
+
+        $course->supportedLanguages = $supportedLanguagesResponse['data'];
+
+
+        $courseLecturesResponse = $this->lecture->getAllPublicLecturesForUserByCourseSlug($courseSlug, $userId);
+
+        if (!$courseLecturesResponse['status']) {
+            return handleError($courseLecturesResponse['message'], false);
+        }
+
+        $course->courseLectures = $courseLecturesResponse['data'];
+
+
+        $coursePercentageFinishedResponse = $this->getUserCoursePercentageFinished($course->id, $userId);
+
+        if (!$coursePercentageFinishedResponse['status']) {
+            return handleError($coursePercentageFinishedResponse['message'], false);
+        }
+
+        $course->coursePercentageFinished = $coursePercentageFinishedResponse['data'];
+
+        return handleSuccess($course);
     }
 
     public function getUserEnrolledCourses($userId) {
@@ -562,8 +565,7 @@ class UserModel extends CI_model {
         $query = $this->db->query($sql, $userId);
 
         if (!$query) {
-            log_message('error', $this->db->error()['message']);
-            return false;
+            return handleError($this->db->error()['message']);
         }
 
         $courses = array();
@@ -572,7 +574,7 @@ class UserModel extends CI_model {
             array_push($courses, $course);
         }
 
-        return $courses;
+        return handleSuccess($courses);
     }
 
     public function getUserCoursePercentageFinished($courseId, $userId) {
@@ -600,13 +602,10 @@ class UserModel extends CI_model {
         ));
 
         if (!$query) {
-            log_message('error', $this->db->error()['message']);
-            return false;
+            return handleError($this->db->error()['message']);
         }
 
-        $coursePercentageFinished = $query->first_row()->coursePercentageFinished;
-
-        return $coursePercentageFinished;
+        return handleSuccess($query->first_row()->coursePercentageFinished);
     }
 
     public function getAllLatestLecturesByUserId($userId) {
@@ -635,8 +634,7 @@ class UserModel extends CI_model {
         $query = $this->db->query($sql, $userId);
 
         if (!$query) {
-            log_message('error', $this->db->error()['message']);
-            return false;
+            return handleError($this->db->error()['message']);
         }
 
         $lectures = array();
@@ -645,7 +643,7 @@ class UserModel extends CI_model {
             array_push($lectures, $lecture);
         }
 
-        return $lectures;
+        return handleSuccess($lectures);
     }
 
     public function getMonthlyActivity($userId) {
@@ -662,8 +660,7 @@ class UserModel extends CI_model {
         $query = $this->db->query($sql, $userId);
 
         if (!$query) {
-            log_message('error', $this->db->error()['message']);
-            return false;
+            return handleError($this->db->error()['message']);
         }
 
         $stats = array();
@@ -672,7 +669,7 @@ class UserModel extends CI_model {
             $stats[$stat->date] = $stat;
         }
 
-        return $stats;
+        return handleSuccess($stats);
     }
 
     public function getCourseActivityPercentages($userId) {
@@ -709,8 +706,7 @@ class UserModel extends CI_model {
         ));
 
         if (!$query) {
-            log_message('error', $this->db->error()['message']);
-            return false;
+            return handleError($this->db->error()['message']);
         }
 
         $percentages = array();
@@ -719,16 +715,20 @@ class UserModel extends CI_model {
             array_push($percentages, $percentage);
         }
 
-        return $percentages;
+        return handleSuccess($percentages);
     }
 
     public function enrollUserInCourse($userId, $courseId) {
-        $isCoursePublic = $this->course->isCoursePublic($courseId);
+        $isCoursePublicResponse = $this->course->isCoursePublic($courseId);
+
+        if (!$isCoursePublicResponse['status']) {
+            return handleError($isCoursePublicResponse['message'], false);
+        }
+
+        $isCoursePublic = $isCoursePublicResponse['data'];
 
         if (!$isCoursePublic) {
-            $date = date('YYYY-MM-DD');
-            log_message('error', "User $userId tried enrolling in private course [$date]");
-            return false;
+            return handleError("User $userId tried enrolling in private course");
         }
 
         $sql = "INSERT INTO
@@ -758,11 +758,10 @@ class UserModel extends CI_model {
         ));
 
         if (!$query) {
-            log_message('error', $this->db->error()['message']);
-            return false;
+            return handleError($this->db->error()['message']);
         }
 
-        return true;
+        return handleSuccess(true);
     }
 
     public function setNewTokenForUser($userId) {
@@ -781,11 +780,10 @@ class UserModel extends CI_model {
         ));
 
         if (!$query) {
-            log_message('error', $this->db->error()['message']);
-            return false;
+            return handleError($this->db->error()['message']);
         }
 
-        return true;
+        return handleSuccess(true);
     }
 
     public function nextUsernameChangeAvailableIn($userId) {
@@ -812,11 +810,10 @@ class UserModel extends CI_model {
         $query = $this->db->query($sql, $userId);
 
         if (!$query) {
-            log_message('error', $this->db->error()['message']);
-            return false;
+            return handleError($this->db->error()['message']);
         }
 
-        return $query->first_row()->nextUsernameChangeAvailableIn;
+        return handleSuccess($query->first_row()->nextUsernameChangeAvailableIn);
     }
 
     public function getCoursesUserIsEnrolledIn($userId) {
@@ -830,8 +827,7 @@ class UserModel extends CI_model {
         $query = $this->db->query($sql, $userId);
 
         if (!$query) {
-            log_message('error', $this->db->error()['message']);
-            return false;
+            return handleError($this->db->error()['message']);
         }
 
         $courses = array();
@@ -840,7 +836,7 @@ class UserModel extends CI_model {
             array_push($courses, $course->courseId);
         }
 
-        return $courses;
+        return handleSuccess($courses);
     }
 
     public function uploadUserImage($fieldName) {
@@ -855,16 +851,9 @@ class UserModel extends CI_model {
         $this->load->library('upload', $config);
 
         if ($this->upload->do_upload($fieldName)) {
-            return array(
-                'status' => true,
-                'data' => $this->upload->data()
-            );
+            return handleSuccess($this->upload->data());
         } else {
-            log_message('error', $this->upload->display_errors());
-            return array(
-                'status' => false,
-                'data' => $this->upload->display_errors('', '')
-            );
+            return handleError($this->upload->display_errors('', ''), true);
         }
     }
 
@@ -874,5 +863,17 @@ class UserModel extends CI_model {
 
     public function generateUserToken() {
         return bin2hex(random_bytes(32)); // 64 character alphanumeric random string
+    }
+
+    public function deleteOldImage($imagePath) {
+        $fullImagePath = FCPATH . ltrim($imagePath, '/'); 
+        if (!file_exists($fullImagePath)) {
+            return handleError('User image does not exist: ' . $fullImagePath);
+        }
+
+        $unlinkStatus = unlink($fullImagePath);
+
+        return $unlinkStatus ? handleSuccess($unlinkStatus) : handleError('There was an error while deleting old user image');
+
     }
 }

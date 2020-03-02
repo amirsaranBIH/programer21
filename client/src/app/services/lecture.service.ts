@@ -10,40 +10,38 @@ export class LectureService {
   constructor(private http: HttpClient, private auth: AuthenticationService) { }
 
   getAllLectures() {
-    return this.http.get('/api/lecture/get-all-lectures', { headers: this.auth.getAuthorizationHeader });
+    return this.http.get('/api/lecture/get-all-lectures');
   }
 
   getLectureById(lectureId) {
-    return this.http.get(`/api/lecture/getLectureById/${lectureId}`, { headers: this.auth.getAuthorizationHeader }).toPromise();
+    return this.http.get(`/api/lecture/getLectureById/${lectureId}`).toPromise();
   }
 
   getLectureBySlug(slug) {
-    return this.http.get(`/api/lecture/getLectureBySlug/${slug}`, { headers: this.auth.getAuthorizationHeader }).toPromise();
+    return this.http.get(`/api/lecture/getLectureBySlug/${slug}`).toPromise();
   }
 
   getLectureHtmlBySlug(slug) {
-    return this.http.get(`/api/lecture/getLectureHtmlBySlug/${slug}`, { headers: this.auth.getAuthorizationHeader }).toPromise();
+    return this.http.get(`/api/lecture/getLectureHtmlBySlug/${slug}`).toPromise();
   }
 
   createLecture(courseId, data) {
-    return this.http.post(`/api/lecture/createLecture/${courseId}`, data, { headers: this.auth.getAuthorizationHeader });
+    return this.http.post(`/api/lecture/createLecture/${courseId}`, data);
   }
 
   editLecture(lectureId, data) {
-    return this.http.post(`/api/lecture/updateLecture/${lectureId}`, data, { headers: this.auth.getAuthorizationHeader });
+    return this.http.post(`/api/lecture/updateLecture/${lectureId}`, data);
   }
 
   deleteLecture(lectureId) {
-    return this.http.get(`/api/lecture/deleteLecture/${lectureId}`, { headers: this.auth.getAuthorizationHeader });
+    return this.http.get(`/api/lecture/deleteLecture/${lectureId}`);
   }
 
   skipLecture(courseIndex, nextModuleIndex, nextLectureIndex) {
-    return this.http.get(`/api/lecture/skip/${courseIndex}/${nextModuleIndex}/${nextLectureIndex}`,
-    { headers: this.auth.getAuthorizationHeader });
+    return this.http.get(`/api/lecture/skip/${courseIndex}/${nextModuleIndex}/${nextLectureIndex}`);
   }
 
   finishLecture(lectureId, finishedLectureCourseId) {
-    return this.http.get(`/api/lecture/finishLecture/${lectureId}/${finishedLectureCourseId}`,
-    { headers: this.auth.getAuthorizationHeader }).toPromise();
+    return this.http.get(`/api/lecture/finishLecture/${lectureId}/${finishedLectureCourseId}`).toPromise();
   }
 }

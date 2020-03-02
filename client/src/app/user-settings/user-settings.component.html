@@ -5,12 +5,17 @@
             <form class="form" [formGroup]="accountInfoForm" #ngForm="ngForm" action="signup" method="POST"
                 (ngSubmit)="onSubmitAccountInfo()">
                 <div class="flex flex--not-even">
-                    <div class="image-upload flex flex--column flex--align-center">
-                        <img [src]="user.image" [alt]="user.username">
-                        <label for="file-upload" class="flex flex--not-even flex--align-center">
-                            <img src="assets/icons/file-upload.svg" alt="file-upload">
-                            <span>Upload profile image</span>
-                            <input type="file" id="file-upload" accept=".png,.jpg,.jpeg,.gif" hidden (change)="uploadFile($event)">
+                    <div class="image-upload flex flex--column flex--align-center flex--not-even flex--between">
+                        <label for="file-upload" class="profile-image-label">
+                            <img class="profile-image" [src]="imagePreview === '' ? user.image : imagePreview" [alt]="user.username">
+                            <img class="edit-hover-image" src="assets/icons/file-upload.svg" alt="file-upload">
+                        </label>
+                        <label for="file-upload">
+                            <div class="flex flex--not-even flex--align-center">
+                                <img src="assets/icons/file-upload.svg" alt="file-upload">
+                                <span>Upload profile image</span>
+                                <input type="file" id="file-upload" accept=".png,.jpg,.jpeg,.gif" hidden (change)="uploadFile($event)">
+                            </div>
                         </label>
                     </div>
                     <div class="fullname">
@@ -153,12 +158,12 @@
 
         <h2 class="margin-top">Change Password</h2>
         <div class="section section--large">
-            <form class="form" [formGroup]="changePasswordForm" #ngForm="ngForm" action="signup" method="POST"
+            <form class="form" [formGroup]="changePasswordForm" #passwordNgForm="ngForm" action="signup" method="POST"
                 (ngSubmit)="onSubmitChangePassword(changePasswordForm.value)">
                 <div class="form-group">
                     <label for="description">New Password</label>
                     <div class="input-group"
-                        [ngClass]="{ 'is-invalid' : (newPassword.invalid && newPassword.touched) || (newPassword.invalid && ngForm.submitted) }">
+                        [ngClass]="{ 'is-invalid' : (newPassword.invalid && newPassword.touched) || (newPassword.invalid && passwordNgForm.submitted) }">
                         <input type="password" id="newPassword" formControlName="newPassword"
                             placeholder="Enter new password" autocomplete="new-password">
                         <div class="input-help flex flex--not-even flex--align-center">
@@ -175,7 +180,7 @@
                     <div class="form-group">
                         <label for="password">Old Password</label>
                         <div class="input-group"
-                            [ngClass]="{ 'is-invalid' : (password.invalid && password.touched) || (password.invalid && ngForm.submitted) }">
+                            [ngClass]="{ 'is-invalid' : (password.invalid && password.touched) || (password.invalid && passwordNgForm.submitted) }">
                             <input type="password" id="password" formControlName="password"
                                 placeholder="Your old password" autocomplete="new-password">
                             <div class="input-help flex flex--not-even flex--align-center">
@@ -190,20 +195,20 @@
                     <div class="form-group">
                         <label for="confirmPassword">Confirm Old Password</label>
                         <div class="input-group"
-                            [ngClass]="{ 'is-invalid' : (confirmPassword.invalid && confirmPassword.touched) || (confirmPassword.invalid && ngForm.submitted) }">
+                            [ngClass]="{ 'is-invalid' : (confirmPassword.invalid && confirmPassword.touched) || (confirmPassword.invalid && passwordNgForm.submitted) }">
                             <input type="password" id="confirmPassword" formControlName="confirmPassword"
                                 placeholder="Confirm old password">
                             <div class="input-help flex flex--not-even flex--align-center">
                                 <div class="input-help-status"></div>
                                 <div class="input-help-message">
                                     <span *ngIf="confirmPassword.errors?.required">Password is required!</span>
-                                    <span *ngIf="ngForm.errors?.passwordsNotMatching">Passwords don't match!</span>
+                                    <span *ngIf="passwordNgForm.errors?.passwordsNotMatching">Passwords don't match!</span>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                <button type="submit" class="button button--large button--update margin-top--small" [disabled]="ngForm.submitted && changePasswordForm.invalid">Change Password</button>
+                <button type="submit" class="button button--large button--update margin-top--small" [disabled]="passwordNgForm.submitted && changePasswordForm.invalid">Change Password</button>
             </form>
         </div>
     </div>

@@ -17,6 +17,7 @@ export class UserSettingsComponent implements OnInit {
   public nextUsernameChangeAvailableIn = 0;
   public user;
   public unchangedUsername = '';
+  public imagePreview = '';
 
   constructor(
     private fb: FormBuilder,
@@ -139,6 +140,14 @@ export class UserSettingsComponent implements OnInit {
 
   uploadFile(e) {
     this.image.patchValue(e.target.files[0]);
+
+    const reader = new FileReader();
+
+    reader.onload = (event: any) => {
+      this.imagePreview = event.target.result;
+    };
+
+    reader.readAsDataURL(e.target.files[0]);
   }
 
   onSubmitAccountInfo() {
@@ -157,14 +166,20 @@ export class UserSettingsComponent implements OnInit {
 
     this.userService.updateUserAccountInfo(this.user.id, fd).subscribe({
       error: (err) => console.error(err),
-      complete: () => {}
+      next: (res: any) => {
+        if (res.status) {
+          this.authService.fetchUserData();
+        }
+      }
     });
   }
 
   onSubmitAdditionalInfo(value) {
     this.userService.updateUserAdditionalInfo(this.user.id, value).subscribe({
       error: (err) => console.error(err),
-      complete: () => {}
+      complete: () => {
+        this.authService.fetchUserData();
+      }
     });
   }
 
@@ -172,7 +187,9 @@ export class UserSettingsComponent implements OnInit {
     this.userService.updateUserPassword(this.user.id, value).subscribe({
       error: (err) => console.error(err),
       next: (res: any) => {
-        if (!res.status) {
+        if (res.status) {
+          this.authService.fetchUserData();
+        } else {
           this.password.setErrors({ wrongPassword: true });
         }
       }

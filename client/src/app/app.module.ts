@@ -1,6 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule, APP_INITIALIZER } from '@angular/core';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule, Routes } from '@angular/router';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -54,6 +54,7 @@ import { UserGuardService } from './guards/user-guard.service';
 import { UserCourseGuardService } from './guards/user-course-guard.service';
 import { VerifyEmailComponent } from './verify-email/verify-email.component';
 import { VerifyEmailResolverService } from './resolvers/verify-email-resolver.service';
+import { AuthTokenInterceptorService } from './services/auth-token-interceptor.service';
 
 const routes: Routes = [
   {
@@ -249,6 +250,11 @@ export function fetchUserDataProviderFactory(provider: AuthenticationService) {
       provide: APP_INITIALIZER,
       useFactory: fetchUserDataProviderFactory,
       deps: [AuthenticationService],
+      multi: true
+    },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: AuthTokenInterceptorService,
       multi: true
     },
     AuthGuardService,

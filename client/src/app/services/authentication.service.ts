@@ -1,7 +1,5 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { environment } from 'src/environments/environment';
 
 @Injectable()
 export class AuthenticationService {
@@ -18,18 +16,18 @@ export class AuthenticationService {
     localStorage.removeItem(this.localStorageTokenName);
   }
 
-  public get getAuthorizationHeader() {
+  public get getAuthorizationToken() {
     const token = localStorage.getItem(this.localStorageTokenName);
 
-    return token ? { Authorization: `Bearer ${token}` } : null;
+    return token ? `Bearer ${token}` : null;
   }
 
   public fetchUserData() {
-    const token = this.getAuthorizationHeader;
+    const token = this.getAuthorizationToken;
 
     if (token) {
       return new Promise((resolve, reject) => {
-        this.http.get('/api/auth/getCurrentUser', { headers: token }).subscribe({
+        this.http.get('/api/auth/getCurrentUser').subscribe({
           error: error => {
             if (error.status === 401) {
               console.error(error);
@@ -66,7 +64,7 @@ export class AuthenticationService {
     return this.http.post('/api/auth/login', data)
     .toPromise().then(async (res: any) => {
       if (res.status) {
-        this.setJwtToken(res.data.token);
+        this.setJwtToken(res.data);
         await this.fetchUserData();
       }
 
@@ -85,7 +83,7 @@ export class AuthenticationService {
   }
 
   public async isEmailTakenWhileEditing(userId, email: string): Promise<boolean> {
-    return await this.http.post('/api/auth/isEmailTakenWhileEditing/' + userId, { email }, { headers: this.getAuthorizationHeader })
+    return await this.http.post('/api/auth/isEmailTakenWhileEditing/' + userId, { email })
       .toPromise()
       .then((res: any) => {
         if (res.status) {

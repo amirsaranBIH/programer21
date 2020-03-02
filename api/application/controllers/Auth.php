@@ -14,10 +14,10 @@ class Auth extends MY_Controller  {
     public function signup() {
         $userData = json_decode(file_get_contents('php://input'), true);
 
-        $createdUserId = $this->user->createUser($userData);
+        $createUserResponse = $this->user->createUser($userData);
 
-        if ($createdUserId === false) {
-            $this->setResponseError();
+        if (!$createUserResponse['status']) {
+            $this->setResponseError(200, $createUserResponse['message']);
             return;
         }
 
@@ -27,8 +27,6 @@ class Auth extends MY_Controller  {
             $this->setResponseError(200, $loginResponse['message']);
             return;
         }
-
-        $loginResponse['createdUserId'] = $createdUserId;
 
         $sendVerificationEmailResponse = $this->mail->sendEmailVerificationMail($userData['email']);
 
@@ -45,25 +43,25 @@ class Auth extends MY_Controller  {
 
         $loginResponse = $this->auth->login($userData['email'], $userData['password']);
 
-        if ($loginResponse['status'] === false) {
+        if (!$loginResponse['status']) {
             $this->setResponseError(200, $loginResponse['message']);
             return;
         }
 
-        $this->setResponseSuccess($loginResponse);
+        $this->setResponseSuccess($loginResponse['data']);
     }
 
     public function isEmailTaken() {
         $data = json_decode(file_get_contents('php://input'), true);
 
-        $response = $this->auth->isEmailTaken($data['email']);
+        $emailTakenResponse = $this->auth->isEmailTaken($data['email']);
 
-        if ($response === false) {
-            $this->setResponseError();
+        if (!$emailTakenResponse['status']) {
+            $this->setResponseError(200, $emailTakenResponse['message']);
             return;
         }
 
-        $this->setResponseSuccess($response['emailTaken']);
+        $this->setResponseSuccess($emailTakenResponse['data']);
     }
 
     public function isEmailTakenWhileEditing($userId) {
@@ -74,33 +72,38 @@ class Auth extends MY_Controller  {
 
         $data = json_decode(file_get_contents('php://input'), true);
 
-        $response = $this->auth->isEmailTakenWhileEditing($userId, $data['email']);
+        $emailTakenResponse = $this->auth->isEmailTakenWhileEditing($userId, $data['email']);
 
-        if ($response === false) {
-            $this->setResponseError();
+        if (!$emailTakenResponse['status']) {
+            $this->setResponseError(200, $emailTakenResponse['message']);
             return;
         }
 
-        $this->setResponseSuccess($response['emailTaken']);
+        $this->setResponseSuccess($emailTakenResponse['data']);
     }
 
     public function getCurrentUser() {
         $response = $this->auth->getCurrentUser();
 
-        if ($response['status'] === false) {
+        if (!$response['status']) {
             $this->setResponseError(200, $response['message']);
             return;
         }
 
-        $this->setResponseSuccess($response['payload']);
+        $this->setResponseSuccess($response['data']);
     }
 
     public function forgotPassword() {
         $data = json_decode(file_get_contents('php://input'), true);
 
-        $isEmailTaken = $this->auth->isEmailTaken($data['email']);
+        $isEmailTakenResponse = $this->auth->isEmailTaken($data['email']);
 
-        if (!$isEmailTaken) {
+        if (!$isEmailTakenResponse['status']) {
+            $this->setResponseError(200, $isEmailTakenResponse['message']);
+            return;
+        }
+
+        if ((int)$isEmailTakenResponse['data'] < 1) {
             $this->setResponseError(200, 'Account with email of ' . $data['email'] . ' is not registered!');
             return;
         }

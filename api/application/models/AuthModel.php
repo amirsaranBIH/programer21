@@ -9,7 +9,6 @@ class AuthModel extends CI_model {
         $this->load->model('UserModel', 'user');
         $this->load->helper('url');
         $this->load->helper('file');
-        $this->load->helper('error');
     }
 
     public function login($email, $password) {
@@ -36,15 +35,9 @@ class AuthModel extends CI_model {
         if ($isCorrectPassword) {  
             $jwt = $this->generateNewJwtToken($row->id);
 
-            return array(
-                'status' => true,
-                'token' => $jwt
-            );
+            return handleSuccess($jwt);
         } else {
-            return array(
-                'status' => false,
-                'message' => 'Password wrong'
-            );
+            return handleError('Password wrong', false, true);
         }
     }
 
@@ -65,20 +58,16 @@ class AuthModel extends CI_model {
         try {
             $payload = \Firebase\JWT\JWT::decode($token, $publicKey, array('RS256'));
 
-            $userPayload = $this->user->getUserById($payload->id);
-        } catch(Exception $e) {
-            return array(
-                'status' => false,
-                'message' => $e->getMessage()
-            );
+            $userPayloadResponse = $this->user->getUserById($payload->id);
 
-            log_message('error', $e->getMessage());
+            if (!$userPayloadResponse['status']) {
+                return handleError($userPayloadResponse['message'], false);
+            }
+        } catch(Exception $e) {
+            return handleError($e->getMessage());
         }
 
-        return array(
-            'status' => true,
-            'payload' => $userPayload
-        );
+        return handleSuccess($userPayloadResponse['data']);
     }
 
     public function isEmailTaken($email) {
@@ -92,14 +81,12 @@ class AuthModel extends CI_model {
         $query = $this->db->query($sql, $email);
 
         if (!$query) {
-            log_message('error', $this->db->error()['message']);
-            return false;
+            return handleError($this->db->error()['message']);
         }
 
         $emailTaken = $query->first_row()->emailTaken;
-        return array(
-            'emailTaken' => $emailTaken > 0
-        );
+
+        return handleSuccess($emailTaken > 0);
     }
 
     public function isEmailTakenWhileEditing($userId, $email) {
@@ -118,21 +105,19 @@ class AuthModel extends CI_model {
         ));
 
         if (!$query) {
-            log_message('error', $this->db->error()['message']);
-            return false;
+            return handleError($this->db->error()['message']);
         }
 
         $emailTaken = $query->first_row()->emailTaken;
-        return array(
-            'emailTaken' => $emailTaken > 0
-        );
+
+        return handleSuccess($emailTaken > 0);
     }
 
     public function isCorrectPassword($inputedPassword, $storedPassword) {
         return password_verify($inputedPassword, $storedPassword);
     }
 
-    public function generateNewJwtToken($userId) {
+    private function generateNewJwtToken($userId) {
         $privateKey = read_file(FCPATH . 'application/keys/private_key.pem');
 
         $payload = array(
@@ -180,11 +165,13 @@ class AuthModel extends CI_model {
             return handleError($this->db->error()['message']);
         }
 
-        $this->user->setNewTokenForUser($user->id);
+        $newTokenResponse = $this->user->setNewTokenForUser($user->id);
 
-        return array(
-            'status' => true
-        );
+        if (!$newTokenResponse['status']) {
+            return handleError($newTokenResponse['message'], false);
+        }
+
+        return handleError(true);
     }
 
     public function verifyEmail($token) {
@@ -216,10 +203,12 @@ class AuthModel extends CI_model {
             return handleError($this->db->error()['message']);
         }
 
-        $this->user->setNewTokenForUser($user->id);
+        $newTokenResponse = $this->user->setNewTokenForUser($user->id);
 
-        return array(
-            'status' => true
-        );
+        if (!$newTokenResponse['status']) {
+            return handleError($newTokenResponse['message'], false);
+        }
+
+        return handleError(true);
     }
 }

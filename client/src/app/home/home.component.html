@@ -12,11 +12,11 @@
               <img [routerLink]="['course', course.slug]" [src]="course.image" alt="default_course_image">
             </div>
           </div>
-          <img (click)="courseCarouselPrevious()" class="carousel-arrow carousel-arrow--left" src="assets/icons/arrow-left.svg" alt="arrow-left">
-          <img (click)="courseCarouselNext()" class="carousel-arrow carousel-arrow--right" src="assets/icons/arrow-right.svg" alt="arrow-right">
+          <img *ngIf="carouselCourses.length > 1" (click)="courseCarouselPrevious()" class="carousel-arrow carousel-arrow--left" src="assets/icons/arrow-left.svg" alt="arrow-left">
+          <img *ngIf="carouselCourses.length > 1" (click)="courseCarouselNext()" class="carousel-arrow carousel-arrow--right" src="assets/icons/arrow-right.svg" alt="arrow-right">
         </div>
         <p class="text--center">
-          <a routerLink="/courses">Check out all of our courses!</a>
+          <a *ngIf="carouselCourses.length > 0" routerLink="/courses">Check out all of our courses!</a>
         </p>
       </div>
       <div class="home__right">

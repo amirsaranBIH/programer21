@@ -41,8 +41,6 @@ export class ForgotPasswordComponent implements OnInit {
         this.router.navigate(['/']);
         if (res.status) {
           this.toastr.success('Successfully sent instructions for reseting password', 'Success');
-        } else {
-          this.toastr.error(res.message, 'Error');
         }
       });
     }

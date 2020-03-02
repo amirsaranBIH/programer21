@@ -35,8 +35,7 @@ class LectureModel extends CI_model {
         $query = $this->db->query($sql, $courseId);
 
         if (!$query) {
-            log_message('error', $this->db->error()['message']);
-            return false;
+            return handleError($this->db->error()['message']);
         }
 
         $lectures = array();
@@ -45,7 +44,7 @@ class LectureModel extends CI_model {
             array_push($lectures, $lecture);
         }
 
-        return $lectures;
+        return handleSuccess($lectures);
     }
 
     public function getAllPublicLecturesByCourseId($courseId) {
@@ -73,8 +72,7 @@ class LectureModel extends CI_model {
         $query = $this->db->query($sql, $courseId);
 
         if (!$query) {
-            log_message('error', $this->db->error()['message']);
-            return false;
+            return handleError($this->db->error()['message']);
         }
 
         $lectures = array();
@@ -83,7 +81,7 @@ class LectureModel extends CI_model {
             array_push($lectures, $lecture);
         }
 
-        return $lectures;
+        return handleSuccess($lectures);
     }
 
     public function getAllPublicLecturesForUserByCourseSlug($courseSlug, $userId) {
@@ -133,8 +131,7 @@ class LectureModel extends CI_model {
         ));
 
         if (!$query) {
-            log_message('error', $this->db->error()['message']);
-            return false;
+            return handleError($this->db->error()['message']);
         }
 
         $lectures = array();
@@ -143,7 +140,7 @@ class LectureModel extends CI_model {
             array_push($lectures, $lecture);
         }
 
-        return $lectures;
+        return handleSuccess($lectures);
     }
 
     public function getLectureById($lectureId) {
@@ -169,13 +166,16 @@ class LectureModel extends CI_model {
         $query = $this->db->query($sql, $lectureId);
 
         if (!$query) {
-            log_message('error', $this->db->error()['message']);
-            return false;
+            return handleError($this->db->error()['message']);
         }
 
         $lecture = $query->first_row();
 
-        return $lecture;
+        if (!$lecture) {
+            return handleError('There is no lecture with id: ' . $lectureId);
+        }
+
+        return handleSuccess($lecture);
     }
 
     public function getLectureBySlug($lectureSlug) {
@@ -201,13 +201,16 @@ class LectureModel extends CI_model {
         $query = $this->db->query($sql, $lectureSlug);
 
         if (!$query) {
-            log_message('error', $this->db->error()['message']);
-            return false;
+            return handleError($this->db->error()['message']);
         }
 
         $lecture = $query->first_row();
 
-        return $lecture;
+        if (!$lecture) {
+            return handleError('There is no lecture with slug: ' . $lectureSlug);
+        }
+
+        return handleSuccess($lecture);
     }
 
     public function getLectureHtmlBySlug($lectureSlug) {
@@ -225,20 +228,29 @@ class LectureModel extends CI_model {
         $query = $this->db->query($sql, $lectureSlug);
 
         if (!$query) {
-            log_message('error', $this->db->error()['message']);
-            return false;
+            return handleError($this->db->error()['message']);
         }
 
-        $courseSlug = $query->first_row()->slug;
+        $row = $query->first_row();
 
-        $lectureHtml = file_get_contents(FCPATH . 'lectures' . DIRECTORY_SEPARATOR . $courseSlug . DIRECTORY_SEPARATOR . $lectureSlug . '.php');
+        if (!$row) {
+            return handleError('There is no lecture with slug: ' . $lectureSlug);
+        }
 
-        return $lectureHtml;
+        $courseSlug = $row->slug;
+
+        $filePath = FCPATH . 'lectures' . DIRECTORY_SEPARATOR . $courseSlug . DIRECTORY_SEPARATOR . $lectureSlug . '.html';
+
+        $lectureHtml = file_get_contents($filePath);
+
+        if (!$lectureHtml) {
+            return handleError('Tried to get file, but does not exist: ' . $filePath);
+        }
+
+        return handleSuccess($lectureHtml);
     }
 
     public function createLecture($courseId, $lectureData) {
-        $this->db->trans_start();
-
         $sql = "SELECT
                     IF(MAX(orderIndex) + 1 IS NULL, 1, MAX(orderIndex) + 1) AS nextIOrderIndex
                 FROM
@@ -249,11 +261,16 @@ class LectureModel extends CI_model {
         $query = $this->db->query($sql, $courseId);
 
         if (!$query) {
-            log_message('error', $this->db->error()['message']);
-            return false;
+            return handleError($this->db->error()['message']);
         }
 
-        $nextIOrderIndex = $query->first_row()->nextIOrderIndex;
+        $row = $query->first_row();
+
+        if (!$row) {
+            return handleError('There is no lecture with course: ' . $courseId);
+        }
+
+        $nextOrderIndex = $row->nextOrderIndex;
 
         $sql = "INSERT INTO
                     lectures
@@ -271,7 +288,13 @@ class LectureModel extends CI_model {
                     ?, ?, ?, ?, ?, ?, ?, ?
                 )";
         
-        $userData = $this->auth->getCurrentUser();
+        $userDataResponse = $this->auth->getCurrentUser();
+
+        if (!$userDataResponse['status']) {
+            return handleError($userDataResponse['message'], false);
+        }
+
+        $userData = $userDataResponse['data'];
 
         $query = $this->db->query($sql, array(
             $lectureData['title'],
@@ -279,56 +302,50 @@ class LectureModel extends CI_model {
             $lectureData['description'],
             $lectureData['difficulty'],
             $lectureData['skippable'],
-            $userData['payload']->id,
+            $userData->id,
             $courseId,
-            $nextIOrderIndex
+            $nextOrderIndex
         ));
+        
+        if (!$query) {
+            return handleError($this->db->error()['message']);
+        }  
 
         $newlyCreatedLectureId = $this->db->insert_id();
 
-        if (!$query) {
-            log_message('error', $this->db->error()['message']);
-            return false;
-        }    
+        $courseResponse = $this->course->getCourseById($courseId);
 
-        $sql = "INSERT INTO
-                    course_lectures
-                (
-                    `courseId`,
-                    `lectureId`
-                ) VALUES
-                ( 
-                    ?, ?
-                )";
-
-        $query = $this->db->query($sql, array(
-            $courseId,
-            $newlyCreatedLectureId
-        ));
-
-        if (!$query) {
-            log_message('error', $this->db->error()['message']);
-            return false;
+        if (!$courseResponse['status']) {
+            return handleError($courseResponse['message']);
         }
 
-        $courseSlug = $this->course->getCourseById($courseId)->slug;
+        $courseSlug = $courseResponse['data']->slug;
 
-        $status = $this->makeLectureFile($courseSlug, $lectureData['slug']);
+        $makeLectureFileResponse = $this->makeLectureFile($courseSlug, $lectureData['slug']);
 
-        if (!$status) {
-            log_message('error', 'Could not create lecture file');
-            return false;
+        if (!$makeLectureFileResponse['status']) {
+            return handleError($makeLectureFileResponse['message'], false);
         }
 
-        $this->db->trans_complete();
-
-        return $newlyCreatedLectureId; // Returns ID of newly created lecture
+        return handleSuccess($newlyCreatedLectureId); // Returns ID of newly created lecture
     }
 
     public function updateLecture($lectureId, $lectureData) {
-        $lecture = $this->getLectureById($lectureId);
+        $lectureReponse = $this->getLectureById($lectureId);
 
-        $courseSlug = $this->course->getCourseById($lecture->course)->slug;
+        if (!$lectureReponse['status']) {
+            return handleError($lectureReponse['message'], false);
+        }
+
+        $lecture = $lectureReponse['data'];
+
+        $courseResponse = $this->course->getCourseById($lecture->course);
+
+        if (!$courseResponse['status']) {
+            return handleError($courseResponse['message'], false);
+        }
+
+        $courseSlug = $courseResponse['data']->slug;
 
         $sql = "UPDATE
                     lectures
@@ -353,22 +370,43 @@ class LectureModel extends CI_model {
         ));
 
         if (!$query) {
-            log_message('error', $this->db->error()['message']);
-            return false;
+            return handleError($this->db->error()['message']);
         }
 
-        $status = $this->renameLectureFile($courseSlug, $lecture->slug, $lectureData['slug']);
+        $renameLectureFileResponse = $this->renameLectureFile($courseSlug, $lecture->slug, $lectureData['slug']);
 
-        if (!$status) {
-            log_message('error', 'Could not rename lecture file');
-            return false;
+        if (!$renameLectureFileResponse['status']) {
+            return handleError($renameLectureFileResponse['message'], false);
         }
 
-
-        return true;
+        return handleSuccess(true);
     }
 
     public function deleteLecture($lectureId) {
+        $sql = "SELECT
+                    l.slug AS lectureSlug,
+                    c.slug AS courseSlug
+                FROM
+                    lectures l
+                LEFT JOIN
+                    courses c
+                ON
+                    c.id = l.course
+                WHERE
+                    l.id = ?";
+
+        $query = $this->db->query($sql, $lectureId);
+
+        if (!$query) {
+            return handleError($this->db->error()['message']);
+        }
+
+        $lecture = $query->first_row();
+
+        if (!$lecture) {
+            return handleError('Trying to delete lecture but there is no lecture with id: ' . $lectureId);
+        }
+
         $sql = "DELETE FROM
                     lectures
                 WHERE
@@ -377,11 +415,16 @@ class LectureModel extends CI_model {
         $query = $this->db->query($sql, $lectureId);
 
         if (!$query) {
-            log_message('error', $this->db->error()['message']);
-            return false;
+            return handleError($this->db->error()['message']);
         }
 
-        return true;
+        $deleteLectureFileResponse = $this->deleteLectureFile($lecture->courseSlug, $lecture->lectureSlug);
+
+        if (!$deleteLectureFileResponse['status']) {
+            return handleError($deleteLectureFileResponse['message'], false);
+        }
+
+        return handleError(true);
     }
 
     public function finishLecture($lectureId, $finishedLectureCourseId) {
@@ -421,8 +464,7 @@ class LectureModel extends CI_model {
         ));
 
         if (!$query) {
-            log_message('error', $this->db->error()['message']);
-            return false;
+            return handleError($this->db->error()['message']);
         }
 
         $nextLecture = $query->first_row();
@@ -445,19 +487,17 @@ class LectureModel extends CI_model {
             ));
     
             if (!$query) {
-                log_message('error', $this->db->error()['message']);
-                return false;
+                return handleError($this->db->error()['message']);
             }
 
             $this->db->trans_complete();
 
             $response = $nextLecture->slug;
         } else {
-            $status = $this->course->finishCourse($finishedLectureCourseId);
+            $finishCourseResponse = $this->course->finishCourse($finishedLectureCourseId);
 
-            if (!$status) {
-                log_message('error', 'Could not finish course');
-                return false;
+            if (!$finishCourseResponse['status']) {
+                return handleError($finishCourseResponse['message'], false);
             }
 
             $this->db->trans_complete();
@@ -465,11 +505,10 @@ class LectureModel extends CI_model {
             $response = -1;
         }
 
-        $status = $this->addLectureToLatestFinishedLectures($lectureId);
+        $addLectureResponse = $this->addLectureToLatestFinishedLectures($lectureId);
     
-        if (!$status) {
-            log_message('error', 'Could not add lecture to latest finished lectures');
-            return false;
+        if (!$addLectureResponse['status']) {
+            return handleError($addLectureResponse['message'], false);
         }
 
         $this->db->trans_complete();
@@ -489,28 +528,61 @@ class LectureModel extends CI_model {
                     ?, ?, ?
                 )";
 
-        $userData = $this->auth->getCurrentUser();
+        $userDataResponse = $this->auth->getCurrentUser();
+
+        if (!$userDataResponse['status']) {
+            return handleError($userDataResponse['message'], false);
+        }
+
+        $userData = $userDataResponse['data'];
 
         $query = $this->db->query($sql, array(
             $lectureId,
-            $userData['payload']->id,
+            $userData->id,
             $skipped
         ));
 
         if (!$query) {
-            log_message('error', $this->db->error()['message']);
-            return false;
+            return handleError($this->db->error()['message']);
         }
 
-        return true;
+        return handleSuccess(true);
     }
 
     public function makeLectureFile($courseSlug, $lectureSlug) {
-        return fopen(FCPATH . 'lectures' . DIRECTORY_SEPARATOR . $courseSlug . DIRECTORY_SEPARATOR . $lectureSlug. '.php', 'w');
+        if (!file_exists(FCPATH . 'lectures' . DIRECTORY_SEPARATOR . $courseSlug)) {
+            return handleError('Trying to create lecture file, but course folder does not exist: ' . $courseSlug);
+        }
+
+        $response = fopen(FCPATH . 'lectures' . DIRECTORY_SEPARATOR . $courseSlug . DIRECTORY_SEPARATOR . $lectureSlug. '.html', 'w');
+
+        return $response ? handleSuccess($response) : handleError($response);
     }
 
     public function renameLectureFile($courseSlug, $oldLectureSlug, $newLectureSlug) {
-        return rename(FCPATH . 'lectures' . DIRECTORY_SEPARATOR . $courseSlug . DIRECTORY_SEPARATOR . $oldLectureSlug. '.php', 
-                        FCPATH . 'lectures' . DIRECTORY_SEPARATOR . $courseSlug . DIRECTORY_SEPARATOR . $newLectureSlug. '.php');
+        $oldFilePath = FCPATH . 'lectures' . DIRECTORY_SEPARATOR . $courseSlug . DIRECTORY_SEPARATOR . $oldLectureSlug. '.html';
+        $newFilePath = FCPATH . 'lectures' . DIRECTORY_SEPARATOR . $courseSlug . DIRECTORY_SEPARATOR . $newLectureSlug. '.html';
+
+        if (!file_exists(FCPATH . 'lectures' . DIRECTORY_SEPARATOR . $courseSlug)) {
+            return handleError('Trying to rename lecture file, but course folder does not exist: ' . $courseSlug);
+        }
+
+        if (!file_exists($oldFilePath)) {
+            return handleError('Trying to rename lecture file that does not exist: ' . $oldFilePath);
+        }
+
+        $response = rename($oldFilePath, $newFilePath);
+
+        return $response ? handleSuccess($response) : handleError($response);
+    }
+
+    public function deleteLectureFile($courseSlug, $lectureSlug) {
+        $filePath = FCPATH . 'lectures' . DIRECTORY_SEPARATOR . $courseSlug . DIRECTORY_SEPARATOR . $lectureSlug. '.html';
+        if (file_exists($filePath)) {
+            $response = unlink($filePath);
+            return $response ? handleSuccess($response) : handleError($response);
+        } else {
+            return handleError('Trying to delete lecture file that does not exist: ' . $filePath);
+        }
     }
 }

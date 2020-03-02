@@ -47,7 +47,6 @@ export class CourseComponent implements OnInit {
         this.userService.enrollUserInCourse(this.authService.userData.id, this.course.id);
       }
     } else {
-      this.toastr.error('You must be logged in to enroll in course', 'Error');
       this.router.navigate(['/login']);
     }
   }

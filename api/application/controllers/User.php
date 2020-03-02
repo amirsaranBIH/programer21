@@ -15,16 +15,16 @@ class User extends MY_Controller  {
             return $this->setResponseError(200, $authResponse['message']);
         }
 
-        if ($authResponse['payload']->role !== 'administrator') {
+        if ($authResponse['data']->role !== 'administrator') {
             return $this->setResponseError(200, 'You must have administrative permissions to update other user accounts');
         }
 
         $data = json_decode(file_get_contents('php://input'), true);
 
-        $status = $this->user->updateUser($userId, $data);
+        $res = $this->user->updateUser($userId, $data);
 
-        if ($status === false) {
-            $this->setResponseError();
+        if (!$res['status']) {
+            $this->setResponseError(200, $res['message']);
             return;
         }
 
@@ -37,15 +37,15 @@ class User extends MY_Controller  {
             return $this->setResponseError(200, $authResponse['message']);
         }
 
-        if ($authResponse['payload']->id !== $userId) {
+        if ($authResponse['data']->id !== $userId) {
             return $this->setResponseError(200, 'You can only update your own account');
         }
 
         $data = $this->input->post();
         $res = $this->user->updateUserAccountInfo($userId, $data);
 
-        if ($res === false) {
-            $this->setResponseError(200, $res['data']);
+        if (!$res['status']) {
+            $this->setResponseError(200, $res['message']);
             return;
         }
 
@@ -58,16 +58,16 @@ class User extends MY_Controller  {
             return $this->setResponseError(200, $authResponse['message']);
         }
 
-        if ($authResponse['payload']->id !== $userId) {
+        if ($authResponse['data']->id !== $userId) {
             return $this->setResponseError(200, 'You can only update your own account');
         }
 
         $data = json_decode(file_get_contents('php://input'), true);
 
-        $status = $this->user->updateUserAdditionalInfo($userId, $data);
+        $res = $this->user->updateUserAdditionalInfo($userId, $data);
 
-        if ($status === false) {
-            $this->setResponseError();
+        if (!$res['status']) {
+            $this->setResponseError(200, $res['message']);
             return;
         }
 
@@ -80,7 +80,7 @@ class User extends MY_Controller  {
             return $this->setResponseError(200, $authResponse['message']);
         }
 
-        if ($authResponse['payload']->id !== $userId) {
+        if ($authResponse['data']->id !== $userId) {
             return $this->setResponseError(200, 'You can only update password for your own account');
         }
 
@@ -88,7 +88,7 @@ class User extends MY_Controller  {
 
         $res = $this->user->updateUserPassword($userId, $data);
 
-        if ($res['status'] === false) {
+        if (!$res['status']) {
             $this->setResponseError(200, $res['message']);
             return;
         }
@@ -102,14 +102,14 @@ class User extends MY_Controller  {
             return $this->setResponseError(200, $authResponse['message']);
         }
 
-        if ($authResponse['payload']->role !== 'administrator') {
+        if ($authResponse['data']->role !== 'administrator') {
             return $this->setResponseError(200, 'You must have administrative permissions to do that');
         }
 
-        $status = $this->user->suspendUser($userId);
+        $res = $this->user->suspendUser($userId);
 
-        if ($status === false) {
-            $this->setResponseError();
+        if (!$res['status']) {
+            $this->setResponseError(200, $res['message']);
             return;
         }
 
@@ -122,18 +122,18 @@ class User extends MY_Controller  {
             return $this->setResponseError(200, $authResponse['message']);
         }
 
-        if ($authResponse['payload']->id !== $userId) {
+        if ($authResponse['data']->id !== $userId) {
             return $this->setResponseError(200, 'You can only access courses that you enrolled in');
         }
 
-        $courses = $this->user->getUserEnrolledCourses($userId);
+        $res = $this->user->getUserEnrolledCourses($userId);
 
-        if ($courses === false) {
-            $this->setResponseError();
+        if (!$res['status']) {
+            $this->setResponseError(200, $res['status']);
             return;
         }
 
-        $this->setResponseSuccess($courses);
+        $this->setResponseSuccess($res['data']);
     }
 
     public function getUserCourseBySlug($courseSlug, $userId) {
@@ -142,18 +142,18 @@ class User extends MY_Controller  {
             return $this->setResponseError(200, $authResponse['message']);
         }
 
-        if ($authResponse['payload']->id !== $userId) {
+        if ($authResponse['data']->id !== $userId) {
             return $this->setResponseError(200, 'You can only access a course that you enrolled in');
         }
 
-        $course = $this->user->getUserCourseBySlug($courseSlug, $userId);
+        $res = $this->user->getUserCourseBySlug($courseSlug, $userId);
 
-        if ($course === false) {
-            $this->setResponseError();
+        if (!$res['status']) {
+            $this->setResponseError(200, $res['message']);
             return;
         }
 
-        $this->setResponseSuccess($course);
+        $this->setResponseSuccess($res['data']);
     }
 
     public function getAllUsers() {
@@ -162,18 +162,18 @@ class User extends MY_Controller  {
             return $this->setResponseError(200, $authResponse['message']);
         }
 
-        if ($authResponse['payload']->role !== 'administrator') {
+        if ($authResponse['data']->role !== 'administrator') {
             return $this->setResponseError(200, 'You must have administrative permissions to do that');
         }
 
-        $users = $this->user->getAllUsers();
+        $res = $this->user->getAllUsers();
 
-        if ($users === false) {
-            $this->setResponseError();
+        if (!$res['status']) {
+            $this->setResponseError(200, $res['message']);
             return;
         }
 
-        $this->setResponseSuccess($users);
+        $this->setResponseSuccess($res['data']);
     }
 
     public function getUserById($userId) {
@@ -182,18 +182,18 @@ class User extends MY_Controller  {
             return $this->setResponseError(200, $authResponse['message']);
         }
 
-        if ($authResponse['payload']->role !== 'administrator') {
+        if ($authResponse['data']->role !== 'administrator') {
             return $this->setResponseError(200, 'You must have administrative permissions to do that');
         }
 
-        $user = $this->user->getUserById($userId);
+        $res = $this->user->getUserById($userId);
 
-        if ($user === false) {
-            $this->setResponseError();
+        if (!$res['status']) {
+            $this->setResponseError(200, $res['message']);
             return;
         }
 
-        $this->setResponseSuccess($user);
+        $this->setResponseSuccess($res['data']);
     }
 
     public function getCourseActivityPercentages($userId) {
@@ -202,18 +202,18 @@ class User extends MY_Controller  {
             return $this->setResponseError(200, $authResponse['message']);
         }
 
-        if ($authResponse['payload']->id !== $userId) {
+        if ($authResponse['data']->id !== $userId) {
             return $this->setResponseError(200, 'You can only access course activity for your own account');
         }
 
-        $percentages = $this->user->getCourseActivityPercentages($userId);
+        $res = $this->user->getCourseActivityPercentages($userId);
 
-        if ($percentages === false) {
-            $this->setResponseError();
+        if (!$res['status']) {
+            $this->setResponseError(200, $res['message']);
             return;
         }
 
-        $this->setResponseSuccess($percentages);
+        $this->setResponseSuccess($res['data']);
     }
 
     public function getAllLatestLecturesByUserId($userId) {
@@ -222,18 +222,18 @@ class User extends MY_Controller  {
             return $this->setResponseError(200, $authResponse['message']);
         }
 
-        if ($authResponse['payload']->id !== $userId) {
+        if ($authResponse['data']->id !== $userId) {
             return $this->setResponseError(200, 'You can only access latest lectures for your own account');
         }
 
-        $lectures = $this->user->getAllLatestLecturesByUserId($userId);
+        $res = $this->user->getAllLatestLecturesByUserId($userId);
 
-        if ($lectures === false) {
-            $this->setResponseError();
+        if (!$res['status']) {
+            $this->setResponseError(200, $res['message']);
             return;
         }
 
-        $this->setResponseSuccess($lectures);
+        $this->setResponseSuccess($res['data']);
     }
 
     public function getMonthlyActivity($userId) {
@@ -242,18 +242,18 @@ class User extends MY_Controller  {
             return $this->setResponseError(200, $authResponse['message']);
         }
 
-        if ($authResponse['payload']->id !== $userId) {
+        if ($authResponse['data']->id !== $userId) {
             return $this->setResponseError(200, 'You can only access monthly activity for your own account');
         }
 
-        $montlyActivity = $this->user->getMonthlyActivity($userId);
+        $res = $this->user->getMonthlyActivity($userId);
 
-        if ($montlyActivity === false) {
-            $this->setResponseError();
+        if (!$res['status']) {
+            $this->setResponseError(200, $res['message']);
             return;
         }
 
-        $this->setResponseSuccess($montlyActivity);
+        $this->setResponseSuccess($res['data']);
     }
 
     public function nextUsernameChangeAvailableIn($userId) {
@@ -262,18 +262,18 @@ class User extends MY_Controller  {
             return $this->setResponseError(200, $authResponse['message']);
         }
 
-        if ($authResponse['payload']->id !== $userId) {
+        if ($authResponse['data']->id !== $userId) {
             return $this->setResponseError(200, 'You can only access next username change information for your own account');
         }
 
-        $nextUsernameChangeAvailableIn = $this->user->nextUsernameChangeAvailableIn($userId);
+        $res = $this->user->nextUsernameChangeAvailableIn($userId);
 
-        if ($nextUsernameChangeAvailableIn === false) {
-            $this->setResponseError();
+        if (!$res['status']) {
+            $this->setResponseError(200, $res['message']);
             return;
         }
 
-        $this->setResponseSuccess($nextUsernameChangeAvailableIn);
+        $this->setResponseSuccess($res['data']);
     }
 
     public function enrollUserInCourse($userId, $courseId) {
@@ -282,14 +282,14 @@ class User extends MY_Controller  {
             return $this->setResponseError(200, $authResponse['message']);
         }
 
-        if ($authResponse['payload']->id !== $userId) {
+        if ($authResponse['data']->id !== $userId) {
             return $this->setResponseError(200, 'You can only enroll in a course for your own account');
         }
 
-        $status = $this->user->enrollUserInCourse($userId, $courseId);
+        $res = $this->user->enrollUserInCourse($userId, $courseId);
 
-        if ($status === false) {
-            $this->setResponseError();
+        if (!$res['status']) {
+            $this->setResponseError(200, $res['message']);
             return;
         }
 

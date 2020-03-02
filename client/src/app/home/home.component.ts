@@ -12,20 +12,7 @@ export class HomeComponent implements OnInit {
 
   ngOnInit() {
     this.carouselCourses = this.route.snapshot.data.courses;
-    // this.carouselCourses = [
-    //   {
-    //     image: 'assets/images/default_course_image.png',
-    //     courseDetailLink: '/asd1'
-    //   },
-    //   {
-    //     image: 'assets/images/sss.gif',
-    //     courseDetailLink: '/asd2'
-    //   },
-    //   {
-    //     image: 'assets/images/default_course_image.png',
-    //     courseDetailLink: '/asd3'
-    //   },
-    // ];
+    this.carouselCourses = [ this.carouselCourses[0], this.carouselCourses[1], this.carouselCourses[2] ];
   }
 
   courseCarouselPrevious() {

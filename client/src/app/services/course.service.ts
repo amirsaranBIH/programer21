@@ -14,11 +14,11 @@ export class CourseService {
   }
 
   getAllCourses() {
-    return this.http.get('/api/course/getAllCourses', { headers: this.auth.getAuthorizationHeader }).toPromise();
+    return this.http.get('/api/course/getAllCourses').toPromise();
   }
 
   getCourseById(courseId) {
-    return this.http.get(`/api/course/getCourseById/${courseId}`, { headers: this.auth.getAuthorizationHeader }).toPromise();
+    return this.http.get(`/api/course/getCourseById/${courseId}`).toPromise();
   }
 
   getCourseBySlug(courseSlug) {
@@ -26,26 +26,26 @@ export class CourseService {
   }
 
   getCourseIdBySlug(courseSlug): Promise<any> {
-    return this.http.get(`/api/course/getCourseIdBySlug/${courseSlug}`, { headers: this.auth.getAuthorizationHeader }).toPromise();
+    return this.http.get(`/api/course/getCourseIdBySlug/${courseSlug}`).toPromise();
   }
 
   getCourseLectures(courseId) {
-    return this.http.get(`/api/course/getCourseLectures/${courseId}`, { headers: this.auth.getAuthorizationHeader }).toPromise();
+    return this.http.get(`/api/course/getCourseLectures/${courseId}`).toPromise();
   }
 
   createCourse(data) {
-    return this.http.post('/api/course/createCourse', data, { headers: this.auth.getAuthorizationHeader });
+    return this.http.post('/api/course/createCourse', data);
   }
 
   updateCourse(courseId, data) {
-    return this.http.post(`/api/course/updateCourse/${courseId}`, data, { headers: this.auth.getAuthorizationHeader });
+    return this.http.post(`/api/course/updateCourse/${courseId}`, data);
   }
 
   deleteCourse(courseId) {
-    return this.http.get(`/api/course/deleteCourse/${courseId}`, { headers: this.auth.getAuthorizationHeader });
+    return this.http.get(`/api/course/deleteCourse/${courseId}`);
   }
 
   enrollInCourse(courseId) {
-    return this.http.get(`/api/course/enroll/${courseId}`, { headers: this.auth.getAuthorizationHeader });
+    return this.http.get(`/api/course/enroll/${courseId}`);
   }
 }

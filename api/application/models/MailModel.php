@@ -32,7 +32,7 @@ class MailModel extends CI_model {
 
         $this->email->initialize($config);
 
-        $this->email->from('noreply@programer21.com', 'admin');
+        $this->email->from('noreply@programer21.com', 'Programer21');
         $this->email->to($to);
 
         $this->email->subject($subject);
@@ -41,7 +41,7 @@ class MailModel extends CI_model {
         $emailResponse = $this->email->send();
 
         if (!$emailResponse) {
-            log_message('error', $this->email->print_debugger());
+            return handleError($this->email->print_debugger());
         }
 
         return true;
@@ -67,12 +67,10 @@ class MailModel extends CI_model {
         $mailResponse = $this->sendMail($email, $subject, $message);
 
         if (!$mailResponse) {
-            return handleError('There was an error while trying to send mail');
+            return handleError('There was an error while trying to send mail', false, true);
         }
 
-        return array(
-            'status' => true
-        );
+        return handleSuccess(true);
     }
 
     public function sendEmailVerificationMail($email) {
@@ -95,11 +93,9 @@ class MailModel extends CI_model {
         $mailResponse = $this->sendMail($email, $subject, $message);
 
         if (!$mailResponse) {
-            return handleError('There was an error while trying to send mail');
+            return handleError('There was an error while trying to send mail', false, true);
         }
 
-        return array(
-            'status' => true
-        );
+        return handleSuccess(true);
     }
 }
