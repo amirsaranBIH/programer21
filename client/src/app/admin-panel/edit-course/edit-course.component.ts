@@ -4,6 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { CourseService } from 'src/app/services/course.service';
 import { TitleToSlugPipe } from 'src/app/pipes/title-to-slug.pipe';
 import { LectureService } from 'src/app/services/lecture.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-edit-course',
@@ -27,7 +28,8 @@ export class EditCourseComponent implements OnInit {
     private courseService: CourseService,
     private router: Router,
     private titleToSlug: TitleToSlugPipe,
-    private lectureService: LectureService
+    private lectureService: LectureService,
+    private toastr: ToastrService
     ) { }
 
   ngOnInit() {
@@ -103,7 +105,8 @@ export class EditCourseComponent implements OnInit {
     fd.append('supportedLanguages', JSON.stringify(this.supportedLanguages));
 
     this.courseService.updateCourse(this.route.snapshot.params.course_id, fd).subscribe({
-      error: (err) => console.log(err)
+      error: (err) => console.log(err),
+      complete: () => this.toastr.success('Successfully updated course', 'Success')
     });
   }
 
@@ -148,7 +151,10 @@ export class EditCourseComponent implements OnInit {
     if (confirm('Are you sure?')) {
       this.courseService.deleteCourse(this.route.snapshot.params.course_id).subscribe({
         error: (err) => console.log(err),
-        complete: () => this.router.navigate(['admin-panel'])
+        complete: () => {
+          this.toastr.success('Successfully deleted course and all it\'s lectures', 'Success');
+          this.router.navigate(['admin-panel']);
+        }
       });
     }
   }
@@ -158,6 +164,7 @@ export class EditCourseComponent implements OnInit {
       this.lectureService.deleteLecture(lectureId).subscribe({
         error: (err) => console.log(err),
         complete: () => {
+          this.toastr.success('Successfully deleted lecture', 'Success');
           this.courseLectures.splice(lectureIndex, 1);
         }
       });

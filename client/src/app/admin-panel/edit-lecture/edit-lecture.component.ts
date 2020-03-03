@@ -3,6 +3,7 @@ import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { LectureService } from 'src/app/services/lecture.service';
 import { TitleToSlugPipe } from 'src/app/pipes/title-to-slug.pipe';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-edit-lecture',
@@ -18,7 +19,8 @@ export class EditLectureComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private lectureService: LectureService,
-    private titleToSlug: TitleToSlugPipe
+    private titleToSlug: TitleToSlugPipe,
+    private toastr: ToastrService
     ) { }
 
     ngOnInit() {
@@ -53,7 +55,8 @@ export class EditLectureComponent implements OnInit {
     value.slug = this.titleToSlug.transform(this.editLectureForm.value.title);
 
     this.lectureService.editLecture(this.route.snapshot.params.lecture_id, value).subscribe({
-      error: (err) => console.log(err)
+      error: (err) => console.log(err),
+      complete: () => this.toastr.success('Successfully updated lecture', 'Success')
     });
   }
 
@@ -61,7 +64,10 @@ export class EditLectureComponent implements OnInit {
     if (confirm('Are you sure?')) {
       this.lectureService.deleteLecture(this.route.snapshot.params.lecture_id).subscribe({
         error: (err) => console.log(err),
-        complete: () => this.router.navigate(['admin-panel', 'edit-course', this.lecture.course])
+        complete: () => {
+          this.toastr.success('Successfully deleted lecture', 'Success');
+          this.router.navigate(['admin-panel', 'edit-course', this.lecture.course]);
+        }
       });
     }
   }

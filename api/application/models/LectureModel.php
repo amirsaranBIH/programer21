@@ -144,6 +144,16 @@ class LectureModel extends CI_model {
     }
 
     public function getLectureById($lectureId) {
+        $isLectureUnlockedResponse = $this->isLectureUnlockedForCurrentUserById($lectureId);
+
+        if (!$isLectureUnlockedResponse['status']) {
+            return handleError($isLectureUnlockedResponse['message'], false);
+        }
+
+        if (!$isLectureUnlockedResponse['data']) {
+            return handleError('Lecture not unlocked', false, true);
+        }
+
         $sql = "SELECT
                     id,
                     title,
@@ -179,6 +189,16 @@ class LectureModel extends CI_model {
     }
 
     public function getLectureBySlug($lectureSlug) {
+        $isLectureUnlockedResponse = $this->isLectureUnlockedForCurrentUserBySlug($lectureSlug);
+
+        if (!$isLectureUnlockedResponse['status']) {
+            return handleError($isLectureUnlockedResponse['message'], false);
+        }
+
+        if (!$isLectureUnlockedResponse['data']) {
+            return handleError('Lecture not unlocked', false, true);
+        }
+
         $sql = "SELECT
                     id,
                     title,
@@ -240,7 +260,7 @@ class LectureModel extends CI_model {
         $courseSlug = $row->slug;
 
         $filePath = FCPATH . 'lectures' . DIRECTORY_SEPARATOR . $courseSlug . DIRECTORY_SEPARATOR . $lectureSlug . '.html';
-
+        
         $lectureHtml = file_get_contents($filePath);
 
         if (!$lectureHtml) {
@@ -252,7 +272,7 @@ class LectureModel extends CI_model {
 
     public function createLecture($courseId, $lectureData) {
         $sql = "SELECT
-                    IF(MAX(orderIndex) + 1 IS NULL, 1, MAX(orderIndex) + 1) AS nextIOrderIndex
+                    IF(MAX(orderIndex) + 1 IS NULL, 1, MAX(orderIndex) + 1) AS nextOrderIndex
                 FROM
                     lectures
                 WHERE
@@ -424,7 +444,7 @@ class LectureModel extends CI_model {
             return handleError($deleteLectureFileResponse['message'], false);
         }
 
-        return handleError(true);
+        return handleSuccess(true);
     }
 
     public function finishLecture($lectureId, $finishedLectureCourseId) {
@@ -445,12 +465,8 @@ class LectureModel extends CI_model {
                             l.orderIndex 
                         FROM 
                             lectures l
-                        INNER JOIN 
-                            user_courses uc
-                        ON 
-                            uc.courseId = ? 
                         WHERE 
-                            l.id = uc.currentLectureId
+                            l.id = ?
                     )
                 AND
                     l.course = ?
@@ -459,7 +475,7 @@ class LectureModel extends CI_model {
                 LIMIT 1";
 
         $query = $this->db->query($sql, array(
-            $finishedLectureCourseId,
+            $lectureId,
             $finishedLectureCourseId
         ));
 
@@ -513,7 +529,7 @@ class LectureModel extends CI_model {
 
         $this->db->trans_complete();
 
-        return $response;
+        return handleSuccess($response);
     }
 
     public function addLectureToLatestFinishedLectures($lectureId, $skipped = false) {
@@ -549,6 +565,100 @@ class LectureModel extends CI_model {
         return handleSuccess(true);
     }
 
+    public function isLectureUnlockedForCurrentUserById($lectureId) {
+        $sql = "SELECT 
+                    lectureId AS isCourseUnlocked
+                FROM 
+                    finished_lectures
+                WHERE
+                    lectureId = ?
+                AND
+                    userId = ?
+                UNION
+                SELECT 
+                    currentLectureId AS isCourseUnlocked
+                FROM
+                    user_courses
+                WHERE
+                    currentLectureId = ?
+                AND
+                    userId = ?";
+
+        $userDataResponse = $this->auth->getCurrentUser();
+
+        if (!$userDataResponse['status']) {
+            return handleError($userDataResponse['message'], false);
+        }
+
+        $userData = $userDataResponse['data'];
+
+        $query = $this->db->query($sql, array(
+            $lectureId,
+            $userData->id,
+            $lectureId,
+            $userData->id
+        ));
+
+        if (!$query) {
+            return handleError($this->db->error()['message']);
+        }
+
+        $isCourseUnlocked = (bool)$query->first_row();
+
+        return handleSuccess($isCourseUnlocked);
+    }
+
+    public function isLectureUnlockedForCurrentUserBySlug($lectureSlug) {
+        $sql = "SELECT 
+                    lectureId AS isCourseUnlocked
+                FROM 
+                    finished_lectures fl
+                LEFT JOIN
+                    lectures l
+                ON
+                l.id = fl.lectureId
+                WHERE
+                    l.slug = ?
+                AND
+                    userId = ?
+                UNION
+                SELECT 
+                    currentLectureId AS isCourseUnlocked
+                FROM
+                    user_courses uc
+                LEFT JOIN
+                    lectures l
+                ON
+                l.id = uc.currentLectureId
+                WHERE
+                    l.slug = ?
+                AND
+                    userId = ?";
+
+        $userDataResponse = $this->auth->getCurrentUser();
+
+        if (!$userDataResponse['status']) {
+            return handleError($userDataResponse['message'], false);
+        }
+
+        $userData = $userDataResponse['data'];
+
+        $query = $this->db->query($sql, array(
+            $lectureSlug,
+            $userData->id,
+            $lectureSlug,
+            $userData->id
+        ));
+
+        if (!$query) {
+            return handleError($this->db->error()['message']);
+        }
+
+        $isCourseUnlocked = (bool)$query->first_row();
+
+        return handleSuccess($isCourseUnlocked);
+    }
+
     public function makeLectureFile($courseSlug, $lectureSlug) {
         if (!file_exists(FCPATH . 'lectures' . DIRECTORY_SEPARATOR . $courseSlug)) {
             return handleError('Trying to create lecture file, but course folder does not exist: ' . $courseSlug);
@@ -580,7 +690,7 @@ class LectureModel extends CI_model {
         $filePath = FCPATH . 'lectures' . DIRECTORY_SEPARATOR . $courseSlug . DIRECTORY_SEPARATOR . $lectureSlug. '.html';
         if (file_exists($filePath)) {
             $response = unlink($filePath);
-            return $response ? handleSuccess($response) : handleError($response);
+            return $response ? handleSuccess($response) : handleError('There was an error while deleting lecture file: ' . $filePath);
         } else {
             return handleError('Trying to delete lecture file that does not exist: ' . $filePath);
         }

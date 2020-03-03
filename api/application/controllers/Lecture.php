@@ -133,7 +133,7 @@ class Lecture extends MY_Controller  {
         }
 
         $finishLectureResponse = $this->lecture->finishLecture($lectureId, $finishedLectureCourseId);
-
+        
         if (!$finishLectureResponse['status']) {
             $this->setResponseError(200, $finishLectureResponse['message']);
             return;

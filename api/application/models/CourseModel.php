@@ -161,6 +161,8 @@ class CourseModel extends CI_model {
             return handleError($supportedLanguagesResponse['message'], false);
         }
 
+        $course->supportedLanguages = $supportedLanguagesResponse['data'];
+
         $courseLecturesResponse = $this->lecture->getAllPublicLecturesByCourseId($course->id);
 
         if (!$courseLecturesResponse['status']) {
@@ -228,7 +230,7 @@ class CourseModel extends CI_model {
             $courseData['price'],
             $courseData['shortName'],
             $courseData['color'],
-            $userData['payload']->id
+            $userData->id
         ));
 
         if (!$query) {
@@ -351,8 +353,11 @@ class CourseModel extends CI_model {
     }
 
     public function deleteCourse($courseId) {
+        $this->db->trans_start();
+
         $sql = "SELECT
-                    slug
+                    slug,
+                    image
                 FROM
                     courses
                 WHERE
@@ -387,7 +392,15 @@ class CourseModel extends CI_model {
             return handleError($deleteCourseFolderResponse['message'], false);
         }
 
-        return true;
+        $deleteOldImageResponse = $this->deleteOldImage($course->image);
+
+        if (!$deleteOldImageResponse['status']) {
+            return handleError($deleteOldImageResponse['message'], false);
+        }
+
+        $this->db->trans_complete();
+
+        return handleSuccess(true);
     }
 
     public function setCourseImage($courseId, $imagePath) {

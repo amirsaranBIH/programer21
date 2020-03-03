@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { CourseService } from 'src/app/services/course.service';
 import { Router } from '@angular/router';
 import { TitleToSlugPipe } from 'src/app/pipes/title-to-slug.pipe';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-new-course',
@@ -19,7 +20,8 @@ export class NewCourseComponent implements OnInit {
     private fb: FormBuilder,
     private courseService: CourseService,
     private router: Router,
-    private titleToSlug: TitleToSlugPipe
+    private titleToSlug: TitleToSlugPipe,
+    private toastr: ToastrService
     ) { }
 
   ngOnInit() {
@@ -84,7 +86,10 @@ export class NewCourseComponent implements OnInit {
 
     this.courseService.createCourse(fd).subscribe({
       error: (err) => console.error(err),
-      next: (res: any) => this.router.navigate(['/admin-panel/edit-course', res.data])
+      next: (res: any) => {
+        this.toastr.success('Successfully created course', 'Success');
+        this.router.navigate(['/admin-panel/edit-course', res.data]);
+      }
     });
   }
 

@@ -44,7 +44,13 @@ export class CourseComponent implements OnInit {
   enrollUserInCourse() {
     if (this.authService.userData) {
       if (!this.userIsEnrolledInCourse()) {
-        this.userService.enrollUserInCourse(this.authService.userData.id, this.course.id);
+        this.userService.enrollUserInCourse(this.authService.userData.id, this.course.id).then((res: any) => {
+          if (res.status) {
+            this.toastr.success('Successfully enroll in course: ' + this.course.title);
+            this.authService.fetchUserData();
+            this.router.navigate(['dashboard', 'course', this.course.slug]);
+          }
+        });
       }
     } else {
       this.router.navigate(['/login']);

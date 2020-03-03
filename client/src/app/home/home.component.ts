@@ -11,8 +11,7 @@ export class HomeComponent implements OnInit {
   constructor(private route: ActivatedRoute) {}
 
   ngOnInit() {
-    this.carouselCourses = this.route.snapshot.data.courses;
-    this.carouselCourses = [ this.carouselCourses[0], this.carouselCourses[1], this.carouselCourses[2] ];
+    this.carouselCourses = this.route.snapshot.data.courses.slice(0, 3);
   }
 
   courseCarouselPrevious() {
