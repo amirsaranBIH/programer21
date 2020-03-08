@@ -29,16 +29,21 @@
 .account-link {
     z-index: 1000;
     position: relative;
-    cursor: pointer;
+
+    img,
+    span {
+        cursor: pointer;
+    }
 
     .account-dropdown {
-        background-color: $dark_purple;
         position: absolute;
         top: 115%;
         right: 0;
         width: 175px;
 
         ul {
+            background-color: $dark_purple;
+
             li {
                 padding: 1em;
                 margin: 0 !important;

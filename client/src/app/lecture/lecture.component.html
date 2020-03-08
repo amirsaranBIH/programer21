@@ -2,6 +2,31 @@
     <div class="lecture">
         <h1 class="margin-bottom">{{ lecture.title }}</h1>
         <div [innerHTML]="htmlContent" class="lecture-content"></div>
-        <button type="button" class="button button--large button--update" (click)="finishLecture()">Finish Lecture</button>
+        <div class="lecture-quiz margin-top--large margin-bottom">
+            <h2 class="image-heading">
+                <img src="assets/icons/question.svg" alt="question"> 
+                <span>Lecture Quiz</span>
+            </h2>
+            <ul class="lecture-quiz-questions">
+                <li class="lecture-quiz-question margin-top" [ngClass]="{'answer-error' : question.wrongAnswer }" *ngFor="let question of quizQuestions; let questionIndex = index">
+                    <h3>{{ questionIndex + 1 }}. {{ question.question }}</h3>
+                    <ul class="lecture-quiz-answers margin-top--small">
+                        <label [for]="question.id + '-' + answerIndex" [ngClass]="{ 'answer-error' : question.wrongAnswer && (question.answer === answer.answer), 'answer-correct' : question.wrongAnswer === false && (question.answer === answer.answer) }" class="lecture-quiz-answer flex flex--not-even flex--align-center" *ngFor="let answer of question.answers; let answerIndex = index">
+                            <input type="radio" [id]="question.id + '-' + answerIndex" [name]="questionIndex" [(ngModel)]="question.answer" [value]="answer.answer" (change)="answeredQuestion(question)">
+                            <p>{{ answer.answer }}</p>
+                        </label>
+                    </ul>
+                    <p class="error-message">{{ question.error }}</p>
+                </li>
+            </ul>
+        </div>
+        <div class="flex flex--not-even flex--between flex--align-center">
+            <div>
+                <button type="button" class="button button--large" (click)="verifyQuizQuestions()">Verify Answers</button>
+            </div>
+            <div>
+                <button type="button" class="button button--large button--update" (click)="finishLecture()">Finish Lecture</button>
+            </div>
+        </div>
     </div>    
 </div>

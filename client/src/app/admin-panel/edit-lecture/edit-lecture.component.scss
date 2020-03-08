@@ -1,3 +1,63 @@
-.lecture-editor {
-    margin-bottom: .25em;
+@import '../../../styles.scss';
+
+.edit-lecture {
+    .add-quiz-question {
+        .add-quiz-question-input {
+            flex: 1;
+
+            input {
+                margin: 0;
+            }
+        }
+        
+        .add-quiz-question-button button {
+            height: 54px;
+            margin-left: 1em;
+        }
+    }
+
+    .lecture-quiz-question {
+        .add-quiz-answer {
+            .add-quiz-answer-input {
+                flex: 1;
+    
+                input {
+                    margin: 0;
+                }
+            }
+            
+            .add-quiz-answer-button button {
+                height: 54px;
+                margin-left: 1em;
+            }
+        }
+    }
+
+    .lecture-quiz-answer p {
+        margin-top: 0;
+        margin-bottom: 0;
+        margin-left: .5em;
+        padding-right: .5em;
+    }
+
+    .lecture-quiz-answer p:hover ~ .remove-answer,
+    .lecture-quiz-question-text:hover .remove-answer,
+    .remove-answer:hover {
+        display: block;
+    }
+
+    .remove-answer {
+        display: none;
+        width: 10px;
+        cursor: pointer;
+    }
+
+    .lecture-quiz-question-text h3 {
+        padding-right: .5em;
+    }
+
+    .lecture-quiz-question-text .remove-answer {
+        position: relative;
+        bottom: 2px;
+    }
 }

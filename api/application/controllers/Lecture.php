@@ -141,4 +141,58 @@ class Lecture extends MY_Controller  {
 
         $this->setResponseSuccess($finishLectureResponse['data']);
     }
+
+    public function getLectureQuizQuestionById($lectureId) {
+        $authResponse = $this->auth->getCurrentUser();
+        if (!$authResponse['status']) {
+            return $this->setResponseError(200, $authResponse['message']);
+        }
+
+        if ($authResponse['data']->role !== 'administrator') {
+            return $this->setResponseError(200, 'You must have administrative permissions to do that');
+        }
+
+        $getLectureQuizQuestionByIdResponse = $this->lecture->getLectureQuizQuestionById($lectureId);
+        
+        if (!$getLectureQuizQuestionByIdResponse['status']) {
+            $this->setResponseError(200, $getLectureQuizQuestionByIdResponse['message']);
+            return;
+        }
+
+        $this->setResponseSuccess($getLectureQuizQuestionByIdResponse['data']);
+    }
+
+    public function getLectureQuizQuestionBySlug($lectureId) {
+        $authResponse = $this->auth->getCurrentUser();
+        if (!$authResponse['status']) {
+            return $this->setResponseError(200, $authResponse['message']);
+        }
+
+        $getLectureQuizQuestionByIdResponse = $this->lecture->getLectureQuizQuestionBySlug($lectureId);
+        
+        if (!$getLectureQuizQuestionByIdResponse['status']) {
+            $this->setResponseError(200, $getLectureQuizQuestionByIdResponse['message']);
+            return;
+        }
+
+        $this->setResponseSuccess($getLectureQuizQuestionByIdResponse['data']);
+    }
+
+    public function verifyQuizAnswers($lectureSlug) {
+        $authResponse = $this->auth->getCurrentUser();
+        if (!$authResponse['status']) {
+            return $this->setResponseError(200, $authResponse['message']);
+        }
+
+        $data = json_decode(file_get_contents('php://input'), true);
+
+        $verifyQuizAnswersResponse = $this->lecture->verifyQuizAnswers($lectureSlug, $data);
+        
+        if (!$verifyQuizAnswersResponse['status']) {
+            $this->setResponseError(200, $verifyQuizAnswersResponse['message']);
+            return;
+        }
+
+        $this->setResponseSuccess($verifyQuizAnswersResponse['data']);
+    }
 }

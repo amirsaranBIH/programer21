@@ -4,55 +4,33 @@ import { HttpClient } from '@angular/common/http';
 @Injectable()
 export class AuthenticationService {
   public userData = null;
-  private localStorageTokenName = 'PROGRAMER21_JWT';
 
   constructor(private http: HttpClient) {}
 
-  private setJwtToken(token) {
-    localStorage.setItem(this.localStorageTokenName, token);
-  }
-
-  public removeJwtToken() {
-    localStorage.removeItem(this.localStorageTokenName);
-  }
-
-  public get getAuthorizationToken() {
-    const token = localStorage.getItem(this.localStorageTokenName);
-
-    return token ? `Bearer ${token}` : null;
-  }
-
   public fetchUserData() {
-    const token = this.getAuthorizationToken;
-
-    if (token) {
-      return new Promise((resolve, reject) => {
-        this.http.get('/api/auth/getCurrentUser').subscribe({
-          error: error => {
-            if (error.status === 401) {
-              console.error(error);
-              reject(error);
-            }
-          },
-          next: (res: any) => {
-            if (res.status) {
-              this.userData = res.data;
-            }
-
-            resolve(true);
+    return new Promise((resolve, reject) => {
+      this.http.get('/api/auth/getCurrentUser').subscribe({
+        error: error => {
+          if (error.status === 401) {
+            console.error(error);
+            reject(error);
           }
-        });
+        },
+        next: (res: any) => {
+          if (res.status && res.data) {
+            this.userData = res.data;
+          }
+
+          resolve(true);
+        }
       });
-    } else {
-      return null;
-    }
+    });
   }
 
   public signup(data): Promise<any> {
     return this.http.post('/api/auth/signup', data)
     .toPromise().then(async (res: any) => {
       if (res.status) {
-        this.setJwtToken(res.data.token);
         await this.fetchUserData();
       }
 
@@ -64,7 +42,6 @@ export class AuthenticationService {
     return this.http.post('/api/auth/login', data)
     .toPromise().then(async (res: any) => {
       if (res.status) {
-        this.setJwtToken(res.data);
         await this.fetchUserData();
       }
 
@@ -94,6 +71,10 @@ export class AuthenticationService {
 
   public forgotPassword(email: string) {
     return this.http.post('/api/auth/forgotPassword', { email }).toPromise();
+  }
+
+  public logout() {
+    return this.http.get('/api/auth/logout').toPromise();
   }
 
   public newPassword(newPassword, token) {

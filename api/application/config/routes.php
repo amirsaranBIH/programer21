@@ -56,6 +56,7 @@ $route['translate_uri_dashes'] = FALSE;
 
 $route['api/auth/signup']['post'] = 'auth/signup';
 $route['api/auth/login']['post'] = 'auth/login';
+$route['api/auth/logout'] = 'auth/logout';
 $route['api/auth/isEmailTaken']['post'] = 'auth/isEmailTaken';
 $route['api/auth/isEmailTakenWhileEditing/(:num)']['post'] = 'auth/isEmailTakenWhileEditing/$1';
 $route['api/auth/getCurrentUser'] = 'auth/getCurrentUser';
@@ -95,3 +96,6 @@ $route['api/lecture/createLecture/(:num)']['post'] = 'lecture/createLecture/$1';
 $route['api/lecture/updateLecture/(:num)']['post'] = 'lecture/updateLecture/$1';
 $route['api/lecture/deleteLecture/(:num)'] = 'lecture/deleteLecture/$1';
 $route['api/lecture/finishLecture/(:num)/(:num)'] = 'lecture/finishLecture/$1/$2';
+$route['api/lecture/getLectureQuizQuestionById/(:num)'] = 'lecture/getLectureQuizQuestionById/$1';
+$route['api/lecture/getLectureQuizQuestionBySlug/(:any)'] = 'lecture/getLectureQuizQuestionBySlug/$1';
+$route['api/lecture/verifyQuizAnswers/(:any)']['post'] = 'lecture/verifyQuizAnswers/$1';

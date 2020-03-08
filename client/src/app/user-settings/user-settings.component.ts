@@ -4,6 +4,7 @@ import { ValidatorService } from '../services/validator.service';
 import { AuthenticationService } from '../services/authentication.service';
 import { UserService } from '../services/user.service';
 import { ActivatedRoute } from '@angular/router';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-user-settings',
@@ -18,13 +19,15 @@ export class UserSettingsComponent implements OnInit {
   public user;
   public unchangedUsername = '';
   public imagePreview = '';
+  public languageFromLocal = localStorage.getItem('language');
 
   constructor(
     private fb: FormBuilder,
     private validators: ValidatorService,
     private route: ActivatedRoute, // this is binded to email validator
     private authService: AuthenticationService,
-    private userService: UserService
+    private userService: UserService,
+    private translate: TranslateService
   ) { }
 
   ngOnInit() {
@@ -206,5 +209,10 @@ export class UserSettingsComponent implements OnInit {
     } else {
       return 'NOW!';
     }
+  }
+
+  languageChanged(value) {
+    localStorage.setItem('language', value);
+    this.translate.use(value);
   }
 }

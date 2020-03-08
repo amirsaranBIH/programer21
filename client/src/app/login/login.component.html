@@ -2,7 +2,7 @@
   <img class="background-triangles-bottom" src="assets/triangles.png" alt="triangles">
   <div class="login fixed-section">
     <h2 class="text--white margin-bottom">Log Into Account</h2>
-    <form class="form" [formGroup]="loginForm" #ngForm="ngForm" action="signup" method="POST" (ngSubmit)="onSubmit(loginForm.value)">
+    <form class="form" [formGroup]="loginForm" #ngForm="ngForm" (ngSubmit)="onSubmit(loginForm.value)">
       <div class="form-group">
         <label for="email">Email</label>
         <div class="input-group" [ngClass]="{ 'is-invalid' : (email.invalid && email.touched) || (email.invalid && ngForm.submitted) }">

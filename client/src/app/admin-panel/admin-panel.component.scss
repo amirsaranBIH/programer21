@@ -1,4 +1,4 @@
-@import '../../styles';
+@import '../../styles.scss';
 
 .admin-panel {
     .courses-and-lectures {
@@ -174,6 +174,10 @@
         }
 
         .filter {
+            select {
+                background-color: white;
+            }
+
             select + select {
                 margin-left: 1em;
             }

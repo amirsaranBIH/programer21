@@ -1,5 +1,5 @@
 <h2 class="text--white margin-bottom">Create An Account</h2>
-    <form class="form" [formGroup]="signupForm" #ngForm="ngForm" action="signup" method="POST" (ngSubmit)="onSubmit(signupForm.value)">
+    <form class="form" [formGroup]="signupForm" #ngForm="ngForm" (ngSubmit)="onSubmit(signupForm.value)">
       <div class="flex">
         <div class="form-group">
           <label for="firstName">First Name</label>

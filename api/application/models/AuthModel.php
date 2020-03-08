@@ -34,24 +34,21 @@ class AuthModel extends CI_model {
 
         if ($isCorrectPassword) {  
             $jwt = $this->generateNewJwtToken($row->id);
+            $weekFromNow = strtotime('+1 week');
+            header("Set-Cookie: PROGRAMER21_JWT={$jwt}; Max-Age={$weekFromNow}; Path=/; HttpOnly; SameSite=Lax");
 
-            return handleSuccess($jwt);
+            return handleSuccess(true);
         } else {
             return handleError('Password wrong', false, true);
         }
     }
 
     public function getCurrentUser() {
-        $tokenHeader = $this->input->get_request_header('Authorization');
-
-        if (!$tokenHeader) {
-            return array(
-                'status' => false,
-                'message' => 'No Authentication header'
-            );
+        if (!isset($_COOKIE['PROGRAMER21_JWT'])) {
+            return handleSuccess(false);
         }
 
-        $token = substr($tokenHeader, 7);
+        $token = $_COOKIE['PROGRAMER21_JWT'];
 
         $publicKey = read_file(FCPATH . 'application/keys/public_key.pem');
 

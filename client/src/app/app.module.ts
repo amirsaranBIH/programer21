@@ -1,9 +1,12 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule, APP_INITIALIZER } from '@angular/core';
-import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS, HttpClient } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule, Routes } from '@angular/router';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+
+import {TranslateLoader, TranslateModule} from '@ngx-translate/core';
+import {TranslateHttpLoader} from '@ngx-translate/http-loader';
 
 import { AppComponent } from './app.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
@@ -54,7 +57,8 @@ import { UserGuardService } from './guards/user-guard.service';
 import { UserCourseGuardService } from './guards/user-course-guard.service';
 import { VerifyEmailComponent } from './verify-email/verify-email.component';
 import { VerifyEmailResolverService } from './resolvers/verify-email-resolver.service';
-import { AuthTokenInterceptorService } from './services/auth-token-interceptor.service';
+import { ResponseErrorInterceptorService } from './services/response-error-interceptor.service';
+import { QuizQuestionsResolverService } from './resolvers/quiz-questions-resolver.service';
 
 const routes: Routes = [
   {
@@ -136,7 +140,8 @@ const routes: Routes = [
         path: 'edit-lecture/:lecture_id',
         component: EditLectureComponent,
         resolve: {
-          lecture: OneLectureResolverService
+          lecture: OneLectureResolverService,
+          quizQuestions: QuizQuestionsResolverService
         }
       },
     ]
@@ -207,6 +212,10 @@ export function fetchUserDataProviderFactory(provider: AuthenticationService) {
   return () => provider.fetchUserData();
 }
 
+export function HttpLoaderFactory(http: HttpClient) {
+  return new TranslateHttpLoader(http);
+}
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -242,7 +251,14 @@ export function fetchUserDataProviderFactory(provider: AuthenticationService) {
     ReactiveFormsModule,
     HttpClientModule,
     RouterModule.forRoot(routes),
-    ToastrModule.forRoot()
+    ToastrModule.forRoot(),
+    TranslateModule.forRoot({
+      loader: {
+          provide: TranslateLoader,
+          useFactory: HttpLoaderFactory,
+          deps: [HttpClient]
+      }
+  })
   ],
   providers: [
     AuthenticationService,
@@ -254,7 +270,7 @@ export function fetchUserDataProviderFactory(provider: AuthenticationService) {
     },
     {
       provide: HTTP_INTERCEPTORS,
-      useClass: AuthTokenInterceptorService,
+      useClass: ResponseErrorInterceptorService,
       multi: true
     },
     AuthGuardService,
@@ -265,6 +281,7 @@ export function fetchUserDataProviderFactory(provider: AuthenticationService) {
     AllCoursesResolverService,
     AllUsersResolverService,
     AllPublicCoursesResolverService,
+    QuizQuestionsResolverService,
     UserResolverService,
     CourseLecturesResolverService,
     OneCourseBySlugResolverService,

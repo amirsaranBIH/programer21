@@ -1,8 +1,8 @@
 <div class="container">
     <div class="user-settings">
-        <h2>Account Information</h2>
+        <h2>{{ 'Account Information' | translate }}</h2>
         <div class="section section--large">
-            <form class="form" [formGroup]="accountInfoForm" #ngForm="ngForm" action="signup" method="POST"
+            <form class="form" [formGroup]="accountInfoForm" #ngForm="ngForm"
                 (ngSubmit)="onSubmitAccountInfo()">
                 <div class="flex flex--not-even">
                     <div class="image-upload flex flex--column flex--align-center flex--not-even flex--between">
@@ -101,9 +101,22 @@
             </form>
         </div>
 
+        <h2 class="margin-top">Change Language</h2>
+        <div class="section section--large form">
+            <div class="form-group">
+                <label for="language">Language preference</label>
+                <div class="input-group">
+                    <select #languageSelect id="language" (change)="languageChanged(languageSelect.value)">
+                        <option value="bs" [selected]="languageFromLocal === 'bs'">Bosnian</option>
+                        <option value="en" [selected]="languageFromLocal === 'en'">English</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
         <h2 class="margin-top">Additional Information</h2>
         <div class="section section--large">
-            <form class="form" [formGroup]="additionalInfoForm" #ngForm="ngForm" action="signup" method="POST"
+            <form class="form" [formGroup]="additionalInfoForm" #ngForm="ngForm"
                 (ngSubmit)="onSubmitAdditionalInfo(additionalInfoForm.value)">
                 <div class="form-group">
                     <label for="description">User Description</label>
@@ -158,7 +171,7 @@
 
         <h2 class="margin-top">Change Password</h2>
         <div class="section section--large">
-            <form class="form" [formGroup]="changePasswordForm" #passwordNgForm="ngForm" action="signup" method="POST"
+            <form class="form" [formGroup]="changePasswordForm" #passwordNgForm="ngForm"
                 (ngSubmit)="onSubmitChangePassword(changePasswordForm.value)">
                 <div class="form-group">
                     <label for="description">New Password</label>

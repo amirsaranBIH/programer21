@@ -51,6 +51,16 @@ class Auth extends MY_Controller  {
         $this->setResponseSuccess($loginResponse['data']);
     }
 
+    public function logout() {    
+        setcookie('PROGRAMER21_JWT', '', time() - 3600, '/');
+
+        if (isset($_COOKIE['PROGRAMER21_JWT'])) {
+            unset($_COOKIE['PROGRAMER21_JWT']);
+        }
+
+        $this->setResponseSuccess(true);
+    }
+
     public function isEmailTaken() {
         $data = json_decode(file_get_contents('php://input'), true);
 

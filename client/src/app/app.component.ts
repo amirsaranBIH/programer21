@@ -3,6 +3,7 @@ import { AuthenticationService } from './services/authentication.service';
 import { environment } from 'src/environments/environment';
 import { Router, NavigationEnd, NavigationStart, NavigationCancel, NavigationError } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-root',
@@ -19,7 +20,8 @@ export class AppComponent {
   constructor(
     public auth: AuthenticationService,
     private router: Router,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private translate: TranslateService
   ) {
     this.router.events.subscribe(event => {
       switch (true) {
@@ -50,6 +52,20 @@ export class AppComponent {
         }
       }
     });
+
+    let language = localStorage.getItem('language');
+
+    if (!language) {
+      if (['bs', 'hr', 'sr'].some(lang => window.navigator.language.includes(lang))) {
+        language = 'bs';
+      } else {
+        language = 'en';
+      }
+
+      localStorage.setItem('language', language);
+    }
+
+    this.translate.use(language);
   }
 
   toggleAccountDropdownMenu() {
@@ -59,8 +75,11 @@ export class AppComponent {
   logout() {
     this.toastr.success('Successfully logged out from your account', 'Success');
     this.toggleAccountDropdownMenu();
-    this.auth.userData = null;
-    this.auth.removeJwtToken();
-    this.router.navigate(['/']);
+    this.auth.logout().then((res: any) => {
+      if (res.status) {
+        this.auth.userData = null;
+        this.router.navigate(['/']);
+      }
+    });
   }
 }

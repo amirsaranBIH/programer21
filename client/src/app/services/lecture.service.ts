@@ -44,4 +44,16 @@ export class LectureService {
   finishLecture(lectureId, finishedLectureCourseId) {
     return this.http.get(`/api/lecture/finishLecture/${lectureId}/${finishedLectureCourseId}`).toPromise();
   }
+
+  getLectureQuizQuestionById(lectureId) {
+    return this.http.get(`/api/lecture/getLectureQuizQuestionById/${lectureId}`).toPromise();
+  }
+
+  getLectureQuizQuestionBySlug(lectureSlug) {
+    return this.http.get(`/api/lecture/getLectureQuizQuestionBySlug/${lectureSlug}`).toPromise();
+  }
+
+  verifyQuizAnswers(lectureSlug, quizAnswers) {
+    return this.http.post(`/api/lecture/verifyQuizAnswers/${lectureSlug}`, quizAnswers).toPromise();
+  }
 }

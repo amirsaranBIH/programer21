@@ -2,28 +2,20 @@ import { HttpInterceptor, HttpRequest, HttpHandler, HttpEvent, HttpResponse } fr
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { AuthenticationService } from './authentication.service';
 import { ToastrService } from 'ngx-toastr';
 
 @Injectable()
-export class AuthTokenInterceptorService implements HttpInterceptor {
+export class ResponseErrorInterceptorService implements HttpInterceptor {
 
-  constructor(private authService: AuthenticationService, private toastr: ToastrService) { }
+  constructor(private toastr: ToastrService) { }
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    const token = this.authService.getAuthorizationToken;
-    let newHeaders = req.headers;
-
-    if (token) {
-      newHeaders = newHeaders.append('Authorization', token);
-    }
-
-    const authReq = req.clone({ headers: newHeaders });
+    const authReq = req.clone();
 
     return next.handle(authReq).pipe(
       map(response => {
         if (response instanceof HttpResponse) {
-          if (!response.body.status) {
+          if (response.body.status === false) {
             this.toastr.error(response.body.message, 'Error');
           }
 

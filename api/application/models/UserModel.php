@@ -579,7 +579,7 @@ class UserModel extends CI_model {
 
     public function getUserCoursePercentageFinished($courseId, $userId) {
         $sql = "SELECT
-                    TRUNCATE((COUNT(1) / (SELECT COUNT(1) FROM lectures WHERE course = ?)) * 100, 0) AS coursePercentageFinished
+                    TRUNCATE((COUNT(1) / (SELECT COUNT(1) FROM lectures WHERE course = ? AND lectures.`status` = 'public')) * 100, 0) AS coursePercentageFinished
                 FROM
                     finished_lectures
                 LEFT JOIN

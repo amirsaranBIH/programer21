@@ -13,6 +13,7 @@ import { ToastrService } from 'ngx-toastr';
 export class EditLectureComponent implements OnInit {
   public editLectureForm: FormGroup;
   public lecture;
+  public quizQuestions = [];
 
   constructor(
     private fb: FormBuilder,
@@ -25,12 +26,14 @@ export class EditLectureComponent implements OnInit {
 
     ngOnInit() {
       this.lecture = this.route.snapshot.data.lecture;
+      this.quizQuestions = this.route.snapshot.data.quizQuestions;
 
       this.editLectureForm = this.fb.group({
         title: [this.lecture.title, [Validators.required]],
         description: [this.lecture.description, [Validators.required]],
         status: [this.lecture.status, [Validators.required]],
         difficulty: [this.lecture.difficulty, [Validators.required]],
+        ert: [this.lecture.ert, [Validators.required]],
         skippable: [this.lecture.skippable]
       });
     }
@@ -45,6 +48,10 @@ export class EditLectureComponent implements OnInit {
 
     get difficulty() {
       return this.editLectureForm.get('difficulty');
+    }
+
+    get ert() {
+      return this.editLectureForm.get('ert');
     }
 
     get status() {
@@ -70,5 +77,34 @@ export class EditLectureComponent implements OnInit {
         }
       });
     }
+  }
+
+  addQuizQuestion(quizQuestionTextInput) {
+    if (quizQuestionTextInput.value.trim().length > 0) {
+      this.quizQuestions.push({
+        question: quizQuestionTextInput.value.trim(),
+        answers: []
+      });
+
+      quizQuestionTextInput.value = '';
+    }
+  }
+
+  addQuizAnswer(questionIndex, quizAnswerTextInput) {
+    if (quizAnswerTextInput.value.trim().length > 0) {
+      this.quizQuestions[questionIndex].answers.push({
+        answer: quizAnswerTextInput.value.trim()
+      });
+
+      quizAnswerTextInput.value = '';
+    }
+  }
+
+  removeQuestion(questionIndex) {
+    this.quizQuestions.splice(questionIndex, 1);
+  }
+
+  removeAnswer(questionIndex, answerIndex) {
+    this.quizQuestions[questionIndex].answers.splice(answerIndex, 1);
   }
 }

@@ -1,4 +1,42 @@
-@import '../../styles';
+@import '../../styles.scss';
 
 .lecture {
+    .error-message {
+        display: none;
+        color: $red;
+    }
+
+    .lecture-quiz-question.answer-error .error-message {
+        display: block;
+    }
+
+    .lecture-quiz-answers {
+        .lecture-quiz-answer {
+            border: 1px solid $light_grey;
+            padding: 1em;
+
+            p {
+                margin-top: 0;
+                margin-bottom: 0;
+                margin-left: 1em;
+            }
+
+        }
+
+        .lecture-quiz-answer.answer-error {
+            border-color: $red;
+        }
+
+        .lecture-quiz-answer.answer-correct {
+            border-color: $green;
+        }
+
+        .lecture-quiz-answer:hover {
+            background-color: $light_grey;
+        }
+
+        .lecture-quiz-answer + .lecture-quiz-answer {
+            margin-top: 1em;
+        }
+    }
 }

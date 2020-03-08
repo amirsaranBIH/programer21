@@ -1,6 +1,6 @@
 <div class="container">
     <div class="edit-course">
-        <form class="form" [formGroup]="editCourseForm" #ngForm="ngForm" action="signup" method="POST" (ngSubmit)="onSubmit()">
+        <form class="form" [formGroup]="editCourseForm" #ngForm="ngForm" (ngSubmit)="onSubmit()">
             <h2>Edit Course</h2>
 
             <div class="section section--large">
@@ -184,17 +184,17 @@
             <div class="course-lecture" *ngFor="let lecture of courseLectures; let i = index">
                 <div class="flex flex--not-even flex--between flex--align-center">
                     <div class="lecture-title flex flex--not-even flex--align-center">
-                        <img *ngIf="lecture.status === 'public'" src="assets/icons/users.svg" alt="users">
-                        <img *ngIf="lecture.status === 'private'" src="assets/icons/user-lock.svg" alt="user-lock">
+                        <img *ngIf="lecture.status === 'public'" src="assets/icons/users.svg" alt="users" title="This lecture is public">
+                        <img *ngIf="lecture.status === 'private'" src="assets/icons/user-lock.svg" alt="user-lock" title="This lecture is private">
                         <span [ngClass]="{ 'private-lecture-title': lecture.status === 'private' }">{{ lecture.title }}</span>
                     </div>
                     <div class="lecture-actions flex flex--not-even flex--align-center">
                         <span routerLink="/admin-panel/edit-lecture/{{lecture.id}}" class="edit-lecture flex flex--not-even flex--align-center">
-                            <img src="assets/icons/edit.svg" alt="pencil" title="This lecture is public">
+                            <img src="assets/icons/edit.svg" alt="pencil">
                             <span>Edit</span>
                         </span>
                         <span (click)="deleteLecture(lecture.id, i)" class="delete-lecture flex flex--not-even flex--align-center">
-                            <img src="assets/icons/delete.svg" alt="trash-can" title="This lecture is private">
+                            <img src="assets/icons/delete.svg" alt="trash-can">
                             <span>Delete</span>
                         </span>
                     </div>

@@ -271,6 +271,8 @@ class LectureModel extends CI_model {
     }
 
     public function createLecture($courseId, $lectureData) {
+        $this->db->trans_start();
+
         $sql = "SELECT
                     IF(MAX(orderIndex) + 1 IS NULL, 1, MAX(orderIndex) + 1) AS nextOrderIndex
                 FROM
@@ -299,13 +301,14 @@ class LectureModel extends CI_model {
                     `slug`,
                     `description`,
                     `difficulty`,
+                    `ert`,
                     `skippable`,
                     `creator`,
                     `course`,
                     `orderIndex`
                 ) VALUES
                 ( 
-                    ?, ?, ?, ?, ?, ?, ?, ?
+                    ?, ?, ?, ?, ?, ?, ?, ?, ?
                 )";
         
         $userDataResponse = $this->auth->getCurrentUser();
@@ -321,6 +324,7 @@ class LectureModel extends CI_model {
             $lectureData['slug'],
             $lectureData['description'],
             $lectureData['difficulty'],
+            $lectureData['ert'],
             $lectureData['skippable'],
             $userData->id,
             $courseId,
@@ -346,6 +350,14 @@ class LectureModel extends CI_model {
         if (!$makeLectureFileResponse['status']) {
             return handleError($makeLectureFileResponse['message'], false);
         }
+
+        $createLectureQuizQuestionsResponse = $this->createLectureQuizQuestions($lectureData['quizQuestions'], $newlyCreatedLectureId);
+
+        if (!$createLectureQuizQuestionsResponse['status']) {
+            return handleError($createLectureQuizQuestionsResponse['message'], false);
+        }
+
+        $this->db->trans_complete();
 
         return handleSuccess($newlyCreatedLectureId); // Returns ID of newly created lecture
     }
@@ -374,6 +386,7 @@ class LectureModel extends CI_model {
                     slug = ?,
                     description = ?,
                     difficulty = ?,
+                    ert = ?,
                     status = ?,
                     skippable = ?
                 WHERE
@@ -384,6 +397,7 @@ class LectureModel extends CI_model {
             $lectureData['slug'],
             $lectureData['description'],
             $lectureData['difficulty'],
+            $lectureData['ert'],
             $lectureData['status'],
             $lectureData['skippable'],
             $lectureId
@@ -448,6 +462,16 @@ class LectureModel extends CI_model {
     }
 
     public function finishLecture($lectureId, $finishedLectureCourseId) {
+        $isQuizAnsweredResponse = $this->isQuizAnswered($lectureId);
+        
+        if (!$isQuizAnsweredResponse['status']) {
+            return handleError($isQuizAnsweredResponse['message'], false);
+        }
+        
+        if (!$isQuizAnsweredResponse['data']) {
+            return handleError('Quiz questions not answered', false, true);
+        }
+
         $this->db->trans_start();
 
         $sql = "SELECT
@@ -470,6 +494,8 @@ class LectureModel extends CI_model {
                     )
                 AND
                     l.course = ?
+                AND
+                    l.status = 'public'
                 ORDER BY 
                     orderIndex
                 LIMIT 1";
@@ -493,7 +519,8 @@ class LectureModel extends CI_model {
             $sql = "UPDATE
                         user_courses
                     SET
-                        currentLectureId = ?
+                        currentLectureId = ?,
+                        quizAnswered = 0
                     WHERE
                         courseId = ?";
     
@@ -530,6 +557,98 @@ class LectureModel extends CI_model {
         $this->db->trans_complete();
 
         return handleSuccess($response);
+    }
+
+    public function verifyQuizAnswers($lectureSlug, $quizAnswers) {
+        $isLectureUnlockedResponse = $this->isLectureUnlockedForCurrentUserBySlug($lectureSlug);
+        
+        if (!$isLectureUnlockedResponse['status']) {
+            return handleError($isLectureUnlockedResponse['message'], false);
+        }
+        
+        if (!$isLectureUnlockedResponse['data']) {
+            return handleError('Lecture not unlocked', false, true);
+        }
+
+        $this->db->trans_start();
+
+        $allCorrect = true;
+
+        foreach ($quizAnswers as &$answer) {
+            if (!isset($answer['answer'])) {
+                $answer['wrongAnswer'] = true;
+                $answer['error'] = 'Not answered!';
+                $allCorrect = false;
+            } else {
+                $sql = "SELECT
+                            COUNT(1) AS isCorrectAnswer
+                        FROM
+                            quiz_questions
+                        WHERE
+                            question = ?
+                        AND
+                            answer = ?";
+    
+                $query = $this->db->query($sql, array(
+                    $answer['question'],
+                    $answer['answer']
+                ));
+    
+                if (!$query) {
+                    return handleError($this->db->error()['message']);
+                }
+
+                $isAnswerCorrect = (int)$query->first_row()->isCorrectAnswer;
+
+                if ($isAnswerCorrect) {
+                    $answer['wrongAnswer'] = false;
+
+                    if (isset($answer['error'])) {
+                        unset($answer['error']);
+                    }
+                } else {
+                    $answer['wrongAnswer'] = true;
+                    $answer['error'] = 'Wrong answer!';
+                    $allCorrect = false;
+                }
+            }
+        }
+
+        if ($allCorrect) {
+            $sql = "UPDATE
+                        user_courses uc
+                    INNER JOIN
+                        lectures l
+                    ON
+                        l.id = uc.currentLectureId
+                    SET
+                        uc.quizAnswered = 1
+                    WHERE
+                        l.slug = ?
+                    AND
+                        uc.userId = ?";
+            
+            $userDataResponse = $this->auth->getCurrentUser();
+
+            if (!$userDataResponse['status']) {
+                return handleError($userDataResponse['message'], false);
+            }
+
+            $userData = $userDataResponse['data'];
+    
+            $query = $this->db->query($sql, array(
+                $lectureSlug,
+                $userData->id
+            ));
+
+            if (!$query) {
+                return handleError($this->db->error()['message']);
+            }
+        }
+
+        $this->db->trans_complete();
+
+        return handleSuccess($quizAnswers);
     }
 
     public function addLectureToLatestFinishedLectures($lectureId, $skipped = false) {
@@ -591,6 +710,10 @@ class LectureModel extends CI_model {
         }
 
         $userData = $userDataResponse['data'];
+
+        if ($userData->role === 'administrator') {
+            return handleSuccess(true);
+        }
 
         $query = $this->db->query($sql, array(
             $lectureId,
@@ -657,6 +780,213 @@ class LectureModel extends CI_model {
         $isCourseUnlocked = (bool)$query->first_row();
 
         return handleSuccess($isCourseUnlocked);
+    }
+
+    public function createLectureQuizQuestions($quizQuestions, $lectureId) {
+        $this->db->trans_start();
+
+        foreach ($quizQuestions as $question) {
+            $sql = "INSERT INTO
+                        quiz_questions
+                    (
+                        `lectureId`,
+                        `question`,
+                        `answer`
+                    ) VALUES (
+                        ?, ?, ?
+                    )";
+
+            $query = $this->db->query($sql, array(
+                $lectureId,
+                $question['question'],
+                $question['answer']
+            ));
+    
+            if (!$query) {
+                return handleError($this->db->error()['message']);
+            }
+
+            $newQuizQuestionId = $this->db->insert_id();
+
+            foreach ($question['answers'] as $answer) {
+                $sql = "INSERT INTO
+                            quiz_question_answers
+                        (
+                            `quizQuestionId`,
+                            `answer`
+                        ) VALUES (
+                            ?, ?
+                        )";
+
+                $query = $this->db->query($sql, array(
+                    $newQuizQuestionId,
+                    $answer['answer']
+                ));
+        
+                if (!$query) {
+                    return handleError($this->db->error()['message']);
+                }
+            }
+        }
+
+        $this->db->trans_complete();
+
+        return handleSuccess(true);
+    }
+
+    public function getLectureQuizQuestionById($lectureId) {
+        $this->db->trans_start();
+
+        $sql = "SELECT
+                    id,
+                    question,
+                    answer
+                FROM
+                    quiz_questions
+                WHERE
+                    lectureId = ?";
+
+        $query = $this->db->query($sql, $lectureId);
+
+        if (!$query) {
+            return handleError($this->db->error()['message']);
+        }
+
+        $quizQuestions = array();
+
+        foreach ($query->result() as $question) {
+            $sql = "SELECT
+                        id,
+                        answer
+                    FROM
+                        quiz_question_answers
+                    WHERE
+                        quizQuestionId = ?";
+
+            $query = $this->db->query($sql, $question->id);
+
+            if (!$query) {
+                return handleError($this->db->error()['message']);
+            }
+
+            $question->answers = array();
+
+            foreach ($query->result() as $answer) {
+                array_push($question->answers, $answer);
+            }
+
+            array_push($quizQuestions, $question);
+        }
+
+        $this->db->trans_complete();
+
+        return handleSuccess($quizQuestions);
+    }
+
+    public function getLectureQuizQuestionBySlug($lectureSlug) {
+        $isLectureUnlockedResponse = $this->isLectureUnlockedForCurrentUserBySlug($lectureSlug);
+
+        if (!$isLectureUnlockedResponse['status']) {
+            return handleError($isLectureUnlockedResponse['message'], false);
+        }
+
+        if (!$isLectureUnlockedResponse['data']) {
+            return handleError('Lecture not unlocked', false, true);
+        }
+
+        $this->db->trans_start();
+
+        $sql = "SELECT
+                    qq.id,
+                    qq.question
+                FROM
+                    quiz_questions qq
+                INNER JOIN
+                    lectures l
+                ON
+                    qq.lectureId = l.id
+                WHERE
+                    l.slug = ?";
+
+        $query = $this->db->query($sql, $lectureSlug);
+
+        if (!$query) {
+            return handleError($this->db->error()['message']);
+        }
+
+        $quizQuestions = array();
+
+        foreach ($query->result() as $question) {
+            $sql = "SELECT
+                        id,
+                        answer
+                    FROM
+                        quiz_question_answers
+                    WHERE
+                        quizQuestionId = ?";
+
+            $query = $this->db->query($sql, $question->id);
+
+            if (!$query) {
+                return handleError($this->db->error()['message']);
+            }
+
+            $question->answers = array();
+
+            foreach ($query->result() as $answer) {
+                array_push($question->answers, $answer);
+            }
+
+            array_push($quizQuestions, $question);
+        }
+
+        $this->db->trans_complete();
+
+        return handleSuccess($quizQuestions);
+    }
+
+    public function isQuizAnswered($lectureId) {
+        $isLectureUnlockedResponse = $this->isLectureUnlockedForCurrentUserById($lectureId);
+
+        if (!$isLectureUnlockedResponse['status']) {
+            return handleError($isLectureUnlockedResponse['message'], false);
+        }
+
+        if (!$isLectureUnlockedResponse['data']) {
+            return handleError('Lecture not unlocked', false, true);
+        }
+
+        $sql = "SELECT
+                    quizAnswered
+                FROM
+                    user_courses
+                WHERE
+                    currentLectureId = ?
+                AND
+                    userId = ?";
+        $userDataResponse = $this->auth->getCurrentUser();
+
+        if (!$userDataResponse['status']) {
+            return handleError($userDataResponse['message'], false);
+        }
+
+        $userData = $userDataResponse['data'];
+
+        $query = $this->db->query($sql, array(
+            $lectureId,
+            $userData->id
+        ));
+
+        if (!$query) {
+            return handleError($this->db->error()['message']);
+        }
+
+        $res = $query->first_row();
+        if (!$res) {
+            return handleSuccess(false);
+        }   
+
+        return handleSuccess((int)$res->quizAnswered);
     }
 
     public function makeLectureFile($courseSlug, $lectureSlug) {
