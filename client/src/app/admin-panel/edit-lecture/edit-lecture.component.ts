@@ -4,6 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { LectureService } from 'src/app/services/lecture.service';
 import { TitleToSlugPipe } from 'src/app/pipes/title-to-slug.pipe';
 import { ToastrService } from 'ngx-toastr';
+import { LoadingService } from 'src/app/services/loading.service';
 
 @Component({
   selector: 'app-edit-lecture',
@@ -14,14 +15,17 @@ export class EditLectureComponent implements OnInit {
   public editLectureForm: FormGroup;
   public lecture;
   public quizQuestions = [];
+  public deletedQuizQuestions = [];
+  public deletedQuizAnswers = [];
 
   constructor(
-    private fb: FormBuilder,
-    private route: ActivatedRoute,
-    private router: Router,
-    private lectureService: LectureService,
-    private titleToSlug: TitleToSlugPipe,
-    private toastr: ToastrService
+      private fb: FormBuilder,
+      private route: ActivatedRoute,
+      private router: Router,
+      private lectureService: LectureService,
+      private titleToSlug: TitleToSlugPipe,
+      private toastr: ToastrService,
+      private loading: LoadingService
     ) { }
 
     ngOnInit() {
@@ -58,12 +62,26 @@ export class EditLectureComponent implements OnInit {
       return this.editLectureForm.get('status');
     }
 
-  onSubmit(value) {
-    value.slug = this.titleToSlug.transform(this.editLectureForm.value.title);
+  onSubmit() {
+    if (this.editLectureForm.invalid || this.loading.isLoading) {
+      return false;
+    }
 
-    this.lectureService.editLecture(this.route.snapshot.params.lecture_id, value).subscribe({
+    const data = this.editLectureForm.value;
+
+    this.loading.setLoadingStatus = true;
+
+    data.slug = this.titleToSlug.transform(this.editLectureForm.value.title);
+    data.quizQuestions = this.quizQuestions;
+    data.deletedQuizQuestions = this.deletedQuizQuestions;
+    data.deletedQuizAnswers = this.deletedQuizAnswers;
+
+    this.lectureService.editLecture(this.route.snapshot.params.lecture_id, data).subscribe({
       error: (err) => console.log(err),
-      complete: () => this.toastr.success('Successfully updated lecture', 'Success')
+      complete: () => {
+        this.toastr.success('Successfully updated lecture', 'Success');
+        this.loading.setLoadingStatus = false;
+      }
     });
   }
 
@@ -101,10 +119,16 @@ export class EditLectureComponent implements OnInit {
   }
 
   removeQuestion(questionIndex) {
-    this.quizQuestions.splice(questionIndex, 1);
+    const removedQuizQuestion = this.quizQuestions.splice(questionIndex, 1)[0];
+    this.deletedQuizQuestions.push(removedQuizQuestion.id);
   }
 
   removeAnswer(questionIndex, answerIndex) {
-    this.quizQuestions[questionIndex].answers.splice(answerIndex, 1);
+    if (this.quizQuestions[questionIndex].answers[answerIndex].answer !== this.quizQuestions[questionIndex].answer) {
+      const removedAnswer = this.quizQuestions[questionIndex].answers.splice(answerIndex, 1)[0];
+      this.deletedQuizAnswers.push(removedAnswer.id);
+    } else {
+      this.toastr.error('You can\'t delete answer to the question.');
+    }
   }
 }

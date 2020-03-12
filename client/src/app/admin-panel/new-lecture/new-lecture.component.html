@@ -6,9 +6,9 @@
 
             <div class="section section--large">
                 <div class="form-group">
-                    <div class="flex flex--align-center flex--not-even flex--between">
+                    <div class="flex flex-sm flex--align-center flex--not-even flex--between">
                         <label for="title" class="required">Title</label>
-                        <span>Slug: {{ title.value | titleToSlug }}</span>
+                        <span class="slug">Slug: {{ title.value | titleToSlug }}</span>
                     </div>
                     <div class="input-group"
                         [ngClass]="{ 'is-invalid' : (title.invalid && title.touched) || (title.invalid && ngForm.submitted) }">
@@ -77,7 +77,7 @@
 
             <h2 class="margin-top">Lecture Quiz Questions</h2>
             <div class="section section--large">
-                <div class="add-quiz-question flex flex--not-even flex--between flex--align-center">
+                <div class="add-quiz-question flex flex-sm flex--not-even flex--between flex--align-center">
                     <div class="add-quiz-question-input">
                         <input type="text" #quizQuestionText placeholder="Enter new question text">
                     </div>
@@ -87,14 +87,14 @@
                 </div>
                 <ul class="lecture-quiz-questions">
                     <li class="lecture-quiz-question margin-top" *ngFor="let question of quizQuestions; let questionIndex = index">
-                        <div class="lecture-quiz-question-text flex flex--not-even flex--align-center">
+                        <div class="lecture-quiz-question-text flex flex-sm flex--not-even flex--align-center">
                             <h3>{{ questionIndex + 1 }}. {{ question.question }}</h3>
                             <div class="remove-answer" (click)="removeQuestion(questionIndex)">
                                 <img src="assets/icons/delete.svg" alt="trash-can">
                             </div>
                         </div>
                         <ul class="lecture-quiz-answers margin-top--small">
-                            <label [for]="questionIndex + '-' + answerIndex" class="lecture-quiz-answer flex flex--not-even flex--align-center" *ngFor="let answer of question.answers; let answerIndex = index">
+                            <label [for]="questionIndex + '-' + answerIndex" class="lecture-quiz-answer flex flex-sm flex--not-even flex--align-center" *ngFor="let answer of question.answers; let answerIndex = index">
                                 <input type="radio" [id]="questionIndex + '-' + answerIndex" [name]="questionIndex" [(ngModel)]="question.answer" [ngModelOptions]="{standalone: true}" [value]="answer.answer">
                                 <p>{{ answer.answer }}</p>
                                 <div class="remove-answer" (click)="removeAnswer(questionIndex, answerIndex)">
@@ -102,7 +102,7 @@
                                 </div>
                             </label>
                         </ul>
-                        <div class="add-quiz-answer margin-top--small flex flex--not-even flex--between flex--align-center">
+                        <div class="add-quiz-answer margin-top--small flex flex-sm flex--not-even flex--between flex--align-center">
                             <div class="add-quiz-answer-input">
                                 <input type="text" #quizAnswerText [placeholder]="'Enter answer text for question #' + (questionIndex + 1)">
                             </div>

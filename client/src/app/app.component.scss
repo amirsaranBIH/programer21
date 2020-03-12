@@ -56,3 +56,30 @@
         }
     }
 }
+
+.show-sm {
+    display: none;
+}
+
+@media (max-width: 768px) {
+    .header {
+        & > .navigation > ul li + li {
+            margin-left: 0;
+        }
+
+        & > .navigation > ul li {
+            margin-right: 2em;
+        }
+        & > .navigation > ul li:last-child {
+            margin-right: 0;
+        }
+    }
+
+    .hide-sm {
+        display: none;
+    }
+
+    .show-sm {
+        display: block;
+    }
+}

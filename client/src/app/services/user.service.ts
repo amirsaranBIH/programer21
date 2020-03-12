@@ -55,12 +55,22 @@ export class UserService {
     return this.http.get('/api/user/getCourseActivityPercentages/' + userId).toPromise();
   }
 
+  getAllFinishedLecturesByUserId(userId) {
+    return this.http.get('/api/user/getAllFinishedLecturesByUserId/' + userId).toPromise();
+  }
+
   getAllLatestLecturesByUserId(userId) {
     return this.http.get('/api/user/getAllLatestLecturesByUserId/' + userId).toPromise();
   }
 
-  getMonthlyActivity(userId) {
-    return this.http.get('/api/user/getMonthlyActivity/' + userId).toPromise();
+  getMonthlyActivity(userId, month = null) {
+    if (month === null) {
+      const date = new Date();
+      const monthIndex = date.getMonth();
+      month = monthIndex + 1;
+    }
+
+    return this.http.get(`/api/user/getMonthlyActivity/${userId}/${month}`).toPromise();
   }
 
   nextUsernameChangeAvailableIn(userId) {

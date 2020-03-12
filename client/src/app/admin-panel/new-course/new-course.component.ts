@@ -4,6 +4,7 @@ import { CourseService } from 'src/app/services/course.service';
 import { Router } from '@angular/router';
 import { TitleToSlugPipe } from 'src/app/pipes/title-to-slug.pipe';
 import { ToastrService } from 'ngx-toastr';
+import { LoadingService } from 'src/app/services/loading.service';
 
 @Component({
   selector: 'app-new-course',
@@ -21,7 +22,8 @@ export class NewCourseComponent implements OnInit {
     private courseService: CourseService,
     private router: Router,
     private titleToSlug: TitleToSlugPipe,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    public loading: LoadingService
     ) { }
 
   ngOnInit() {
@@ -68,9 +70,11 @@ export class NewCourseComponent implements OnInit {
   }
 
   onSubmit() {
-    if (this.createCourseForm.invalid) {
+    if (this.createCourseForm.invalid || this.loading.isLoading) {
       return false;
     }
+
+    this.loading.setLoadingStatus = true;
 
     const fd = new FormData();
     if (this.image) {
@@ -89,6 +93,9 @@ export class NewCourseComponent implements OnInit {
       next: (res: any) => {
         this.toastr.success('Successfully created course', 'Success');
         this.router.navigate(['/admin-panel/edit-course', res.data]);
+      },
+      complete: () => {
+        this.loading.setLoadingStatus = false;
       }
     });
   }

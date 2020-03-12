@@ -195,4 +195,24 @@ class Lecture extends MY_Controller  {
 
         $this->setResponseSuccess($verifyQuizAnswersResponse['data']);
     }
+
+    public function toggleLectureStatus($lectureId, $newStatus) {
+        $authResponse = $this->auth->getCurrentUser();
+        if (!$authResponse['status']) {
+            return $this->setResponseError(200, $authResponse['message']);
+        }
+
+        if ($authResponse['data']->role !== 'administrator') {
+            return $this->setResponseError(200, 'You must have administrative permissions to do that');
+        }
+
+        $toggleLectureStatusResponse = $this->lecture->toggleLectureStatus($lectureId, $newStatus);
+        
+        if (!$toggleLectureStatusResponse['status']) {
+            $this->setResponseError(200, $toggleLectureStatusResponse['message']);
+            return;
+        }
+
+        $this->setResponseSuccess($toggleLectureStatusResponse['data']);
+    }
 }

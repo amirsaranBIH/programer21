@@ -4,9 +4,9 @@
 
 export const environment = {
   production: false,
-  HOST_URL: 'http://localhost',
+  HOST_URL: 'http://192.168.1.59',
   HOST_PORT: 4201,
-  HOST: 'http://localhost:4200',
+  HOST: 'http://192.168.1.59:4200',
 
   UPLOAD_FOLDER: 'uploads/'
 };

@@ -216,6 +216,26 @@ class User extends MY_Controller  {
         $this->setResponseSuccess($res['data']);
     }
 
+    public function getAllFinishedLecturesByUserId($userId) {
+        $authResponse = $this->auth->getCurrentUser();
+        if (!$authResponse['status']) {
+            return $this->setResponseError(200, $authResponse['message']);
+        }
+
+        if ($authResponse['data']->id !== $userId) {
+            return $this->setResponseError(200, 'You can only access finished lectures for your own account');
+        }
+
+        $res = $this->user->getAllFinishedLecturesByUserId($userId);
+
+        if (!$res['status']) {
+            $this->setResponseError(200, $res['message']);
+            return;
+        }
+
+        $this->setResponseSuccess($res['data']);
+    }
+
     public function getAllLatestLecturesByUserId($userId) {
         $authResponse = $this->auth->getCurrentUser();
         if (!$authResponse['status']) {
@@ -236,7 +256,7 @@ class User extends MY_Controller  {
         $this->setResponseSuccess($res['data']);
     }
 
-    public function getMonthlyActivity($userId) {
+    public function getMonthlyActivity($userId, $month) {
         $authResponse = $this->auth->getCurrentUser();
         if (!$authResponse['status']) {
             return $this->setResponseError(200, $authResponse['message']);
@@ -246,7 +266,7 @@ class User extends MY_Controller  {
             return $this->setResponseError(200, 'You can only access monthly activity for your own account');
         }
 
-        $res = $this->user->getMonthlyActivity($userId);
+        $res = $this->user->getMonthlyActivity($userId, $month);
 
         if (!$res['status']) {
             $this->setResponseError(200, $res['message']);
@@ -284,6 +304,20 @@ class User extends MY_Controller  {
 
         if ($authResponse['data']->id !== $userId) {
             return $this->setResponseError(200, 'You can only enroll in a course for your own account');
+        }
+
+        $res = $this->user->getUserEnrolledCourses($authResponse['data']->id);
+
+        if (!$res['status']) {
+            $this->setResponseError(200, $res['status']);
+            return;
+        }
+
+        foreach ($res['data'] as $course) {
+            if ($course->id == $courseId) {
+                $this->setResponseError(200, 'Already enrolled in that course');
+                return;
+            }
         }
 
         $res = $this->user->enrollUserInCourse($userId, $courseId);

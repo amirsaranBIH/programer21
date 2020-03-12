@@ -4,6 +4,7 @@ import { environment } from 'src/environments/environment';
 import { Router, NavigationEnd, NavigationStart, NavigationCancel, NavigationError } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { TranslateService } from '@ngx-translate/core';
+import { LoadingService } from './services/loading.service';
 
 @Component({
   selector: 'app-root',
@@ -13,7 +14,6 @@ import { TranslateService } from '@ngx-translate/core';
 export class AppComponent {
   public isDevelopment = !environment.production;
   public showAccountDropdownMenu = false;
-  public loading = false;
   public fixedHeaderPages = [ '/', '/login', '/signup', '/forgot-password', '/new-password', '/404' ];
   public hasFixedHeader = false;
 
@@ -21,7 +21,8 @@ export class AppComponent {
     public auth: AuthenticationService,
     private router: Router,
     private toastr: ToastrService,
-    private translate: TranslateService
+    private translate: TranslateService,
+    public loading: LoadingService
   ) {
     this.router.events.subscribe(event => {
       switch (true) {
@@ -37,14 +38,14 @@ export class AppComponent {
               break;
             }
           }
-          this.loading = true;
+          this.loading.setLoadingStatus = true;
           break;
         }
 
         case event instanceof NavigationEnd:
         case event instanceof NavigationCancel:
         case event instanceof NavigationError: {
-          this.loading = false;
+          this.loading.setLoadingStatus = false;
           break;
         }
         default: {

@@ -35,3 +35,29 @@
 .file-upload:hover {
     background-color: $light_grey;
 }
+
+@media (max-width: 768px) {
+    .file-upload {
+        .file-upload-content {
+            width: 50%;
+        }
+    
+        .preview-image img {
+            width: 200px;
+        }
+    }
+}
+
+@media (max-width: 768px) {
+    .file-upload {
+        .file-upload-content {
+            p {
+                font-size: 1.25em;
+            }
+        }
+    
+        .preview-image img {
+            width: 150px;
+        }
+    }
+}

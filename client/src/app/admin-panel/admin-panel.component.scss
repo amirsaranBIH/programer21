@@ -103,7 +103,7 @@
             span {
                 color: white;
                 font-size: 2.5em;
-                padding: 1em;
+                padding: 1em .9em;
                 line-height: 1.2em;
             }
         }
@@ -223,6 +223,53 @@
             th:hover {
                 background-color: $lighter_grey;
             }
+        }
+    }
+}
+
+@media (max-width: 1024px) {
+    .admin-panel {
+        .courses-and-lectures {
+            .new-course {
+                span {
+                    font-size: 1.75em;
+                    padding: 1em .75em;
+                }
+            }
+
+            .course-info {
+                h3.h2 {
+                    font-size: 1.25em;
+                }
+            }
+        }
+    }
+}
+
+@media (max-width: 867px) {
+    .admin-panel {
+        .courses-and-lectures {
+            grid-gap: 1em;
+            -ms-grid-columns: 1fr 1fr 1fr;
+            grid-template-columns: 1fr 1fr 1fr;
+            -ms-grid-rows: 3fr 1fr;
+            grid-template-rows: 3fr 1fr;
+            grid-template-areas:"courses courses courses"
+                                "new-course edit-course new-lecture";
+
+            .courses .course {
+                padding-top: 60%;
+            }
+
+            span {
+                font-size: 1.15em !important;
+                padding: .75em .5em !important;
+            }
+        }
+
+        .filter,
+        .info {
+            display: none;
         }
     }
 }

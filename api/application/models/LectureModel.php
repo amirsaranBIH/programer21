@@ -413,6 +413,12 @@ class LectureModel extends CI_model {
             return handleError($renameLectureFileResponse['message'], false);
         }
 
+        $updateLectureQuizQuestionsResponse = $this->updateLectureQuizQuestions($lectureData['quizQuestions'], $lectureData['deletedQuizQuestions'], $lectureData['deletedQuizAnswers'], $lectureId);
+
+        if (!$updateLectureQuizQuestionsResponse['status']) {
+            return handleError($updateLectureQuizQuestionsResponse['message'], false);
+        }
+
         return handleSuccess(true);
     }
 
@@ -834,6 +840,127 @@ class LectureModel extends CI_model {
         return handleSuccess(true);
     }
 
+    public function updateLectureQuizQuestions($quizQuestions, $deletedQuizQuestions, $deletedQuizAnswers, $lectureId) {
+        $this->db->trans_start();
+
+        foreach ($quizQuestions as $question) {
+            if (isset($question['id'])) {
+
+                $sql = "UPDATE
+                            quiz_questions
+                        SET
+                            `question` = ?,
+                            `answer` = ?
+                        WHERE
+                            id = ?";
+    
+                $query = $this->db->query($sql, array(
+                    $question['question'],
+                    $question['answer'],
+                    $question['id']
+                ));
+
+                if (!$query) {
+                    return handleError($this->db->error()['message']);
+                }
+
+                $questionId = $question['id'];
+            } else {
+                $sql = "INSERT INTO
+                            quiz_questions
+                        (
+                            `lectureId`,
+                            `question`,
+                            `answer`
+                        ) VALUES (
+                            ?, ?, ?
+                        )";
+    
+                $query = $this->db->query($sql, array(
+                    $lectureId,
+                    $question['question'],
+                    $question['answer']
+                ));
+        
+                if (!$query) {
+                    return handleError($this->db->error()['message']);
+                }
+    
+                $questionId = $this->db->insert_id();
+            }
+
+            foreach ($question['answers'] as $answer) {
+                if (isset($answer['id'])) {
+                    $sql = "UPDATE
+                                quiz_question_answers
+                            SET
+                                `quizQuestionId` = ?,
+                                `answer` = ?
+                            WHERE
+                                id = ?";
+
+                    $query = $this->db->query($sql, array(
+                        $questionId,
+                        $answer['answer'],
+                        $answer['id']
+                    ));
+
+                    if (!$query) {
+                        return handleError($this->db->error()['message']);
+                    }
+                } else {
+                    $sql = "INSERT INTO
+                                quiz_question_answers
+                            (
+                                `quizQuestionId`,
+                                `answer`
+                            ) VALUES (
+                                ?, ?
+                            )";
+    
+                    $query = $this->db->query($sql, array(
+                        $questionId,
+                        $answer['answer']
+                    ));
+            
+                    if (!$query) {
+                        return handleError($this->db->error()['message']);
+                    }
+                }
+            }
+        }
+
+        foreach ($deletedQuizQuestions as $deletedQuestionId) {
+            $sql = "DELETE FROM
+                        quiz_questions
+                    WHERE
+                        id = ?";
+            
+            $query = $this->db->query($sql, $deletedQuestionId);
+    
+            if (!$query) {
+                return handleError($this->db->error()['message']);
+            }
+        }
+
+        foreach ($deletedQuizAnswers as $deletedAnswerId) {
+            $sql = "DELETE FROM
+                        quiz_question_answers
+                    WHERE
+                        id = ?";
+            
+            $query = $this->db->query($sql, $deletedAnswerId);
+    
+            if (!$query) {
+                return handleError($this->db->error()['message']);
+            }
+        }
+
+        $this->db->trans_complete();
+
+        return handleSuccess(true);
+    }
+
     public function getLectureQuizQuestionById($lectureId) {
         $this->db->trans_start();
 
@@ -987,6 +1114,26 @@ class LectureModel extends CI_model {
         }   
 
         return handleSuccess((int)$res->quizAnswered);
+    }
+
+    public function toggleLectureStatus($lectureId, $newStatus) {
+        $sql = "UPDATE
+                    lectures
+                SET
+                    status = ?
+                WHERE
+                    id = ?";
+
+        $query = $this->db->query($sql, array(
+            $newStatus,
+            $lectureId
+        ));
+
+        if (!$query) {
+            return handleError($this->db->error()['message']);
+        }
+
+        return handleSuccess(true);
     }
 
     public function makeLectureFile($courseSlug, $lectureSlug) {

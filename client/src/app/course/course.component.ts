@@ -4,6 +4,7 @@ import * as moment from 'moment';
 import { AuthenticationService } from '../services/authentication.service';
 import { UserService } from '../services/user.service';
 import { ToastrService } from 'ngx-toastr';
+import { LoadingService } from '../services/loading.service';
 
 @Component({
   selector: 'app-course',
@@ -18,7 +19,8 @@ export class CourseComponent implements OnInit {
     private router: Router,
     private toastr: ToastrService,
     private authService: AuthenticationService,
-    private userService: UserService
+    private userService: UserService,
+    private loading: LoadingService
   ) { }
 
   ngOnInit() {

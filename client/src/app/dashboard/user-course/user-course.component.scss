@@ -112,11 +112,11 @@
                 .more-info-right {
                     padding-left: 1em;
 
-                    p {
-                        margin: 0;
-                    }
                 }
 
+                p {
+                    margin: 0;
+                }
             }
         }
 
@@ -133,6 +133,27 @@
 
         .course-lecture + .course-lecture {
             margin-top: 1em;
+        }
+    }
+}
+
+@media (max-width: 1024px) {
+    .user-course {
+        .course-payment-info {
+            flex: 1;
+        }
+    }
+}
+
+@media (max-width: 768px) {
+    .user-course {
+        .course-main {
+            flex-direction: column-reverse;
+
+            .course-payment-info {
+                padding-left: 0;
+                margin-bottom: 1.5em;
+            }
         }
     }
 }

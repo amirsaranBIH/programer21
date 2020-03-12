@@ -3,6 +3,8 @@ import { environment } from 'src/environments/environment';
 import { AuthenticationService } from '../services/authentication.service';
 import { ActivatedRoute } from '@angular/router';
 import * as moment from 'moment';
+import { UserService } from '../services/user.service';
+import { runInThisContext } from 'vm';
 
 @Component({
   templateUrl: './dashboard.component.html',
@@ -17,11 +19,14 @@ export class DashboardComponent implements OnInit {
   public monthlyActivity = {};
   public currentEnrolledCourse = 0;
   public environment = environment;
-  public currentMonth = moment().format('MMMM, YYYY');
+  public currentMonth = moment();
+  public showAllFinishedLectures = false;
+  public finishedLectures = null;
 
   constructor(
-    public auth: AuthenticationService,
-    private route: ActivatedRoute
+      public auth: AuthenticationService,
+      private userService: UserService,
+      private route: ActivatedRoute
     ) {}
 
   ngOnInit() {
@@ -31,26 +36,31 @@ export class DashboardComponent implements OnInit {
     this.latestLectures = this.route.snapshot.data.latestLectures;
     this.monthlyActivity = this.route.snapshot.data.monthlyActivity;
 
-    const today = new Date();
-    const days = this.getDaysInMonth(today.getMonth(), today.getFullYear());
+    this.displayMonthlyActivity();
 
-    const maxMonthlyActivity = this.getMaxMonthlyActivity();
+    this.calculateCourseActivityOffset(this.courseActivityPercentages);
+  }
 
-    // tslint:disable-next-line: prefer-for-of
-    for (let i = 0; i < days.length; i++) {
-      if (this.monthlyActivity.hasOwnProperty(days[i])) {
-        this.monthlyActivityDays.push((this.monthlyActivity[days[i]].lecturesFinished / maxMonthlyActivity) * 100);
+  toggleFinishedAndLatestLectuers() {
+    this.showAllFinishedLectures = !this.showAllFinishedLectures;
+    if (this.showAllFinishedLectures) {
+      if (this.finishedLectures) {
+        this.latestLectures = this.finishedLectures;
       } else {
-        this.monthlyActivityDays.push(0);
+        this.userService.getAllFinishedLecturesByUserId(this.user.id).then((res: any) => {
+          if (res.status) {
+            this.latestLectures = res.data;
+          }
+        });
       }
+    } else {
+      this.latestLectures = this.route.snapshot.data.latestLectures;
     }
-
-    this.calculateCourseActivityOffest(this.courseActivityPercentages);
   }
 
   // calculating offsets for each percentage using
   // formula 360 / (100 / (thisPercentage + allPreviousPercentages))
-  private calculateCourseActivityOffest(percentages) {
+  private calculateCourseActivityOffset(percentages) {
     let totalOffest = 0;
 
     percentages = percentages.map((p, i) => {
@@ -66,12 +76,13 @@ export class DashboardComponent implements OnInit {
   }
 
   getDaysInMonth(month, year) {
-    const date = new Date(year, month, 1);
+    const date = new Date(year, month - 1, 1);
     const days = [];
-    while (date.getMonth() === month) {
+    while (date.getMonth() === month - 1) {
       days.push(moment(date).format('YYYY-MM-DD'));
       date.setDate(date.getDate() + 1);
     }
+
     return days;
   }
 
@@ -108,5 +119,45 @@ export class DashboardComponent implements OnInit {
 
   formatDate(date) {
     return moment(date).format('MMMM D, YYYY');
+  }
+
+  formatCurrentMonth() {
+    return this.currentMonth.format('MMMM, YYYY');
+  }
+
+  previousMonthActivity() {
+    this.currentMonth.subtract(1, 'months');
+    this.setNewCurrentMonthActivity();
+  }
+
+  nextMonthActivity() {
+    this.currentMonth.add(1, 'months');
+    this.setNewCurrentMonthActivity();
+  }
+
+  setNewCurrentMonthActivity() {
+    this.userService.getMonthlyActivity(this.user.id, this.currentMonth.format('M')).then((res: any) => {
+      if (res.status) {
+        this.monthlyActivity = res.data;
+        this.displayMonthlyActivity();
+      }
+    });
+  }
+
+  displayMonthlyActivity() {
+    const days = this.getDaysInMonth(this.currentMonth.format('M'), this.currentMonth.format('YYYY'));
+
+    const maxMonthlyActivity = this.getMaxMonthlyActivity();
+
+    this.monthlyActivityDays = [];
+
+    // tslint:disable-next-line: prefer-for-of
+    for (let i = 0; i < days.length; i++) {
+      if (this.monthlyActivity.hasOwnProperty(days[i])) {
+        this.monthlyActivityDays.push((this.monthlyActivity[days[i]].lecturesFinished / maxMonthlyActivity) * 100);
+      } else {
+        this.monthlyActivityDays.push(0);
+      }
+    }
   }
 }

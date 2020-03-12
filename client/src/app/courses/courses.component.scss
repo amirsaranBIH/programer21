@@ -23,7 +23,7 @@
         .course {
             .thumbnail {
                 position: relative;
-                min-height: 320px;
+                padding-top: 60%;
                 background-size: cover;
                 background-position: center;
 
@@ -82,6 +82,30 @@
                 display: block;
                 width: 75px;
             }
+        }
+    }
+}
+
+@media (max-width: 1024px) {
+    .courses {
+        .courses-list {
+            grid-template-columns: 1fr;
+        }
+
+        h1 {
+            margin-bottom: .5em;
+        }
+
+        .flex {
+            flex-direction: column;
+        }
+    }
+}
+
+@media (max-width: 768px) {
+    .courses {
+        .course-search-and-filter select {
+            display: none;
         }
     }
 }

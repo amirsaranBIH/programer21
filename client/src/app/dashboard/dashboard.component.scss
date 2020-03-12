@@ -193,6 +193,10 @@
         grid-column: 1;
         grid-area: latest-lectures;
         
+        .toggle-finished-lectures {
+            cursor: pointer;
+        }
+
         .section {
             position: relative;
             flex: 1;
@@ -250,6 +254,15 @@
         -ms-grid-column-span: 3;
         grid-area: monthly-activity;
 
+        .current-month-text {
+            width: 180px;
+        }
+
+        .current-month-arrow img {
+            width: 8px;
+            cursor: pointer;
+        }
+
         .section {
             flex: 1;
 
@@ -285,4 +298,73 @@
             }
         }
     }
+}
+
+@media (max-width: 1024px) {
+    .dashboard {
+        height: auto;
+        -ms-grid-rows: 1fr;
+        grid-template-rows: 1fr;
+        -ms-grid-columns: 1fr 1fr;
+        grid-template-columns: 1fr 1fr;
+            grid-template-areas: "enrolled-courses enrolled-courses"
+                                "user-details course-activity"
+                                "latest-lectures latest-lectures"
+                                "monthly-activity monthly-activity";
+
+        .enrolled-courses .enrolled-courses-list .enrolled-course {
+            padding-top: 60%;
+        }
+
+        .latest-lectures {
+            height: 400px;
+        }
+
+        .monthly-activity {
+            height: 400px;
+        }
+
+        .day {
+            font-size: .5em !important;
+        }
+
+        .monthly-activity-days {
+            overflow: auto;
+        }
+
+        .monthly-activity-day {
+            padding: 0 .1em;
+        }
+    }
+}
+
+@media (max-width: 768px) {
+    .dashboard {
+        height: auto;
+        -ms-grid-rows: 1fr;
+        grid-template-rows: 1fr;
+        -ms-grid-columns: 1fr 1fr;
+        grid-template-columns: 1fr 1fr;
+            grid-template-areas: "enrolled-courses enrolled-courses"
+                                "user-details user-details"
+                                "latest-lectures latest-lectures"
+                                "monthly-activity monthly-activity";
+
+        .course-activity {
+            display: none;
+        }
+
+        .latest-lectures {
+            height: 300px;
+        }
+    
+        .monthly-activity {
+            height: 300px;
+        }
+
+        .enrolled-courses a {
+            display: none;
+        }
+    }
+
 }

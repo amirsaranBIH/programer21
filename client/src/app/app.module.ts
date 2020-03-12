@@ -59,6 +59,7 @@ import { VerifyEmailComponent } from './verify-email/verify-email.component';
 import { VerifyEmailResolverService } from './resolvers/verify-email-resolver.service';
 import { ResponseErrorInterceptorService } from './services/response-error-interceptor.service';
 import { QuizQuestionsResolverService } from './resolvers/quiz-questions-resolver.service';
+import { LectureGuardService } from './guards/lecture-guard.service';
 
 const routes: Routes = [
   {
@@ -142,7 +143,8 @@ const routes: Routes = [
         resolve: {
           lecture: OneLectureResolverService,
           quizQuestions: QuizQuestionsResolverService
-        }
+        },
+        canActivate: [LectureGuardService]
       },
     ]
    },
@@ -278,6 +280,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     RoleGuardService,
     UserGuardService,
     UserCourseGuardService,
+    LectureGuardService,
     AllCoursesResolverService,
     AllUsersResolverService,
     AllPublicCoursesResolverService,

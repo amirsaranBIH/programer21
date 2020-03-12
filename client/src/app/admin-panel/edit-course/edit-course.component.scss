@@ -82,8 +82,13 @@
             }
         }
         
-        .supported-language + .supported-language {
-            margin-left: 1em;
+        .supported-language {
+            margin-top: .5em;
+            margin-right: 1em;
+        }
+
+        .supported-language:last-child {
+            margin-right: 0;
         }
     }
 
@@ -161,6 +166,48 @@
             margin: 0 auto;
             display: block;
             width: 50px;
+        }
+    }
+}
+
+@media (max-width: 768px) {
+    .edit-course {
+        .color-picker {
+            label {
+                height: 46px;
+                width: 46px;
+            }
+
+            img {
+                height: 18px;
+                width: 18px;
+            }
+        }
+
+        .add-language-button {
+            margin-left: 1em;
+
+            button {
+                height: 46px;
+                width: 46px;
+    
+                img {
+                    height: 20px;
+                    width: 20px; 
+                }
+            }
+        }
+
+        .supported-language-group input {
+            margin: 0.5em 0 1.5em 0;
+        }
+        
+        .color-input-group {
+            margin-bottom: 1.25em !important;
+        }
+
+        .filter-lectures select {
+            display: none;
         }
     }
 }

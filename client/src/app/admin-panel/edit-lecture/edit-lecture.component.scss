@@ -61,3 +61,22 @@
         bottom: 2px;
     }
 }
+
+@media (max-width: 768px) {
+    .edit-lecture {
+        .add-quiz-question {
+            
+            .add-quiz-question-button button {
+                height: 46px;
+            }
+        }
+
+        .lecture-quiz-question {
+            .add-quiz-answer {
+                .add-quiz-answer-button button {
+                    height: 46px;
+                }
+            }
+        }
+    }
+}

@@ -5,9 +5,9 @@
 
             <div class="section section--large">
                 <div class="form-group">
-                    <div class="flex flex--align-center flex--not-even flex--between">
+                    <div class="flex flex-sm flex--align-center flex--not-even flex--between">
                         <label for="title" class="required">Title</label>
-                        <span>Slug: {{ title.value | titleToSlug }}</span>
+                        <span class="slug">Slug: {{ title.value | titleToSlug }}</span>
                     </div>
                     <div class="input-group"
                         [ngClass]="{ 'is-invalid' : (title.invalid && title.touched) || (title.invalid && ngForm.submitted) }">
@@ -89,7 +89,7 @@
                         <label for="color" class="required color-group-label">Color</label>
                         <div class="input-group"
                             [ngClass]="{ 'is-invalid' : (color.invalid && color.touched) || (color.invalid && ngForm.submitted) }">
-                            <div class="color-input-group flex flex--not-even flex--align-center">
+                            <div class="color-input-group flex flex-sm flex--not-even flex--align-center">
                                 <input type="text" id="color" formControlName="color"
                                     placeholder="What you want to be know as on Programer21">
                                 <div class="color-picker">
@@ -108,7 +108,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="flex flex--not-even flex--align-center">
+                <div class="flex flex-sm flex--not-even flex--align-center">
                     <div class="form-group supported-language-group">
                         <label for="supportedLanguage" class="required">Supported Languages</label>
                         <div class="input-group"
@@ -124,13 +124,13 @@
                         </div>
                     </div>
                     <div class="add-language-button">
-                        <button type="button" class="flex" (click)="addSupportedLanguage()">
+                        <button type="button" class="flex flex-sm" (click)="addSupportedLanguage()">
                             <img src="assets/icons/plus.svg" alt="plus">
                         </button>
                     </div>
                 </div>
-                <div class="supported-languages-list margin-bottom flex flex--not-even flex--align-center">
-                    <div class="supported-language flex flex--not-even flex--align-center" *ngFor="let language of supportedLanguages; let i = index">
+                <div class="supported-languages-list margin-bottom flex flex-sm flex--wrap flex--not-even flex--align-center">
+                    <div class="supported-language flex flex-sm flex--not-even flex--align-center" *ngFor="let language of supportedLanguages; let i = index">
                         <span class="text--capitalize">{{ language }}</span>
                         <div (click)="removeSupportedLanguage(i)" class="remove-supported-language">
                             <img src="assets/icons/remove-supported-language.svg" alt="remove-supported-language">
@@ -184,8 +184,8 @@
             <div class="course-lecture" *ngFor="let lecture of courseLectures; let i = index">
                 <div class="flex flex--not-even flex--between flex--align-center">
                     <div class="lecture-title flex flex--not-even flex--align-center">
-                        <img *ngIf="lecture.status === 'public'" src="assets/icons/users.svg" alt="users" title="This lecture is public">
-                        <img *ngIf="lecture.status === 'private'" src="assets/icons/user-lock.svg" alt="user-lock" title="This lecture is private">
+                        <img (click)="toggleLectureStatus(i)" *ngIf="lecture.status === 'public'" src="assets/icons/users.svg" alt="users" title="This lecture is public">
+                        <img (click)="toggleLectureStatus(i)" *ngIf="lecture.status === 'private'" src="assets/icons/user-lock.svg" alt="user-lock" title="This lecture is private">
                         <span [ngClass]="{ 'private-lecture-title': lecture.status === 'private' }">{{ lecture.title }}</span>
                     </div>
                     <div class="lecture-actions flex flex--not-even flex--align-center">
@@ -205,5 +205,6 @@
                 <p>No lectures created yet</p>
             </div>
         </div>
+        <button [routerLink]="'/admin-panel/new-lecture/' + course.id" class="button button--create margin-top">Create lecture for course</button>
     </div>
 </div>

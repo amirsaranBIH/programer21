@@ -68,8 +68,47 @@
             }
         }
         
-        .supported-language + .supported-language {
+        .supported-language {
+            margin-top: .5em;
+            margin-right: 1em;
+        }
+
+        .supported-language:last-child {
+            margin-right: 0;
+        }
+    }
+}
+
+@media (max-width: 768px) {
+    .new-course {
+        .color-picker {
+            label {
+                height: 46px;
+                width: 46px;
+            }
+
+            img {
+                height: 18px;
+                width: 18px;
+            }
+        }
+
+        .add-language-button {
             margin-left: 1em;
+            
+            button {
+                height: 46px;
+                width: 46px;
+    
+                img {
+                    height: 20px;
+                    width: 20px;
+                }
+            }
+        }
+        
+        .color-input-group {
+            margin-bottom: 1.25em !important;
         }
     }
 }

@@ -2,12 +2,13 @@
   <span class="brand sans-serif h4"><a routerLink="/">Programer21 <small *ngIf="isDevelopment">(DEV)</small></a></span>
   <nav class="navigation">
     <ul class="flex flex--not-even flex--align-center flex--end">
-      <li><a routerLink="/courses">Courses</a></li>
+      <li class="hide-sm" routerLink="/courses"><a>Courses</a></li>
       <li class="account-link flex flex--not-even flex--align-center" *ngIf="auth.userData">
         <img (click)="toggleAccountDropdownMenu()" class="profile-image" [src]="auth.userData.image" alt="{{auth.userData.firstName}} {{auth.userData.lastName}}">
         <span (click)="toggleAccountDropdownMenu()">{{auth.userData.firstName}} {{auth.userData.lastName}} <i class="fa" [ngClass]="{'fa-angle-down' : !showAccountDropdownMenu, 'fa-angle-up': showAccountDropdownMenu}"></i></span>
         <nav class="account-dropdown" *ngIf="showAccountDropdownMenu">
           <ul>
+            <li class="show-sm" routerLink="/courses"><a>Courses</a></li>
             <li routerLink="/dashboard"><a>Dashboard</a></li>
             <li *ngIf="auth.userData.role === 'administrator'"><a routerLink="/admin-panel">Admin Panel</a></li>
             <li [routerLink]="['/settings/', auth.userData.id]"><a>Settings</a></li>
@@ -20,7 +21,7 @@
     </ul>
   </nav>
 </section>
-<div *ngIf="loading" class="loading">
+<div *ngIf="loading.isLoading" class="loading">
   <div class="loading__block"></div>
 </div>
 <router-outlet></router-outlet>

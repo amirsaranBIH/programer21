@@ -5,6 +5,7 @@ import { CourseService } from 'src/app/services/course.service';
 import { TitleToSlugPipe } from 'src/app/pipes/title-to-slug.pipe';
 import { LectureService } from 'src/app/services/lecture.service';
 import { ToastrService } from 'ngx-toastr';
+import { LoadingService } from 'src/app/services/loading.service';
 
 @Component({
   selector: 'app-edit-course',
@@ -29,7 +30,8 @@ export class EditCourseComponent implements OnInit {
     private router: Router,
     private titleToSlug: TitleToSlugPipe,
     private lectureService: LectureService,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private loading: LoadingService
     ) { }
 
   ngOnInit() {
@@ -87,9 +89,12 @@ export class EditCourseComponent implements OnInit {
   }
 
   onSubmit() {
-    if (this.editCourseForm.invalid) {
+    if (this.editCourseForm.invalid || this.loading.isLoading) {
       return false;
     }
+
+    this.loading.setLoadingStatus = true;
+
     const fd = new FormData();
     if (this.image) {
       fd.append('image', this.image.value);
@@ -106,7 +111,10 @@ export class EditCourseComponent implements OnInit {
 
     this.courseService.updateCourse(this.route.snapshot.params.course_id, fd).subscribe({
       error: (err) => console.log(err),
-      complete: () => this.toastr.success('Successfully updated course', 'Success')
+      complete: () => {
+        this.toastr.success('Successfully updated course', 'Success');
+        this.loading.setLoadingStatus = false;
+      }
     });
   }
 
@@ -169,5 +177,21 @@ export class EditCourseComponent implements OnInit {
         }
       });
     }
+  }
+
+  toggleLectureStatus(lectureIndex) {
+    const selectedLecture = this.courseLectures[lectureIndex];
+
+    if (selectedLecture.status === 'public') {
+      selectedLecture.status = 'private';
+    } else {
+      selectedLecture.status = 'public';
+    }
+
+    this.lectureService.toggleLectureStatus(selectedLecture.id, selectedLecture.status).then((res: any) => {
+      if (res.status) {
+        this.toastr.success('Successfully changed lecture status to: ' + selectedLecture.status, 'Success');
+      }
+    });
   }
 }

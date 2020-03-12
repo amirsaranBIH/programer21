@@ -3,6 +3,7 @@ import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 import { LectureService } from 'src/app/services/lecture.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TitleToSlugPipe } from 'src/app/pipes/title-to-slug.pipe';
+import { LoadingService } from 'src/app/services/loading.service';
 
 @Component({
   selector: 'app-new-lecture',
@@ -19,7 +20,8 @@ export class NewLectureComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private lectureService: LectureService,
-    private titleToSlug: TitleToSlugPipe
+    private titleToSlug: TitleToSlugPipe,
+    private loading: LoadingService
     ) { }
 
   ngOnInit() {
@@ -51,15 +53,22 @@ export class NewLectureComponent implements OnInit {
   }
 
   onSubmit(value) {
-    if (this.createLectureForm.valid) {
-      value.slug = this.titleToSlug.transform(this.createLectureForm.value.title);
-      value.quizQuestions = this.quizQuestions;
-
-      this.lectureService.createLecture(this.route.snapshot.params.course_id, value).subscribe({
-        error: (err) => console.log(err),
-        next: (res: any) => this.router.navigate(['/admin-panel/edit-lecture', res.data])
-      });
+    if (this.createLectureForm.invalid || this.loading.isLoading) {
+      return false;
     }
+
+    this.loading.setLoadingStatus = true;
+
+    value.slug = this.titleToSlug.transform(this.createLectureForm.value.title);
+    value.quizQuestions = this.quizQuestions;
+
+    this.lectureService.createLecture(this.route.snapshot.params.course_id, value).subscribe({
+      error: (err) => console.log(err),
+      next: (res: any) => this.router.navigate(['/admin-panel/edit-lecture', res.data]),
+      complete: () => {
+        this.loading.setLoadingStatus = false;
+      }
+    });
   }
 
   addQuizQuestion(quizQuestionTextInput) {

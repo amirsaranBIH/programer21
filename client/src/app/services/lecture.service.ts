@@ -56,4 +56,8 @@ export class LectureService {
   verifyQuizAnswers(lectureSlug, quizAnswers) {
     return this.http.post(`/api/lecture/verifyQuizAnswers/${lectureSlug}`, quizAnswers).toPromise();
   }
+
+  toggleLectureStatus(lectureId, newStatus) {
+    return this.http.get(`/api/lecture/toggleLectureStatus/${lectureId}/${newStatus}`).toPromise();
+  }
 }

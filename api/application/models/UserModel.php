@@ -608,6 +608,41 @@ class UserModel extends CI_model {
         return handleSuccess($query->first_row()->coursePercentageFinished);
     }
 
+    public function getAllFinishedLecturesByUserId($userId) {
+        $sql = "SELECT
+                    l.id,
+                    l.title,
+                    l.slug,
+                    c.color AS courseColor,
+                    fl.createdAt AS finishedAt
+                FROM
+                    finished_lectures fl
+                INNER JOIN
+                    lectures l
+                ON
+                    l.id = fl.lectureId
+                INNER JOIN
+                    courses c
+                ON
+                    c.id = l.course
+                WHERE
+                    userId = ?";
+
+        $query = $this->db->query($sql, $userId);
+
+        if (!$query) {
+            return handleError($this->db->error()['message']);
+        }
+
+        $lectures = array();
+
+        foreach ($query->result() as $lecture) {
+            array_push($lectures, $lecture);
+        }
+
+        return handleSuccess($lectures);
+    }
+
     public function getAllLatestLecturesByUserId($userId) {
         $sql = "SELECT
                     l.id,
@@ -646,18 +681,21 @@ class UserModel extends CI_model {
         return handleSuccess($lectures);
     }
 
-    public function getMonthlyActivity($userId) {
+    public function getMonthlyActivity($userId, $month) {
         $sql = "SELECT
                     COUNT(1) AS lecturesFinished,
                     DATE(createdAt) AS date
                 FROM
                     finished_lectures
                 WHERE
-                    userId = ? AND skipped = 0 AND MONTH(createdAt) = MONTH(NOW())
+                    userId = ? AND skipped = 0 AND MONTH(createdAt) = ?
                 GROUP BY
                     date";
 
-        $query = $this->db->query($sql, $userId);
+        $query = $this->db->query($sql, array(
+            $userId,
+            $month
+        ));
 
         if (!$query) {
             return handleError($this->db->error()['message']);

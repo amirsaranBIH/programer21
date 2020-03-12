@@ -114,3 +114,24 @@
         }
     }
 }
+
+@media (max-width: 768px) {
+    .course {
+        .course-main {
+            flex-direction: column-reverse;
+
+            .course-payment-info {
+                padding-left: 0;
+                margin-bottom: .5em;
+
+                button {
+                    margin: 1em 0;
+                }
+            }
+        }
+
+        .estimated-reading-time {
+            display: none;
+        }
+    }
+}

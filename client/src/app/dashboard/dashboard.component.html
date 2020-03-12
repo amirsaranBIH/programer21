@@ -90,16 +90,23 @@
           <div class="no-latest-lectures" *ngIf="latestLectures.length < 1">
             <span>You haven't finished any courses lately</span>
           </div>
+          <p class="text--center">
+            <span (click)="toggleFinishedAndLatestLectuers()" class="toggle-finished-lectures">{{ showAllFinishedLectures ? 'Show only latest lectures' : 'Show all finished lectures' }}</span>
+          </p>
         </div>
       </div>
     </div>
     <div class="monthly-activity flex flex--not-even flex--column">
       <h2 class="image-heading"><img src="assets/icons/activity.svg" alt="activity"> Monthly Activity</h2>
       <div class="section flex flex--not-even flex--column">
-        <div class="current-month h3">
-          <span class="image-heading flex--center"><img src="assets/icons/date.svg" alt="date"> {{ currentMonth }}</span>
+        <div class="current-month h3 flex flex--not-even flex--align-center flex--center">
+          <span (click)="previousMonthActivity()" class="current-month-arrow"><img src="assets/icons/skinny-arrow-left.svg" alt="skinny-arrow-left"></span>
+          <div class="current-month-text">
+            <span class="image-heading flex--center"><img src="assets/icons/date.svg" alt="date"> {{ formatCurrentMonth() }}</span>
+          </div>
+          <span (click)="nextMonthActivity()" class="current-month-arrow"><img src="assets/icons/skinny-arrow-right.svg" alt="skinny-arrow-right"></span>
         </div>
-        <div class="monthly-activity-days flex">
+        <div class="monthly-activity-days flex scrollbar">
           <div class="monthly-activity-day text--center flex flex--column flex--not-even flex--end" *ngFor="let day of monthlyActivityDays; let i = index">
             <div class="monthly-activity-bar" [ngStyle]="{ 'height': day + '%' }"></div>
             <span class="day text--small">{{formatDateNumber(i + 1)}}</span>

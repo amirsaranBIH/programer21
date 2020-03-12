@@ -6,9 +6,9 @@
 
             <div class="section section--large">
                 <div class="form-group">
-                    <div class="flex flex--align-center flex--not-even flex--between">
+                    <div class="flex flex-sm flex--align-center flex--not-even flex--between">
                         <label for="title" class="required">Title</label>
-                        <span>Slug: {{ title.value | titleToSlug }}</span>
+                        <span class="slug">Slug: {{ title.value | titleToSlug }}</span>
                     </div>
                     <div class="input-group"
                         [ngClass]="{ 'is-invalid' : (title.invalid && title.touched) || (title.invalid && ngForm.submitted) }">
@@ -74,7 +74,7 @@
                         <label for="color" class="required color-group-label">Color</label>
                         <div class="input-group"
                             [ngClass]="{ 'is-invalid' : (color.invalid && color.touched) || (color.invalid && ngForm.submitted) }">
-                            <div class="color-input-group flex flex--not-even flex--align-center">
+                            <div class="color-input-group flex flex-sm flex--not-even flex--align-center">
                                 <input type="text" id="color" formControlName="color"
                                     placeholder="What you want to be know as on Programer21">
                                 <div class="color-picker">
@@ -93,14 +93,14 @@
                         </div>
                     </div>
                 </div>
-                <div class="flex flex--not-even flex--align-center">
+                <div class="flex flex-sm flex--not-even flex--align-center">
                     <div class="form-group supported-language-group">
                         <label for="supportedLanguage" class="required">Supported Languages</label>
                         <div class="input-group"
                             [ngClass]="{ 'is-invalid' : !supportedLanguage && supportedLanguageSubmitted }">
                             <input type="text" id="supportedLanguage" [ngModelOptions]="{standalone: true}" [(ngModel)]="supportedLanguage"
                                 placeholder="Enter supported language to add">
-                            <div class="input-help flex flex--not-even flex--align-center">
+                            <div class="input-help flex flex-sm flex--not-even flex--align-center">
                                 <div class="input-help-status"></div>
                                 <div class="input-help-message">
                                     <span>Supported language can't be empty!</span>
@@ -109,13 +109,13 @@
                         </div>
                     </div>
                     <div class="add-language-button">
-                        <button type="button" class="flex" (click)="addSupportedLanguage()">
+                        <button type="button" class="flex flex-sm" (click)="addSupportedLanguage()">
                             <img src="assets/icons/plus.svg" alt="plus">
                         </button>
                     </div>
                 </div>
-                <div class="supported-languages-list margin-bottom flex flex--not-even flex--align-center">
-                    <div class="supported-language flex flex--not-even flex--align-center" *ngFor="let language of supportedLanguages">
+                <div class="supported-languages-list margin-bottom flex flex-sm flex--wrap flex--not-even flex--align-center">
+                    <div class="supported-language flex flex-sm flex--not-even flex--align-center" *ngFor="let language of supportedLanguages">
                         <span class="text--capitalize">{{ language }}</span>
                         <div class="remove-supported-language">
                             <img src="assets/icons/remove-supported-language.svg" alt="remove-supported-language">
