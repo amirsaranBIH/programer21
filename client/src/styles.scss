@@ -241,7 +241,7 @@ img {
             }
 
             .input-help-message {
-                display: flex;
+            display: flex;
                 background-color: white;
                 padding: 0 .75em;
                 height: 22px;
@@ -251,7 +251,6 @@ img {
                 z-index: 30;
                 @extend .text--small;
                 @extend .flex;
-                @extend .flex--align-center;
             }
         }
     }
@@ -396,6 +395,10 @@ input[type=search] {
 
     &--create {
         background-color: $red;
+    }
+
+    &--secondary {
+        background-color: $grey;
     }
 }
 
@@ -621,7 +624,7 @@ img[src$=".svg"] {
 
     .form {
         .section {
-            .flex:not(.flex-sm) {
+            .flex:not(.flex-sm):not(.input-help) {
                 flex-direction: column;
             }
     
@@ -645,8 +648,8 @@ img[src$=".svg"] {
         }
 
         .input-group .input-help {
-            bottom: -8px;
-            left: -8px;
+            bottom: -8px !important;
+            left: -8px !important;
         }
 
         .input-help-status {
@@ -655,11 +658,12 @@ img[src$=".svg"] {
         }
 
         .input-help-message {
+            line-height: 16px;
             height: 16px !important;
             min-width: 120px !important;
 
             span {
-                font-size: .8em;
+                font-size: .8em !important;
             }
         }
     }

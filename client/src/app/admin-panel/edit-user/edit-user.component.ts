@@ -4,6 +4,7 @@ import { ValidatorService } from 'src/app/services/validator.service';
 import { ActivatedRoute } from '@angular/router';
 import { UserService } from 'src/app/services/user.service';
 import { AuthenticationService } from 'src/app/services/authentication.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-edit-user',
@@ -19,7 +20,8 @@ export class EditUserComponent implements OnInit {
     private validators: ValidatorService,
     private route: ActivatedRoute,
     private userService: UserService,
-    private authService: AuthenticationService
+    private authService: AuthenticationService, // this is used in validator
+    private toastr: ToastrService
   ) { }
 
   ngOnInit() {
@@ -109,7 +111,12 @@ export class EditUserComponent implements OnInit {
   onSubmit(value) {
     if (this.editUserForm.valid) {
       this.userService.updateUser(this.route.snapshot.params.user_id, value).subscribe({
-        error: (err) => console.log(err)
+        error: (err) => console.log(err),
+        next: (res: any) => {
+          if (res.status) {
+            this.toastr.success('Successfully updated user', 'Success')
+          }
+        }
       });
     }
   }
@@ -117,7 +124,12 @@ export class EditUserComponent implements OnInit {
   suspendUser() {
     this.userService.suspendUser(this.route.snapshot.params.user_id).subscribe({
       error: (err) => console.log(err),
-      complete: () => this.user.suspended = this.user.suspended === 1 ? 0 : 1
+      next: (res: any) => {
+        if (res.status) {
+          this.user.suspended = this.user.suspended === 1 ? 0 : 1;
+          this.toastr.success(this.user.suspended ? 'Successfully suspened user' : 'Successfully unsuspened user', 'Success');
+        }
+      }
     });
   }
 }

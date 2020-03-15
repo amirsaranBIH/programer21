@@ -15,7 +15,7 @@ class User extends MY_Controller  {
             return $this->setResponseError(200, $authResponse['message']);
         }
 
-        if ($authResponse['data']->role !== 'administrator') {
+        if ($authResponse['data']->role !== 'administrator' && $authResponse['data']->role !== 'moderator') {
             return $this->setResponseError(200, 'You must have administrative permissions to update other user accounts');
         }
 
@@ -162,7 +162,7 @@ class User extends MY_Controller  {
             return $this->setResponseError(200, $authResponse['message']);
         }
 
-        if ($authResponse['data']->role !== 'administrator') {
+        if ($authResponse['data']->role !== 'administrator' && $authResponse['data']->role !== 'moderator') {
             return $this->setResponseError(200, 'You must have administrative permissions to do that');
         }
 
@@ -182,7 +182,7 @@ class User extends MY_Controller  {
             return $this->setResponseError(200, $authResponse['message']);
         }
 
-        if ($authResponse['data']->role !== 'administrator') {
+        if ($authResponse['data']->role !== 'administrator' && $authResponse['data']->role !== 'moderator') {
             return $this->setResponseError(200, 'You must have administrative permissions to do that');
         }
 

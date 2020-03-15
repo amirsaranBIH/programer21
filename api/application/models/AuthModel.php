@@ -168,7 +168,7 @@ class AuthModel extends CI_model {
             return handleError($newTokenResponse['message'], false);
         }
 
-        return handleError(true);
+        return handleSuccess(true);
     }
 
     public function verifyEmail($token) {
@@ -206,6 +206,141 @@ class AuthModel extends CI_model {
             return handleError($newTokenResponse['message'], false);
         }
 
-        return handleError(true);
+        return handleSuccess(true);
+    }
+
+    public function logLogin($clientIp, $email, $isSuccessful) {
+        $sql = "INSERT INTO
+                    login_logs
+                (
+                    `clientIp`,
+                    `email`,
+                    `isSuccessful`
+                ) VALUES (
+                    ?, ?, ?
+                )";
+
+        $query = $this->db->query($sql, array(
+            $clientIp,
+            $email,
+            $isSuccessful
+        ));
+        
+        if (!$query) {
+            return handleError($this->db->error()['message']);
+        }
+
+        return handleSuccess(true);
+    }
+
+    public function logSignup($clientIp, $email, $isSuccessful) {
+        $sql = "INSERT INTO
+                    signup_logs
+                (
+                    `clientIp`,
+                    `email`,
+                    `isSuccessful`
+                ) VALUES (
+                    ?, ?, ?
+                )";
+
+        $query = $this->db->query($sql, array(
+            $clientIp,
+            $email,
+            $isSuccessful
+        ));
+        
+        if (!$query) {
+            return handleError($this->db->error()['message']);
+        }
+
+        return handleSuccess(true);
+    }
+
+    public function logForgotPassword($clientIp, $email, $isSuccessful) {
+        $sql = "INSERT INTO
+                    forgot_password_logs
+                (
+                    `clientIp`,
+                    `email`,
+                    `isSuccessful`
+                ) VALUES (
+                    ?, ?, ?
+                )";
+
+        $query = $this->db->query($sql, array(
+            $clientIp,
+            $email,
+            $isSuccessful
+        ));
+        
+        if (!$query) {
+            return handleError($this->db->error()['message']);
+        }
+
+        return handleSuccess(true);
+    }
+
+    public function checkIfCanSignup($clientIp) {
+        $sql = "SELECT
+                    COUNT(1) AS signupsInLast10Minutes
+                FROM
+                    signup_logs
+                WHERE
+                    clientIp = ?
+                AND 
+                    createdAt > (NOW() - INTERVAL 10 MINUTE)";
+
+        $query = $this->db->query($sql, $clientIp);
+        
+        if (!$query) {
+            return handleError($this->db->error()['message']);
+        }
+
+        $signupsInLast10Minutes = (int)$query->first_row()->signupsInLast10Minutes;
+
+        return handleSuccess($signupsInLast10Minutes < 1);
+    }
+
+    public function checkIfCanLogin($clientIp) {
+        $sql = "SELECT
+                    COUNT(1) AS loginsInLast5Minutes
+                FROM
+                    login_logs
+                WHERE
+                    clientIp = ?
+                AND 
+                    createdAt > (NOW() - INTERVAL 5 MINUTE)";
+
+        $query = $this->db->query($sql, $clientIp);
+        
+        if (!$query) {
+            return handleError($this->db->error()['message']);
+        }
+
+        $loginsInLast5Minutes = (int)$query->first_row()->loginsInLast5Minutes;
+
+        return handleSuccess($loginsInLast5Minutes <= 3);
+    }
+
+    public function checkIfCanResetPassword($clientIp) {
+        $sql = "SELECT
+                    COUNT(1) AS resetPasswordsInLast10Minutes
+                FROM
+                    forgot_password_logs
+                WHERE
+                    clientIp = ?
+                AND 
+                    createdAt > (NOW() - INTERVAL 10 MINUTE)";
+
+        $query = $this->db->query($sql, $clientIp);
+        
+        if (!$query) {
+            return handleError($this->db->error()['message']);
+        }
+
+        $resetPasswordsInLast10Minutes = (int)$query->first_row()->resetPasswordsInLast10Minutes;
+
+        return handleSuccess($resetPasswordsInLast10Minutes <= 3);
     }
 }

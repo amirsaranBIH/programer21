@@ -253,7 +253,9 @@ export function HttpLoaderFactory(http: HttpClient) {
     ReactiveFormsModule,
     HttpClientModule,
     RouterModule.forRoot(routes),
-    ToastrModule.forRoot(),
+    ToastrModule.forRoot({
+      positionClass: 'toast-top-left'
+    }),
     TranslateModule.forRoot({
       loader: {
           provide: TranslateLoader,

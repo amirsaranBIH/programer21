@@ -14,17 +14,43 @@ class Auth extends MY_Controller  {
     public function signup() {
         $userData = json_decode(file_get_contents('php://input'), true);
 
+        $checkIfCanSignupResponse = $this->auth->checkIfCanSignup($_SERVER['REMOTE_ADDR']);
+
+        if (!$checkIfCanSignupResponse['status']) {
+            $this->setResponseError(200, $checkIfCanSignupResponse['message']);
+            return;
+        }
+
+        if ($checkIfCanSignupResponse['status'] && !$checkIfCanSignupResponse['data']) {
+            $this->setResponseError(200, 'You can only create one account every 10 minutes');
+            return;
+        }
+
         $createUserResponse = $this->user->createUser($userData);
+
+        $logSignupResponse = $this->auth->logSignup($_SERVER['REMOTE_ADDR'], $userData['email'], $createUserResponse['status']);
 
         if (!$createUserResponse['status']) {
             $this->setResponseError(200, $createUserResponse['message']);
             return;
         }
 
+        if (!$logSignupResponse['status']) {
+            $this->setResponseError(200, $logSignupResponse['message']);
+            return;
+        }
+
         $loginResponse = $this->auth->login($userData['email'], $userData['password']);
+
+        $logLoginResponse = $this->auth->logLogin($_SERVER['REMOTE_ADDR'], $userData['email'], $loginResponse['status']);
 
         if (!$loginResponse['status']) {
             $this->setResponseError(200, $loginResponse['message']);
+            return;
+        }
+
+        if (!$logLoginResponse['status']) {
+            $this->setResponseError(200, $logLoginResponse['message']);
             return;
         }
 
@@ -41,10 +67,29 @@ class Auth extends MY_Controller  {
     public function login() {
         $userData = json_decode(file_get_contents('php://input'), true);
 
+        $checkIfCanLoginResponse = $this->auth->checkIfCanLogin($_SERVER['REMOTE_ADDR']);
+
+        if (!$checkIfCanLoginResponse['status']) {
+            $this->setResponseError(200, $checkIfCanLoginResponse['message']);
+            return;
+        }
+
+        if ($checkIfCanLoginResponse['status'] && !$checkIfCanLoginResponse['data']) {
+            $this->setResponseError(200, 'You only have 3 login attempts per 5 minutes');
+            return;
+        }
+
         $loginResponse = $this->auth->login($userData['email'], $userData['password']);
+
+        $logLoginResponse = $this->auth->logLogin($_SERVER['REMOTE_ADDR'], $userData['email'], $loginResponse['status']);
 
         if (!$loginResponse['status']) {
             $this->setResponseError(200, $loginResponse['message']);
+            return;
+        }
+
+        if (!$logLoginResponse['status']) {
+            $this->setResponseError(200, $logLoginResponse['message']);
             return;
         }
 
@@ -110,18 +155,53 @@ class Auth extends MY_Controller  {
 
         if (!$isEmailTakenResponse['status']) {
             $this->setResponseError(200, $isEmailTakenResponse['message']);
+
+            $logForgotPasswordResponse = $this->auth->logForgotPassword($_SERVER['REMOTE_ADDR'], $data['email'], false);
+
+            if (!$logForgotPasswordResponse['status']) {
+                $this->setResponseError(200, $logForgotPasswordResponse['message']);
+                return;
+            }
+
             return;
         }
 
         if ((int)$isEmailTakenResponse['data'] < 1) {
             $this->setResponseError(200, 'Account with email of ' . $data['email'] . ' is not registered!');
+
+            $logForgotPasswordResponse = $this->auth->logForgotPassword($_SERVER['REMOTE_ADDR'], $data['email'], false);
+
+            if (!$logForgotPasswordResponse['status']) {
+                $this->setResponseError(200, $logForgotPasswordResponse['message']);
+                return;
+            }
+            
+            return;
+        }
+
+        $checkIfCanResetPasswordResponse = $this->auth->checkIfCanResetPassword($_SERVER['REMOTE_ADDR']);
+
+        if (!$checkIfCanResetPasswordResponse['status']) {
+            $this->setResponseError(200, $checkIfCanResetPasswordResponse['message']);
+            return;
+        }
+
+        if ($checkIfCanResetPasswordResponse['status'] && !$checkIfCanResetPasswordResponse['data']) {
+            $this->setResponseError(200, 'You only have 3 reset password requests per 10 minutes');
             return;
         }
 
         $response = $this->mail->sendForgotPasswordMail($data['email']);
 
+        $logForgotPasswordResponse = $this->auth->logForgotPassword($_SERVER['REMOTE_ADDR'], $data['email'], $response['status']);
+
         if (!$response['status']) {
             $this->setResponseError(200, $response['message']);
+            return;
+        }
+
+        if (!$logForgotPasswordResponse['status']) {
+            $this->setResponseError(200, $logForgotPasswordResponse['message']);
             return;
         }
 

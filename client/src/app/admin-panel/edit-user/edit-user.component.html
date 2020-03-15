@@ -2,7 +2,12 @@
     <div class="edit-user">
         <form class="form" [formGroup]="editUserForm" #ngForm="ngForm"
         (ngSubmit)="onSubmit(editUserForm.value)">
-            <h2>Edit User: AmirSaran</h2>
+            <div class="flex flex--not-even flex--align-center flex--between margin-bottom--small">
+                <h2>Edit User: {{ user.username }}</h2>
+                <div>
+                    <button type="button" class="button button--small button--secondary" routerLink="/admin-panel">Go Back</button>
+                </div>
+            </div>
 
             <div class="section section--large">
                 <div class="flex">

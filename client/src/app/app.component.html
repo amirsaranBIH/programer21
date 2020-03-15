@@ -10,7 +10,7 @@
           <ul>
             <li class="show-sm" routerLink="/courses"><a>Courses</a></li>
             <li routerLink="/dashboard"><a>Dashboard</a></li>
-            <li *ngIf="auth.userData.role === 'administrator'"><a routerLink="/admin-panel">Admin Panel</a></li>
+            <li *ngIf="auth.userData.role === 'administrator' || auth.userData.role === 'moderator'"><a routerLink="/admin-panel">Admin Panel</a></li>
             <li [routerLink]="['/settings/', auth.userData.id]"><a>Settings</a></li>
             <li (click)="logout()"><a>Logout</a></li>
           </ul>

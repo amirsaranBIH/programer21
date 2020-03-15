@@ -38,9 +38,9 @@ export class ForgotPasswordComponent implements OnInit {
   onSubmit() {
     if (this.forgotPasswordForm.valid) {
       this.authService.forgotPassword(this.forgotPasswordForm.value.email).then((res: any) => {
-        this.router.navigate(['/']);
         if (res.status) {
           this.toastr.success('Successfully sent instructions for reseting password', 'Success');
+          this.router.navigate(['/']);
         }
       });
     }

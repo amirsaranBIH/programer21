@@ -159,9 +159,11 @@ export class EditCourseComponent implements OnInit {
     if (confirm('Are you sure?')) {
       this.courseService.deleteCourse(this.route.snapshot.params.course_id).subscribe({
         error: (err) => console.log(err),
-        complete: () => {
-          this.toastr.success('Successfully deleted course and all it\'s lectures', 'Success');
-          this.router.navigate(['admin-panel']);
+        next: (res: any) => {
+          if (res.status) {
+            this.toastr.success('Successfully deleted course and all it\'s lectures', 'Success');
+            this.router.navigate(['admin-panel']);
+          }
         }
       });
     }

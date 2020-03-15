@@ -58,7 +58,13 @@ class MailModel extends CI_model {
             return handleError('Could not find ' . $htmlTemplateFile);
         }
 
-        $token = $this->user->getUserTokenByEmail($email);
+        $tokenResponse = $this->user->getUserTokenByEmail($email);
+
+        if (!$tokenResponse['status']) {
+            return handleError($tokenResponse['message'], false);
+        }
+        
+        $token = $tokenResponse['data'];
 
         $message = $this->formatEmailMessage($message, array(
             '{%link_url%}' => $this->config->item('host') . 'new-password/' . $token
@@ -84,7 +90,13 @@ class MailModel extends CI_model {
             return handleError('Could not find ' . $htmlTemplateFile);
         }
 
-        $token = $this->user->getUserTokenByEmail($email);
+        $tokenResponse = $this->user->getUserTokenByEmail($email);
+
+        if (!$tokenResponse['status']) {
+            return handleError($tokenResponse['message'], false);
+        }
+        
+        $token = $tokenResponse['data'];
 
         $message = $this->formatEmailMessage($message, array(
             '{%link_url%}' => $this->config->item('host') . 'verify-email/' . $token

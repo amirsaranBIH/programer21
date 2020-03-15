@@ -88,11 +88,13 @@ export class SignupFormComponent implements OnInit {
 
   onSubmit(data) {
     if (this.signupForm.valid) {
-      this.authService.signup(data).then(() => {
-        this.authService.fetchUserData().then(() => {
+      this.authService.signup(data).then((res: any) => {
+        if (res.status) {
           this.toastr.success('Successfully created account', 'Success');
-          this.router.navigate(['/dashboard']);
-        });
+          this.authService.fetchUserData().then(() => {
+            this.router.navigate(['/dashboard']);
+          });
+        }
       });
     }
   }

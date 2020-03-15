@@ -1,8 +1,12 @@
 <div class="container">
     <div class="edit-lecture">
-        <form class="form" [formGroup]="editLectureForm" #ngForm="ngForm"
-        (ngSubmit)="onSubmit()">
-            <h2>Edit Lecture</h2>
+        <form class="form" [formGroup]="editLectureForm" #ngForm="ngForm" (ngSubmit)="onSubmit()">
+            <div class="flex flex--not-even flex--align-center flex--between margin-bottom--small">
+                <h2>Edit Lecture</h2>
+                <div>
+                    <button type="button" class="button button--small button--secondary" routerLink="/admin-panel">Go Back</button>
+                </div>
+            </div>
 
             <div class="section section--large">
                 <div class="form-group">
