@@ -14,7 +14,9 @@
 		"php": ">=5.3.7",
 		"firebase/php-jwt": "^5.0",
 		"vlucas/phpdotenv": "^4.1",
-		"aidantwoods/secureheaders": "^2.0"
+		"aidantwoods/secureheaders": "^2.0",
+		"contentful/contentful-management": "^3.1",
+		"michelf/php-markdown": "^1.9"
 	},
 	"suggest": {
 		"paragonie/random_compat": "Provides better randomness in PHP 5.x"

@@ -230,7 +230,7 @@ class UserModel extends CI_model {
                 return handleError($setUserImageResponse['message'], false);
             }
 
-            if ($oldImage !== 'assets/images/default/user.png') {
+            if (strpos($oldImage, 'user.png') !== false) {
                 $deleteOldImageResponse = $this->deleteOldImage($oldImage);
     
                 if (!$deleteOldImageResponse['status']) {
@@ -712,7 +712,7 @@ class UserModel extends CI_model {
 
     public function getCourseActivityPercentages($userId) {
         $sql = "SELECT
-                    c.id,
+                    c.slug,
                     c.color,
                     c.shortName,
                     (COUNT(1) / 

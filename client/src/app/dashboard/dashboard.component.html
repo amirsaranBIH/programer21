@@ -20,7 +20,7 @@
       <div class="section">
         <div class="course-activity-graph">
           <div class="no-course-activity" *ngIf="courseActivityPercentages.length < 1">
-            <span>No course activity yet</span>
+            <span>{{ 'No course activity yet' | translate }}</span>
           </div>
           <svg  viewBox="0 0 20 20">
             <circle r="10" cx="10" cy="10" fill="white" />
@@ -35,7 +35,7 @@
         <div class="course-activity-legend flex flex--not-even flex--between flex--align-center flex--center">
           <div class="course-activity-course flex flex--align-center" *ngFor="let course of courseActivityPercentages">
             <span class="course-activity-color" [style.background-color]="course.color"></span>
-            <span class="course-activity-name"><a class="link" routerLink="/dashboard/course/{{course.id}}">{{course.shortName}}</a></span>
+            <span class="course-activity-name"><a class="link" routerLink="/dashboard/course/{{course.slug}}">{{course.shortName}}</a></span>
           </div>
         </div>
       </div>
@@ -44,10 +44,10 @@
       <div class="flex flex--not-even flex--between flex--align-center">
         <h2 class="image-heading">
           <img src="assets/icons/enrolled-courses.svg" alt="enrolled-courses">
-          <span>Enrolled Courses</span>
+          <span>{{ 'Enrolled Courses' | translate }}</span>
         </h2>
         <div>
-          <a class="link" routerLink="/courses">Check out all the courses</a>
+          <a class="link" routerLink="/courses">{{ 'Check out all the courses' | translate }}</a>
         </div>
       </div>
       <div class="enrolled-courses-list">
@@ -61,7 +61,7 @@
             </div>
             <div class="enrolled-courses-control-info">
               <div>{{ currentEnrolledCourse + 1 }} / {{ enrolledCourses.length }}</div>
-              <div>COURSES</div>
+              <div>{{ 'COURSES' | translate }}</div>
             </div>
             <div class="arrow">
               <img (click)="nextEnrolledCourse()" [ngClass]="{ 'disabled': currentEnrolledCourse === enrolledCourses.length - 1 }" src="assets/icons/arrow-right.svg" alt="arrow-right">
@@ -71,38 +71,38 @@
         <div class="no-courses flex" *ngIf="enrolledCourses.length < 1">
           <div>
             <img src="/assets/icons/frown.svg" alt="frown">
-            <p>You haven't enrolled in any courses yet.</p>
+            <p>{{ 'You haven\'t enrolled in any courses yet.' | translate }}</p>
             <div class="text--center">
-              <span class="link" routerLink="/courses">Check out courses</span>
+              <span class="link" routerLink="/courses">{{ 'Check out courses' | translate }}</span>
             </div>
           </div>
         </div>
       </div>
     </div>
     <div class="latest-lectures flex flex--not-even flex--column">
-      <h2 class="image-heading"><img src="assets/icons/latest-lectures.svg" alt="latest-lectures"> Latest Lectures</h2>
+      <h2 class="image-heading"><img src="assets/icons/latest-lectures.svg" alt="latest-lectures"> {{ 'Latest Finished Lectures' | translate }}</h2>
       <div class="section">
         <div class="latest-lectures-list">
           <li class="latest-lecture" [style.border-left-color]="lecture.courseColor" *ngFor="let lecture of latestLectures">
             <h3 class="link"><a routerLink="/lecture/{{lecture.slug}}">{{lecture.title}}</a></h3>
-            <span>Finished at {{formatDate(lecture.finishedAt)}}</span>
+            <span>{{ 'Finished at' | translate }} {{ formatDateMonth(lecture.finishedAt) | translate }} {{ formatDateDayAndYear(lecture.finishedAt) | translate }}</span>
           </li>
           <div class="no-latest-lectures" *ngIf="latestLectures.length < 1">
-            <span>You haven't finished any courses lately</span>
+            <span>{{ 'You haven\'t finished any courses lately' | translate }}</span>
           </div>
           <p class="text--center">
-            <span (click)="toggleFinishedAndLatestLectuers()" class="toggle-finished-lectures">{{ showAllFinishedLectures ? 'Show only latest lectures' : 'Show all finished lectures' }}</span>
+            <span (click)="toggleFinishedAndLatestLectuers()" class="toggle-finished-lectures">{{ (showAllFinishedLectures ? 'Show only latest finished lectures' : 'Show all finished lectures') | translate }}</span>
           </p>
         </div>
       </div>
     </div>
     <div class="monthly-activity flex flex--not-even flex--column">
-      <h2 class="image-heading"><img src="assets/icons/activity.svg" alt="activity"> Monthly Activity</h2>
+      <h2 class="image-heading"><img src="assets/icons/activity.svg" alt="activity"> {{ 'Monthly Activity' | translate }}</h2>
       <div class="section flex flex--not-even flex--column">
         <div class="current-month h3 flex flex--not-even flex--align-center flex--center">
           <span (click)="previousMonthActivity()" class="current-month-arrow"><img src="assets/icons/skinny-arrow-left.svg" alt="skinny-arrow-left"></span>
           <div class="current-month-text">
-            <span class="image-heading flex--center"><img src="assets/icons/date.svg" alt="date"> {{ formatCurrentMonth() }}</span>
+            <span class="image-heading flex--center"><img src="assets/icons/date.svg" alt="date"> {{ formatCurrentMonth() | translate }}, {{ formatCurrentYear() }}</span>
           </div>
           <span (click)="nextMonthActivity()" class="current-month-arrow"><img src="assets/icons/skinny-arrow-right.svg" alt="skinny-arrow-right"></span>
         </div>

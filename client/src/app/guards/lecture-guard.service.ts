@@ -14,7 +14,6 @@ export class LectureGuardService implements CanActivate {
 
   canActivate(route: ActivatedRouteSnapshot) {
     return this.lectureService.getLectureById(route.params.lecture_id).then((res: any) => {
-      console.log(res);
       if (!res.status) {
         this.router.navigate(['/admin-panel']);
         return false;

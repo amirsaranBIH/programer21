@@ -1,6 +1,10 @@
 @import '../../../styles.scss';
 
 .edit-lecture {
+    .quick-buttons button:last-child {
+        margin-left: 1em;
+    }
+
     .add-quiz-question {
         .add-quiz-question-input {
             flex: 1;

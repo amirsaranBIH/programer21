@@ -4,6 +4,8 @@ import { LectureService } from 'src/app/services/lecture.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TitleToSlugPipe } from 'src/app/pipes/title-to-slug.pipe';
 import { LoadingService } from 'src/app/services/loading.service';
+import { ToastrService } from 'ngx-toastr';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-new-lecture',
@@ -21,7 +23,9 @@ export class NewLectureComponent implements OnInit {
     private router: Router,
     private lectureService: LectureService,
     private titleToSlug: TitleToSlugPipe,
-    private loading: LoadingService
+    private loading: LoadingService,
+    private toastr: ToastrService,
+    private translate: TranslateService
     ) { }
 
   ngOnInit() {
@@ -66,6 +70,7 @@ export class NewLectureComponent implements OnInit {
       error: (err) => console.log(err),
       next: (res: any) => this.router.navigate(['/admin-panel/edit-lecture', res.data]),
       complete: () => {
+        this.toastr.success(this.translate.instant('Successfully created lecture!'), this.translate.instant('Success'));
         this.loading.setLoadingStatus = false;
       }
     });

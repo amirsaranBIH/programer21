@@ -109,6 +109,10 @@
         .course-carousel {
             margin-top: 9em;
 
+            .course {
+                cursor: pointer;
+            }
+
             .course:nth-child(2) {
                 bottom: 50px;
             }

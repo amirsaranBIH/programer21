@@ -2,113 +2,114 @@
     <div class="edit-lecture">
         <form class="form" [formGroup]="editLectureForm" #ngForm="ngForm" (ngSubmit)="onSubmit()">
             <div class="flex flex--not-even flex--align-center flex--between margin-bottom--small">
-                <h2>Edit Lecture</h2>
-                <div>
-                    <button type="button" class="button button--small button--secondary" routerLink="/admin-panel">Go Back</button>
+                <h2>{{ 'Edit Lecture' | translate }}</h2>
+                <div class="quick-buttons flex flex--align-center flex--not-even">
+                    <button type="button" class="button button--small button--secondary" routerLink="/lecture/{{ lecture.slug }}">{{ 'View Lecture' | translate }}</button>
+                    <button type="button" class="button button--small button--secondary" routerLink="/admin-panel">{{ 'Go Back' | translate }}</button>
                 </div>
             </div>
 
             <div class="section section--large">
                 <div class="form-group">
                     <div class="flex flex-sm flex--align-center flex--not-even flex--between">
-                        <label for="title" class="required">Title</label>
-                        <span class="slug">Slug: {{ title.value | titleToSlug }}</span>
+                        <label for="title" class="required">{{ 'Title' | translate }}</label>
+                        <span class="slug">{{ 'Slug' | translate }}: {{ title.value | titleToSlug }}</span>
                     </div>
                     <div class="input-group"
                         [ngClass]="{ 'is-invalid' : (title.invalid && title.touched) || (title.invalid && ngForm.submitted) }">
                         <input type="text" id="title" formControlName="title"
-                            placeholder="Course title">
+                            placeholder="{{ 'Course title' | translate }}">
                         <div class="input-help flex flex--not-even flex--align-center">
                             <div class="input-help-status"></div>
                             <div class="input-help-message">
-                                <span>Title is required!</span>
+                                <span>{{ 'Title is required!' | translate }}</span>
                             </div>
                         </div>
                     </div>  
                 </div>
                 <div class="flex">
                     <div class="form-group">
-                        <label for="difficulty" class="required">Difficulty</label>
+                        <label for="difficulty" class="required">{{ 'Difficulty' | translate }}</label>
                         <div class="input-group"
                             [ngClass]="{ 'is-invalid' : (difficulty.invalid && difficulty.touched) || (difficulty.invalid && ngForm.submitted) }">
                             <select formControlName="difficulty" id="difficulty">
-                                <option value="">Select difficulty</option>
-                                <option value="beginner">Beginner</option>
-                                <option value="advanced">Advanced</option>
+                                <option value="">{{ 'Select difficulty' | translate }}</option>
+                                <option value="beginner">{{ 'Beginner' | translate }}</option>
+                                <option value="advanced">{{ 'Advanced' | translate }}</option>
                             </select>
                             <div class="input-help flex flex--not-even flex--align-center">
                                 <div class="input-help-status"></div>
                                 <div class="input-help-message">
-                                    <span>User must have a difficulty!</span>
+                                    <span>{{ 'Lecture must have a difficulty!' | translate }}</span>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="ert" class="required">Estimated reading time (in minutes)</label>
+                        <label for="ert" class="required">{{ 'Estimated reading time (in minutes)' | translate }}</label>
                         <div class="input-group"
                             [ngClass]="{ 'is-invalid' : (ert.invalid && ert.touched) || (ert.invalid && ngForm.submitted) }">
                             <input type="number" id="ert" formControlName="ert"
-                            placeholder="Estimated reading time for lecture">
+                            placeholder="{{ 'Estimated reading time for lecture' | translate }}">
                             <div class="input-help flex flex--not-even flex--align-center">
                                 <div class="input-help-status"></div>
                                 <div class="input-help-message">
-                                    <span>User must have a ert!</span>
+                                    <span>{{ 'Lecture must have a ert!' | translate }}</span>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="status" class="required">Status</label>
+                    <label for="status" class="required">{{ 'Status' | translate }}</label>
                     <div class="input-group"
                         [ngClass]="{ 'is-invalid' : (status.invalid && status.touched) || (status.invalid && ngForm.submitted) }">
                         <select formControlName="status" id="status">
-                            <option value="private">Private</option>
-                            <option value="public">Public</option>
+                            <option value="private">{{ 'Private' | translate }}</option>
+                            <option value="public">{{ 'Public' | translate }}</option>
                         </select>
                         <div class="input-help flex flex--not-even flex--align-center">
                             <div class="input-help-status"></div>
                             <div class="input-help-message">
-                                <span>User must have a status!</span>
+                                <span>{{ 'Lecture must have a status!' | translate }}</span>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="description" class="required">Description</label>
+                    <label for="description" class="required">{{ 'Description' | translate }}</label>
                     <div class="input-group"
                         [ngClass]="{ 'is-invalid' : (description.invalid && description.touched) || (description.invalid && ngForm.submitted) }">
                         <textarea formControlName="description" id="description" cols="30" rows="5"
-                            placeholder="Enter Description"></textarea>
+                            placeholder="{{ 'Enter Description' | translate }}"></textarea>
                         <div class="input-help flex flex--not-even flex--align-center">
                             <div class="input-help-status"></div>
                             <div class="input-help-message">
-                                <span>Description must be contain less than 200 characters!</span>
+                                <span>{{ 'Description must be contain less than 200 characters!' | translate }}</span>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="form-group">
                     <input type="checkbox" id="skippable" formControlName="skippable">
-                    <label for="skippable">Make lecture skippable</label>
+                    <label for="skippable">{{ 'Make lecture skippable' | translate }}</label>
                 </div>
             </div>
 
-            <h2 class="margin-top">Edit Lecture Quiz Questions</h2>
+            <h2 class="margin-top">{{ 'Edit Lecture Quiz Questions' | translate }}</h2>
             <div class="section section--large">
                 <div class="add-quiz-question flex flex-sm flex--not-even flex--between flex--align-center">
                     <div class="add-quiz-question-input">
-                        <input type="text" #quizQuestionText placeholder="Enter new question text">
+                        <input type="text" #quizQuestionText placeholder="{{ 'Enter new question text' | translate }}">
                     </div>
                     <div class="add-quiz-question-button">
-                        <button type="button" class="button button--update button--large" (click)="addQuizQuestion(quizQuestionText)">Add Question</button>
+                        <button type="button" class="button button--update button--large" (click)="addQuizQuestion(quizQuestionText)">{{ 'Add Question' | translate }}</button>
                     </div>
                 </div>
                 <ul class="lecture-quiz-questions">
                     <li class="lecture-quiz-question margin-top" *ngFor="let question of quizQuestions; let questionIndex = index">
                         <div class="lecture-quiz-question-text flex flex-sm flex--not-even flex--align-center">
-                            <h3>{{ questionIndex + 1 }}. {{ question.question }}</h3>
+                            <h3>{{ questionIndex + 1 }}. {{ question.question | translate }}</h3>
                             <div class="remove-answer" (click)="removeQuestion(questionIndex)">
                                 <img src="assets/icons/delete.svg" alt="trash-can">
                             </div>
@@ -116,7 +117,7 @@
                         <ul class="lecture-quiz-answers margin-top--small">
                             <label [for]="questionIndex + '-' + answerIndex" class="lecture-quiz-answer flex flex-sm flex--not-even flex--align-center" *ngFor="let answer of question.answers; let answerIndex = index">
                                 <input type="radio" [id]="questionIndex + '-' + answerIndex" [name]="questionIndex" [(ngModel)]="question.answer" [ngModelOptions]="{standalone: true}" [value]="answer.answer">
-                                <p>{{ answer.answer }}</p>
+                                <p>{{ answer.answer | translate }}</p>
                                 <div class="remove-answer" (click)="removeAnswer(questionIndex, answerIndex)">
                                     <img src="assets/icons/delete.svg" alt="trash-can">
                                 </div>
@@ -127,15 +128,15 @@
                                 <input type="text" #quizAnswerText [placeholder]="'Enter answer text for question #' + (questionIndex + 1)">
                             </div>
                             <div class="add-quiz-answer-button">
-                                <button type="button" class="button button--update button--small" (click)="addQuizAnswer(questionIndex, quizAnswerText)">Add Answer</button>
+                                <button type="button" class="button button--update button--small" (click)="addQuizAnswer(questionIndex, quizAnswerText)">{{ 'Add Answer' | translate }}</button>
                             </div>
                         </div>
                     </li>
                 </ul>
             </div>
             <div class="flex flex--not-even flex--between flex--align-start margin-top">
-                <button type="submit" class="button button--large button--update">Update Lecture</button>
-                <button type="button" class="button button--large button--delete" (click)="deleteLecture()">Delete Lecture</button>
+                <button type="submit" class="button button--large button--update">{{ 'Update Lecture' | translate }}</button>
+                <button type="button" class="button button--large button--delete" (click)="deleteLecture()">{{ 'Delete Lecture' | translate }}</button>
             </div>
         </form>
     </div>

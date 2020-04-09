@@ -2,22 +2,22 @@
   <span class="brand sans-serif h4"><a routerLink="/">Programer21 <small *ngIf="isDevelopment">(DEV)</small></a></span>
   <nav class="navigation">
     <ul class="flex flex--not-even flex--align-center flex--end">
-      <li class="hide-sm" routerLink="/courses"><a>Courses</a></li>
+      <li class="hide-sm" routerLink="/courses">{{ 'Courses' | translate }}</li>
       <li class="account-link flex flex--not-even flex--align-center" *ngIf="auth.userData">
         <img (click)="toggleAccountDropdownMenu()" class="profile-image" [src]="auth.userData.image" alt="{{auth.userData.firstName}} {{auth.userData.lastName}}">
         <span (click)="toggleAccountDropdownMenu()">{{auth.userData.firstName}} {{auth.userData.lastName}} <i class="fa" [ngClass]="{'fa-angle-down' : !showAccountDropdownMenu, 'fa-angle-up': showAccountDropdownMenu}"></i></span>
         <nav class="account-dropdown" *ngIf="showAccountDropdownMenu">
           <ul>
-            <li class="show-sm" routerLink="/courses"><a>Courses</a></li>
-            <li routerLink="/dashboard"><a>Dashboard</a></li>
-            <li *ngIf="auth.userData.role === 'administrator' || auth.userData.role === 'moderator'"><a routerLink="/admin-panel">Admin Panel</a></li>
-            <li [routerLink]="['/settings/', auth.userData.id]"><a>Settings</a></li>
-            <li (click)="logout()"><a>Logout</a></li>
+            <li class="show-sm" routerLink="/courses">{{ 'Courses' | translate }}</li>
+            <li routerLink="/dashboard">{{ 'Dashboard' | translate }}</li>
+            <li *ngIf="auth.userData.role === 'administrator' || auth.userData.role === 'moderator'" routerLink="/admin-panel">{{ 'Admin Panel' | translate }}</li>
+            <li [routerLink]="['/settings/', auth.userData.id]">{{ 'Settings' | translate }}</li>
+            <li (click)="logout()">{{ 'Logout' | translate }}</li>
           </ul>
         </nav>
       </li>
-      <li *ngIf="!auth.userData"><a routerLink="/login">Login</a></li>
-      <li *ngIf="!auth.userData"><a routerLink="/signup">Sign Up</a></li>
+      <li *ngIf="!auth.userData" routerLink="/login">{{ 'Log in' | translate }}</li>
+      <li *ngIf="!auth.userData" routerLink="/signup">{{ 'Sign Up' | translate }}</li>
     </ul>
   </nav>
 </section>

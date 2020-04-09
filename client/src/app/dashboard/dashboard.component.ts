@@ -116,12 +116,20 @@ export class DashboardComponent implements OnInit {
     return day < 10 ? '0' + day : day;
   }
 
-  formatDate(date) {
-    return moment(date).format('MMMM D, YYYY');
+  formatDateMonth(date) {
+    return moment(date).format('MMMM');
+  }
+
+  formatDateDayAndYear(date) {
+    return moment(date).format('D, YYYY');
   }
 
   formatCurrentMonth() {
-    return this.currentMonth.format('MMMM, YYYY');
+    return this.currentMonth.format('MMMM');
+  }
+
+  formatCurrentYear() {
+    return this.currentMonth.format('YYYY');
   }
 
   previousMonthActivity() {

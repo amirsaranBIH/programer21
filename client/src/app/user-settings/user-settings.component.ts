@@ -63,7 +63,8 @@ export class UserSettingsComponent implements OnInit {
       ]],
       email: [this.user.email, [
         Validators.required,
-        this.validators.EmailValidator
+        this.validators.EmailValidator,
+        Validators.maxLength(100),
       ], [this.validators.IsEmailTakenWhileEditing.bind(this)]],
       image: [this.user.image, [Validators.required]]
     });

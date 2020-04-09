@@ -2,31 +2,31 @@
     <div class="course">
         <div class="course-main flex margin-bottom">
             <div class="course-main-info">
-                <h1 class="h2">{{ course.title }}</h1>
+                <h1 class="h2">{{ course.title | translate }}</h1>
                 <hr class="hr--small" [ngStyle]="{ 'background-color': course.color }">
                 <div class="course-info">
-                    <span>{{course.courseLectures.length}} {{course.courseLectures.length === 1 ? 'lecture' : 'lectures'}}</span>
-                    <span>{{course.totalErt}} {{course.totalErt === 1 ? 'hour' : 'hours'}}</span>
-                    <span class="text--capitalize">{{ course.difficulty }}</span>
+                    <span>{{course.courseLectures.length}} {{ (course.courseLectures.length === 1 ? 'lecture' : 'lectures') | translate }}</span>
+                    <span>{{course.totalErt}} {{ (course.totalErt === 1 ? 'hour' : 'hours') | translate }}</span>
+                    <span class="text--capitalize">{{ course.difficulty | translate }}</span>
                 </div>
-                <p>{{ course.description }}</p>
+                <p>{{ course.description | translate }}</p>
                 <p class="course-supported-languages h3">{{ course.supportedLanguages | formatSupportedLanguages }}</p>
-                <p>Last updated at {{ formatDate(course.updatedAt) }}</p>
+                <p>{{ 'Last updated at' | translate }} {{ formatDate(course.updatedAt) }}</p>
             </div>
             <div class="course-payment-info">
                 <div class="thumbnail">
                     <img [src]="course.image" [alt]="course.slug">
                     <div class="thumbnail-info flex flex--not-even flex--align-center flex--between">
-                        <span class="price">{{ course.price === 0 ? 'FREE' : ('$' + course.price) }}</span>
-                        <span class="students-enrolled">{{ course.enrolledStudents }} {{course.enrolledStudents === 1 ? 'student' : 'students'}} enrolled</span>
+                        <span class="price">{{ course.price === 0 ? ('FREE' | translate) : ('$' + course.price) }}</span>
+                        <span class="students-enrolled">{{ course.enrolledStudents }} {{ (course.enrolledStudents === 1 ? 'student' : 'students') | translate}} {{ 'enrolled' | translate }}</span>
                     </div>
                 </div>
-                <p *ngIf="course.price !== 0">30-Day Money-Back Guarantee</p>
+                <p *ngIf="course.price !== 0">{{ '30-Day Money-Back Guarantee' | translate }}</p>
                 <div class="flex flex--not-even flex--align-center flex--between margin-top--small">
                     <div>
                         <img *ngIf="course.price !== 0" src="/assets/paypal-payment.png" alt="paypal-payment">
                     </div>
-                    <button (click)="enrollUserInCourse()" [disabled]="userIsEnrolledInCourse()" class="button button--large sans-serif">{{ userIsEnrolledInCourse() ? 'ENROLLED IN COURSE' : 'ENROLL NOW' }}</button>
+                    <button (click)="enrollUserInCourse()" [disabled]="userIsEnrolledInCourse()" class="button button--large sans-serif">{{ (userIsEnrolledInCourse() ? 'ENROLLED IN COURSE' : 'ENROLL NOW') | translate }}</button>
                 </div>
             </div>
         </div>
@@ -35,18 +35,18 @@
                 <div class="flex flex--not-even flex--between flex--align-center">
                     <div class="lecture-title flex flex--not-even flex--align-center">
                         <img (click)="lectureShowMore(lecture)" [ngClass]="{ 'rotate-arrow': lecture.showMore }" src="assets/icons/arrow-down.svg" alt="arrow-down">
-                        <span>{{ lecture.title }}</span>
+                        <span>{{ lecture.title | translate }}</span>
                     </div>
-                    <div class="estimated-reading-time">Estimated reading time: {{ lecture.ert }} min</div>
+                    <div class="estimated-reading-time">{{ 'Estimated reading time' | translate }}: {{ lecture.ert }} min</div>
                 </div>
                 <div *ngIf="lecture.showMore" class="course-lecture-more-info">
-                    <p>{{ lecture.description }}</p>
+                    <p>{{ lecture.description | translate }}</p>
                 </div>
             </div>
             <div class="no-lectures margin-top--large" *ngIf="course.courseLectures.length < 1">
                 <div>
                   <img src="/assets/icons/frown.svg" alt="frown">
-                  <p>There are no lectures created for this course.</p>
+                  <p>{{ 'There are no lectures created for this course.' | translate }}</p>
                 </div>
               </div>
         </div>

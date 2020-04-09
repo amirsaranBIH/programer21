@@ -1,11 +1,11 @@
 <label for="file-upload" class="file-upload section flex" (drop)="drop($event)" (dragover)="drag($event)" (drag)="drag($event)">
     <div *ngIf="imagePreview !== ''" class="preview-image">
         <img [src]="imagePreview" alt="preview-upload-image">
-        <div>Uploaded image preview</div>
+        <div>{{ 'Uploaded image preview' | translate }}</div>
     </div>
     <div class="file-upload-content">
         <img src="assets/icons/cloud-upload.svg" alt="cloud-upload">
-        <p class="text--center">{{ uploadText }}</p>
+        <p class="text--center">{{ uploadText | translate }}</p>
         <input type="file" id="file-upload" accept=".png,.jpg,.jpeg,.gif" hidden (change)="uploadFile($event)">
     </div>
 </label>

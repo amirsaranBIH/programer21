@@ -261,12 +261,6 @@ class CourseModel extends CI_model {
             }
         }
 
-        $makeCourseFolderResponse = $this->makeCourseFolder($courseData['slug']);
-
-        if (!$makeCourseFolderResponse['status']) {
-            return handleError($makeCourseFolderResponse['message'], false);
-        }
-
         $this->db->trans_complete();
 
         return handleSuccess($newlyCreatedCourseId); // Returns ID of newly created course
@@ -341,12 +335,6 @@ class CourseModel extends CI_model {
             }
         }
 
-        $renameCourseFolderResponse = $this->renameCourseFolder($oldCourse->slug, $courseData['slug']);
-
-        if (!$renameCourseFolderResponse['status']) {
-            return handleError($renameCourseFolderResponse['message'], false);
-        }
-
         $this->db->trans_complete();
 
         return handleSuccess(true);
@@ -384,12 +372,6 @@ class CourseModel extends CI_model {
 
         if (!$query) {
             return handleError($this->db->error()['message']);
-        }
-
-        $deleteCourseFolderResponse = $this->deleteCourseFolder($course->slug);
-
-        if (!$deleteCourseFolderResponse['status']) {
-            return handleError($deleteCourseFolderResponse['message'], false);
         }
 
         $deleteOldImageResponse = $this->deleteOldImage($course->image);
@@ -558,47 +540,6 @@ class CourseModel extends CI_model {
         } else {
             return handleError($this->upload->display_errors('', ''));
         }
-    }
-
-    public function makeCourseFolder($courseSlug) {
-        $response = mkdir(FCPATH . 'lectures' . DIRECTORY_SEPARATOR . $courseSlug);
-
-        return $response ? handleSuccess($response) : handleError($response);
-    }
-
-    public function renameCourseFolder($oldCourseSlug, $newCourseSlug) {
-        if (!file_exists(FCPATH . 'lectures' . DIRECTORY_SEPARATOR . $oldCourseSlug)) {
-            return handleError('Course folder does not exist: ' . $oldCourseSlug);
-        }
-
-        $response = rename(FCPATH . 'lectures' . DIRECTORY_SEPARATOR . $oldCourseSlug, 
-                        FCPATH . 'lectures' . DIRECTORY_SEPARATOR . $newCourseSlug);
-
-        return $response ? handleSuccess($response) : handleError($response);
-    }
-
-    public function deleteCourseFolder($courseSlug) {
-        $courseFolder = FCPATH . 'lectures' . DIRECTORY_SEPARATOR . $courseSlug;
-
-        if (!file_exists($courseFolder)) {
-            return handleError('Course folder does not exist: ' . $courseSlug);
-        }
-
-        $courseLectureFiles = scandir($courseFolder);
-
-        foreach ($courseLectureFiles as $lectureFileName) {
-            if ($lectureFileName !== '.' && $lectureFileName !== '..') {
-                $lectureDeleteStatus = $this->lecture->deleteLectureFile($courseSlug, basename($lectureFileName, '.html'));
-    
-                if (!$lectureDeleteStatus['status']) {
-                    return handleError($lectureDeleteStatus['message']);
-                }
-            }
-        }
-
-        $response = rmdir($courseFolder);
-
-        return $response ? handleSuccess($response) : handleError($response);
     }
 
     public function deleteOldImage($imagePath) {

@@ -64,7 +64,8 @@ a {
     text-decoration: none;
 }
 
-*[ng-reflect-router-link] {
+*[ng-reflect-router-link],
+*[routerLink] {
     cursor: pointer;
 }
 
@@ -241,7 +242,7 @@ img {
             }
 
             .input-help-message {
-            display: flex;
+                display: flex;
                 background-color: white;
                 padding: 0 .75em;
                 height: 22px;
@@ -251,6 +252,10 @@ img {
                 z-index: 30;
                 @extend .text--small;
                 @extend .flex;
+
+                span {
+                    line-height: 22px;
+                }
             }
         }
     }
@@ -525,6 +530,80 @@ img[src$=".svg"] {
 
     &::-webkit-scrollbar {
         width: 17px;
+    }
+}
+
+.lecture {
+    h1 {
+        font-size: 2.1em;
+    }
+
+    a {
+        @extend .link;
+    }
+
+    .lecture-content {
+
+        ul, ol {
+            margin: 1.5em 0;
+            padding-left: 2.25em;
+    
+            li {
+                list-style-type: decimal;
+            }
+    
+            li + li {
+                margin-top: .75em;
+            }
+        }
+    
+        .flex > *:first-child {
+            padding-right: 1.5em;
+        }
+        .flex > *:last-child {
+            padding-left: 1.5em;
+        }
+    
+        .image-fit-content {
+            width: fit-content;
+        }
+    
+        code {
+            display: inline-block;
+            font-size: 1em;
+            font-weight: normal;
+            background-color: $light_grey;
+            padding: 0 .35em;
+            border-radius: 3px;
+            color: $red;
+        }
+
+        code.code-block {
+            display: block;
+            font-size: 1em;
+            font-weight: normal;
+            background-color: $light_grey;
+            padding: 1em;
+            margin: 1em 0;
+            border-radius: 3px;
+            color: $red;
+            line-height: 1.5em;
+        }
+
+        table {
+            width: 100%;
+            background-color: white;
+
+            thead {
+                font-weight: bold;
+                background-color: $lighter_grey;
+            }
+            
+            th, td {
+                border-bottom: 1px solid $light_grey;
+                padding: .75em;
+            }
+        }
     }
 }
 

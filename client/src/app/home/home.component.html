@@ -3,10 +3,10 @@
   <div class="home fixed-section">
     <div class="flex">
       <div class="home__left">
-        <h1>Learn Programming the Modern Way</h1>
+        <h1>{{ 'Learn Programming the Modern Way' | translate }}</h1>
         <hr class="hr">
-        <p class="home__description">Learn all the relevant tools and topics of web development you need to get and keep a job in IT. We provide 21st century ways of teaching with all the useful content that matters.</p>
-        <button class="cta-signup button button--large" routerLink="/signup">Create Account</button>
+        <p class="home__description">{{ 'Learn all the relevant tools and topics of web development you need to get and keep a job in IT. We provide 21st century ways of teaching with all the useful content that matters.' | translate }}</p>
+        <button class="cta-signup button button--large" routerLink="/signup">{{ 'Create Account' | translate }}</button>
         <div class="course-carousel">
           <div class="course-carousel--courses">
             <div class="course" *ngFor="let course of carouselCourses">
@@ -17,7 +17,7 @@
           <img *ngIf="carouselCourses.length > 1" (click)="courseCarouselNext()" class="carousel-arrow carousel-arrow--right" src="assets/icons/arrow-right.svg" alt="arrow-right">
         </div>
         <p class="text--center">
-          <a *ngIf="carouselCourses.length > 0" routerLink="/courses">Check out all of our courses!</a>
+          <a *ngIf="carouselCourses.length > 0" routerLink="/courses">{{ 'Check out all of our courses!' | translate }}</a>
         </p>
       </div>
       <div class="home__right">

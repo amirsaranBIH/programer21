@@ -29,7 +29,6 @@ import { LectureComponent } from './lecture/lecture.component';
 import { OneLectureBySlugResolverService } from './resolvers/one-lecture-by-slug-resolver.service';
 import { TitleToSlugPipe } from './pipes/title-to-slug.pipe';
 import { GetSummaryPipe } from './pipes/get-summary.pipe';
-import { LectureHTMLContentResolverService } from './resolvers/lecture-html-content-by-slug-resolver.service';
 import { ToastrModule } from 'ngx-toastr';
 import { SignupFormComponent } from './signup/signup-form/signup-form.component';
 import { CoursesComponent } from './courses/courses.component';
@@ -196,8 +195,7 @@ const routes: Routes = [
     canActivate: [AuthGuardService],
     component: LectureComponent,
     resolve: {
-      lecture: OneLectureBySlugResolverService,
-      html_content: LectureHTMLContentResolverService
+      lecture: OneLectureBySlugResolverService
     },
   },
   {
@@ -298,7 +296,6 @@ export function HttpLoaderFactory(http: HttpClient) {
     OneCourseResolverService,
     UserLatestLecturesResolverService,
     OneLectureBySlugResolverService,
-    LectureHTMLContentResolverService,
     UserEnrolledCoursesResolverService,
     TitleToSlugPipe
   ],

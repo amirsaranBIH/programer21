@@ -156,7 +156,7 @@
                     
                     
                     div:first-child {
-                        font-size: 2.3em;
+                        font-size: 2.14em;
                         font-weight: bold;
                         line-height: .85;
                     }
@@ -195,6 +195,8 @@
         
         .toggle-finished-lectures {
             cursor: pointer;
+            position: relative;
+            z-index: 1000;
         }
 
         .section {
@@ -311,6 +313,10 @@
                                 "user-details course-activity"
                                 "latest-lectures latest-lectures"
                                 "monthly-activity monthly-activity";
+
+        .enrolled-courses {
+            min-height: 400px;
+        }
 
         .enrolled-courses .enrolled-courses-list .enrolled-course {
             padding-top: 60%;

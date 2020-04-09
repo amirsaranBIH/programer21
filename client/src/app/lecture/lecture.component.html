@@ -1,7 +1,7 @@
 <div class="container">
     <div class="lecture">
         <h1 class="margin-bottom">{{ lecture.title }}</h1>
-        <div [innerHTML]="htmlContent" class="lecture-content"></div>
+        <div [innerHTML]="lecture.body" class="lecture-content"></div>
         <div class="lecture-quiz margin-top--large margin-bottom">
             <h2 class="image-heading">
                 <img src="assets/icons/question.svg" alt="question"> 
@@ -25,7 +25,7 @@
                 <button type="button" class="button button--large" (click)="verifyQuizQuestions()">Verify Answers</button>
             </div>
             <div>
-                <button type="button" class="button button--large button--update" (click)="finishLecture()">Finish Lecture</button>
+                <button type="button" class="button button--large button--update" *ngIf="!lecture.finished" (click)="finishLecture()">Finish Lecture</button>
             </div>
         </div>
     </div>    
