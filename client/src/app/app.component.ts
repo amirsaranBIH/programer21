@@ -3,7 +3,6 @@ import { AuthenticationService } from './services/authentication.service';
 import { environment } from 'src/environments/environment';
 import { Router, NavigationEnd, NavigationStart, NavigationCancel, NavigationError } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-import { TranslateService } from '@ngx-translate/core';
 import { LoadingService } from './services/loading.service';
 
 @Component({
@@ -21,7 +20,6 @@ export class AppComponent {
     public auth: AuthenticationService,
     private router: Router,
     private toastr: ToastrService,
-    private translate: TranslateService,
     public loading: LoadingService
   ) {
     this.router.events.subscribe(event => {
@@ -53,20 +51,6 @@ export class AppComponent {
         }
       }
     });
-
-    let language = localStorage.getItem('language');
-
-    if (!language) {
-      if (['bs', 'hr', 'sr'].some(lang => window.navigator.language.includes(lang))) {
-        language = 'bs';
-      } else {
-        language = 'en';
-      }
-
-      localStorage.setItem('language', language);
-    }
-
-    this.translate.use(language);
   }
 
   toggleAccountDropdownMenu() {

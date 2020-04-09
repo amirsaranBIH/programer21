@@ -1,31 +1,31 @@
 <div class="container">
     <div class="courses">
       <div class="flex flex flex--not-even flex--between flex--align-center margin-bottom--small">
-          <h1>{{ 'All Courses' | translate }}</h1>
+          <h1>All Courses</h1>
           <div class="course-search-and-filter">
-              <input type="search" name="search" placeholder="{{ 'Search courses' | translate }}" [(ngModel)]="searchInput" (input)="filterCourses()">
+              <input type="search" name="search" placeholder="Search courses" [(ngModel)]="searchInput" (input)="filterCourses()">
               <select name="payment" [(ngModel)]="paymentFilter" (change)="filterCourses()">
-                  <option value="">{{ 'Filter by payment' | translate }}</option>
-                  <option value="free">{{ 'Free' | translate }}</option>
-                  <option value="paid">{{ 'Paid' | translate }}</option>
+                  <option value="">Filter by payment</option>
+                  <option value="free">Free</option>
+                  <option value="paid">Paid</option>
               </select>
               <select name="difficulty" [(ngModel)]="difficultyFilter" (change)="filterCourses()">
-                  <option value="">{{ 'Filter by difficulty' | translate }}</option>
-                  <option value="beginner">{{ 'Beginner' | translate }}</option>
-                  <option value="advanced">{{ 'Advanced' | translate }}</option>
+                  <option value="">Filter by difficulty</option>
+                  <option value="beginner">Beginner</option>
+                  <option value="advanced">Advanced</option>
               </select>
           </div>
       </div>
       <div class="courses-list">
           <div class="course" *ngFor="let course of courses">
               <div [routerLink]="['/course', course.slug]" class="thumbnail" [ngStyle]="{'background-image': 'url(' + environment.HOST + course.image + ')'}">
-                <span class="price">{{ course.price === 0 ? ( 'FREE' |translate) : ('$' + course.price) }}</span>
+                <span class="price">{{ course.price === 0 ? 'FREE' : ('$' + course.price) }}</span>
               </div>
               <h2 [routerLink]="['/course', course.slug]">{{course.title}}</h2>
               <div class="course-info">
-                  <span>{{course.numberOfLectures}} {{ (course.numberOfLectures === 1 ? 'lecture' : 'lectures') | translate }}</span>
-                  <span>{{course.totalErt}} {{ (course.totalErt === 1 ? 'hour' : 'hours') | translate }}</span>
-                  <span class="text--capitalize">{{course.difficulty | translate}}</span>
+                  <span>{{course.numberOfLectures}} {{ (course.numberOfLectures === 1 ? 'lecture' : 'lectures') }}</span>
+                  <span>{{course.totalErt}} {{ (course.totalErt === 1 ? 'hour' : 'hours') }}</span>
+                  <span class="text--capitalize">course.difficulty</span>
               </div>
               <p>{{course.description | getSummary: 100}}</p>
           </div>
@@ -33,7 +33,7 @@
         <div class="no-courses flex margin-top--large" *ngIf="courses.length < 1">
         <div>
             <img src="/assets/icons/frown.svg" alt="frown">
-            <p>{{ 'No courses were found' | translate }}</p>
+            <p>No courses were found</p>
         </div>
         </div>
     </div>

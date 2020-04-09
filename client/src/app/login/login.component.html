@@ -1,42 +1,42 @@
 <div class="gradient-background">
   <img class="background-triangles-bottom" src="assets/triangles.png" alt="triangles">
   <div class="login fixed-section">
-    <h2 class="text--white margin-bottom">{{ 'Log Into Account' | translate }}</h2>
+    <h2 class="text--white margin-bottom">Log Into Account</h2>
     <form class="form" [formGroup]="loginForm" #ngForm="ngForm" (ngSubmit)="onSubmit(loginForm.value)">
       <div class="form-group">
-        <label for="email">{{ 'Email' | translate }}</label>
+        <label for="email">Email</label>
         <div class="input-group" [ngClass]="{ 'is-invalid' : (email.invalid && email.touched) || (email.invalid && ngForm.submitted) }">
-          <input type="email" id="email" formControlName="email" placeholder="{{ 'Your email address' | translate }}">
+          <input type="email" id="email" formControlName="email" placeholder="Your email address">
           <div class="input-help flex flex--not-even flex--align-center">
             <div class="input-help-status"></div>
             <div class="input-help-message">
-              <span *ngIf="email.errors?.required">{{ 'Email is required!' | translate }}</span>
-              <span *ngIf="email.errors?.maxlength && !email.errors?.notValidEmail">{{ 'Email must be less than' | translate }} {{ email.errors?.maxlength.requiredLength }} {{ 'characters long!' | translate }}</span>
-              <span *ngIf="email.errors?.notValidEmail && !email.errors?.required">{{ 'Email is invalid!' | translate }}</span>
+              <span *ngIf="email.errors?.required">Email is required!</span>
+              <span *ngIf="email.errors?.maxlength && !email.errors?.notValidEmail">Email must be less than {{ email.errors?.maxlength.requiredLength }} characters long!</span>
+              <span *ngIf="email.errors?.notValidEmail && !email.errors?.required">Email is invalid!</span>
             </div>
           </div>
         </div>
       </div>
       <div class="form-group">
-        <label for="password">{{ 'Password' | translate }}</label>
+        <label for="password">Password</label>
         <div class="input-group" [ngClass]="{ 'is-invalid' : (password.invalid && password.touched) || (password.invalid && ngForm.submitted) }">
-          <input type="password" id="password" formControlName="password" placeholder="{{ 'Your password' | translate }}">
+          <input type="password" id="password" formControlName="password" placeholder="Your password">
           <div class="input-help flex flex--not-even flex--align-center">
             <div class="input-help-status"></div>
             <div class="input-help-message">
-              <span *ngIf="password.errors?.required">{{ 'Password is required!' | translate }}</span>
-              <span *ngIf="password.errors?.wrongPassword">{{ 'Password not correct!' | translate }}</span>
+              <span *ngIf="password.errors?.required">Password is required!</span>
+              <span *ngIf="password.errors?.wrongPassword">Password not correct!</span>
             </div>
           </div>
         </div>
       </div>
       <div class="margin-top--large">
         <div class="flex flex--not-even flex--center">         
-          <button type="submit" class="button button--large">{{ 'Log In' | translate }}</button>
+          <button type="submit" class="button button--large">Log In</button>
         </div>
         <div class="alternate-links text--center">
-          <span class="form-alternative-link"><a routerLink="/forgot-password">{{ 'Forgot Password' | translate }}</a></span><br>
-          <span class="form-alternative-link">{{ 'Don\'t have an account?' | translate }} <a routerLink="/signup">{{ 'Sign up' | translate }}</a></span>
+          <span class="form-alternative-link"><a routerLink="/forgot-password">Forgot Password</a></span><br>
+          <span class="form-alternative-link">Don\'t have an account? <a routerLink="/signup">Sign up</a></span>
         </div>
       </div>
     </form>

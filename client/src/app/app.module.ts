@@ -5,9 +5,6 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule, Routes } from '@angular/router';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
-import {TranslateLoader, TranslateModule} from '@ngx-translate/core';
-import {TranslateHttpLoader} from '@ngx-translate/http-loader';
-
 import { AppComponent } from './app.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { LoginComponent } from './login/login.component';
@@ -59,6 +56,8 @@ import { VerifyEmailResolverService } from './resolvers/verify-email-resolver.se
 import { ResponseErrorInterceptorService } from './services/response-error-interceptor.service';
 import { QuizQuestionsResolverService } from './resolvers/quiz-questions-resolver.service';
 import { LectureGuardService } from './guards/lecture-guard.service';
+import { ServiceWorkerModule } from '@angular/service-worker';
+import { environment } from '../environments/environment';
 
 const routes: Routes = [
   {
@@ -212,10 +211,6 @@ export function fetchUserDataProviderFactory(provider: AuthenticationService) {
   return () => provider.fetchUserData();
 }
 
-export function HttpLoaderFactory(http: HttpClient) {
-  return new TranslateHttpLoader(http);
-}
-
 @NgModule({
   declarations: [
     AppComponent,
@@ -254,13 +249,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     ToastrModule.forRoot({
       positionClass: 'toast-top-left'
     }),
-    TranslateModule.forRoot({
-      loader: {
-          provide: TranslateLoader,
-          useFactory: HttpLoaderFactory,
-          deps: [HttpClient]
-      }
-  })
+    ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production })
   ],
   providers: [
     AuthenticationService,

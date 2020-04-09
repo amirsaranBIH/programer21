@@ -3,44 +3,44 @@
         <form class="form" [formGroup]="editUserForm" #ngForm="ngForm"
         (ngSubmit)="onSubmit(editUserForm.value)">
             <div class="flex flex--not-even flex--align-center flex--between margin-bottom--small">
-                <h2>{{ 'Edit User' | translate }}: {{ user.username }}</h2>
+                <h2>Edit User: {{ user.username }}</h2>
                 <div>
-                    <button type="button" class="button button--small button--secondary" routerLink="/admin-panel">{{ 'Go Back' | translate }}</button>
+                    <button type="button" class="button button--small button--secondary" routerLink="/admin-panel">Go Back</button>
                 </div>
             </div>
 
             <div class="section section--large">
                 <div class="flex">
                     <div class="form-group">
-                        <label for="firstName" class="required">{{ 'First Name' | translate }}</label>
+                        <label for="firstName" class="required">First Name</label>
                         <div class="input-group"
                             [ngClass]="{ 'is-invalid' : (firstName.invalid && firstName.touched) || (firstName.invalid && ngForm.submitted) }">
                             <input type="text" id="firstName" formControlName="firstName"
-                                placeholder="{{ 'What\'s your first name' | translate }}">
+                                placeholder="What\'s your first name">
                             <div class="input-help flex flex--not-even flex--align-center">
                                 <div class="input-help-status"></div>
                                 <div class="input-help-message">
-                                    <span *ngIf="firstName.errors?.required">{{ 'First name is required!' | translate }}</span>
-                                    <span *ngIf="firstName.errors?.nameNotValid && !firstName.errors?.required">{{ 'First name can only have alphabetical characters!' | translate }}</span>
-                                    <span *ngIf="firstName.errors?.minlength && !firstName.errors?.nameNotValid">{{ 'First name must be atleast' | translate }} {{ firstName.errors?.minlength.requiredLength }} {{ 'characters long!' | translate }}</span>
-                                    <span *ngIf="firstName.errors?.maxlength && !firstName.errors?.nameNotValid">{{ 'First name must be less than' | translate }} {{ firstName.errors?.maxlength.requiredLength }} {{ 'characters long!' | translate }}</span>
+                                    <span *ngIf="firstName.errors?.required">First name is required!</span>
+                                    <span *ngIf="firstName.errors?.nameNotValid && !firstName.errors?.required">First name can only have alphabetical characters!</span>
+                                    <span *ngIf="firstName.errors?.minlength && !firstName.errors?.nameNotValid">First name must be atleast {{ firstName.errors?.minlength.requiredLength }} characters long!</span>
+                                    <span *ngIf="firstName.errors?.maxlength && !firstName.errors?.nameNotValid">First name must be less than {{ firstName.errors?.maxlength.requiredLength }} characters long!</span>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="lastName" class="required">{{ 'Last Name' | translate }}</label>
+                        <label for="lastName" class="required">Last Name</label>
                         <div class="input-group"
                             [ngClass]="{ 'is-invalid' : (lastName.invalid && lastName.touched) || (lastName.invalid && ngForm.submitted) }">
                             <input type="text" id="lastName" formControlName="lastName"
-                                placeholder="{{ 'What\'s your last name' | translate }}">
+                                placeholder="What\'s your last name">
                             <div class="input-help flex flex--not-even flex--align-center">
                                 <div class="input-help-status"></div>
                                 <div class="input-help-message">
-                                    <span *ngIf="lastName.errors?.required">{{ 'Last name is required!' | translate }}</span>
-                                    <span *ngIf="lastName.errors?.nameNotValid && !lastName.errors?.required">{{ 'Last name can only have alphabetical characters!' | translate }}</span>
-                                    <span *ngIf="lastName.errors?.minlength && !lastName.errors?.nameNotValid">{{ 'Last name must be atleast' | translate }} {{ lastName.errors?.minlength.requiredLength }} {{ 'characters long!' | translate }}</span>
-                                    <span *ngIf="lastName.errors?.maxlength && !lastName.errors?.nameNotValid">{{ 'Last name must be less than' | translate }} {{ lastName.errors?.maxlength.requiredLength }} {{ 'characters long!' | translate }}</span>
+                                    <span *ngIf="lastName.errors?.required">Last name is required!</span>
+                                    <span *ngIf="lastName.errors?.nameNotValid && !lastName.errors?.required">Last name can only have alphabetical characters!</span>
+                                    <span *ngIf="lastName.errors?.minlength && !lastName.errors?.nameNotValid">Last name must be atleast {{ lastName.errors?.minlength.requiredLength }} characters long!</span>
+                                    <span *ngIf="lastName.errors?.maxlength && !lastName.errors?.nameNotValid">Last name must be less than {{ lastName.errors?.maxlength.requiredLength }} characters long!</span>
                                 </div>
                             </div>
                         </div>
@@ -48,34 +48,34 @@
                 </div>
                 <div class="flex">
                     <div class="form-group">
-                        <label for="username" class="required">{{ 'Username' | translate }}</label>
+                        <label for="username" class="required">Username</label>
                         <div class="input-group"
                             [ngClass]="{ 'is-invalid' : (username.invalid && username.touched) || (username.invalid && ngForm.submitted) }">
                             <input type="text" id="username" formControlName="username"
-                                placeholder="{{ 'What you want to be know as on Programer21' | translate }}">
+                                placeholder="What you want to be know as on Programer21">
                             <div class="input-help flex flex--not-even flex--align-center">
                                 <div class="input-help-status"></div>
                                 <div class="input-help-message">
-                                    <span *ngIf="username.errors?.required">{{ 'Username is required!' | translate }}</span>
-                                    <span *ngIf="username.errors?.usernameNotValid && !username.errors?.required">{{ 'Username can only contain alphanumeric characters and underscores!' | translate }}</span>
-                                    <span *ngIf="username.errors?.minlength">{{ 'Username must be atleast' | translate }} {{ username.errors?.minlength.requiredLength }} {{ 'characters long!' | translate }}</span>
-                                    <span *ngIf="username.errors?.maxlength">{{ 'Username must be less than' | translate }} {{ username.errors?.maxlength.requiredLength }} {{ 'characters long!' | translate }}</span>
+                                    <span *ngIf="username.errors?.required">Username is required!</span>
+                                    <span *ngIf="username.errors?.usernameNotValid && !username.errors?.required">Username can only contain alphanumeric characters and underscores!</span>
+                                    <span *ngIf="username.errors?.minlength">Username must be atleast {{ username.errors?.minlength.requiredLength }} characters long!</span>
+                                    <span *ngIf="username.errors?.maxlength">Username must be less than {{ username.errors?.maxlength.requiredLength }} characters long!</span>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="email" class="required">{{ 'Email' | translate }}</label>
+                        <label for="email" class="required">Email</label>
                         <div class="input-group"
                             [ngClass]="{ 'is-invalid' : (email.invalid && email.touched) || (email.invalid && ngForm.submitted) }">
-                            <input type="email" id="email" formControlName="email" placeholder="{{ 'Your email address' | translate }}">
+                            <input type="email" id="email" formControlName="email" placeholder="Your email address">
                             <div class="input-help flex flex--not-even flex--align-center">
                                 <div class="input-help-status"></div>
                                 <div class="input-help-message">
-                                    <span *ngIf="email.errors?.required">{{ 'Email is required!' | translate }}</span>
-                                    <span *ngIf="email.errors?.maxlength && !email.errors?.notValidEmail">{{ 'Email must be less than' | translate }} {{ email.errors?.maxlength.requiredLength }} {{ 'characters long!' | translate }}</span>
-                                    <span *ngIf="email.errors?.notValidEmail && !email.errors?.required">{{ 'Email is invalid!' | translate }}</span>
-                                    <span *ngIf="email.errors?.emailTaken && !email.errors?.required">{{ 'An account with that email has been registered!' | translate }}</span>
+                                    <span *ngIf="email.errors?.required">Email is required!</span>
+                                    <span *ngIf="email.errors?.maxlength && !email.errors?.notValidEmail">Email must be less than {{ email.errors?.maxlength.requiredLength }} characters long!</span>
+                                    <span *ngIf="email.errors?.notValidEmail && !email.errors?.required">Email is invalid!</span>
+                                    <span *ngIf="email.errors?.emailTaken && !email.errors?.required">An account with that email has been registered!</span>
                                 </div>
                             </div>
                         </div>
@@ -83,35 +83,35 @@
                 </div>
                 <div class="flex">
                     <div class="form-group">
-                        <label for="role" class="required">{{ 'Role' | translate }}</label>
+                        <label for="role" class="required">Role</label>
                         <div class="input-group"
                             [ngClass]="{ 'is-invalid' : (role.invalid && role.touched) || (role.invalid && ngForm.submitted) }">
                             <select formControlName="role" id="role">
-                                <option value="user">{{ 'User' | translate }}</option>
-                                <option value="administrator">{{ 'Administrator' | translate }}</option>
-                                <option value="moderator">{{ 'Moderator' | translate }}</option>
+                                <option value="user">User</option>
+                                <option value="administrator">Administrator</option>
+                                <option value="moderator">Moderator</option>
                             </select>
                             <div class="input-help flex flex--not-even flex--align-center">
                                 <div class="input-help-status"></div>
                                 <div class="input-help-message">
-                                    <span *ngIf="role.errors?.required">{{ 'User must have a role!' | translate }}</span>
-                                    <span *ngIf="role.errors?.pattern">{{ 'User role can only be user, moderator and administrator!' | translate }}</span>
+                                    <span *ngIf="role.errors?.required">User must have a role!</span>
+                                    <span *ngIf="role.errors?.pattern">User role can only be user, moderator and administrator!</span>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="gender" class="required">{{ 'Email Verified' | translate }}</label>
+                        <label for="gender" class="required">Email Verified</label>
                         <div class="input-group"
                             [ngClass]="{ 'is-invalid' : (emailVerified.invalid && emailVerified.touched) || (emailVerified.invalid && ngForm.submitted) }">
                             <select formControlName="emailVerified" id="emailVerified">
-                                <option value="1">{{ 'Yes' | translate }}</option>
-                                <option value="0">{{ 'No' | translate }}</option>
+                                <option value="1">Yes</option>
+                                <option value="0">No</option>
                             </select>
                             <div class="input-help flex flex--not-even flex--align-center">
                                 <div class="input-help-status"></div>
                                 <div class="input-help-message">
-                                    <span>{{ 'Email verified can only be true or false!' | translate }}</span>
+                                    <span>Email verified can only be true or false!</span>
                                 </div>
                             </div>
                         </div>
@@ -119,50 +119,50 @@
                 </div>
             </div>
 
-            <h2 class="margin-top">{{ 'Additional Information' | translate }}</h2>
+            <h2 class="margin-top">Additional Information</h2>
             <div class="section section--large">
                 <div class="form-group">
-                    <label for="description">{{ 'User Description' | translate }}</label>
+                    <label for="description">User Description</label>
                     <div class="input-group"
                         [ngClass]="{ 'is-invalid' : (description.invalid && description.touched) || (description.invalid && ngForm.submitted) }">
                         <textarea formControlName="description" id="description" cols="30" rows="5"
-                            placeholder="{{ 'User Description' | translate }}"></textarea>
+                            placeholder="User Description"></textarea>
                         <div class="input-help flex flex--not-even flex--align-center">
                             <div class="input-help-status"></div>
                             <div class="input-help-message">
-                                <span>{{ 'Description must be contain less than' | translate }} {{ description.errors?.maxlength.requiredLength }} {{ 'characters!' | translate }}</span>
+                                <span>Description must be contain less than {{ description.errors?.maxlength.requiredLength }} characters!</span>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="flex">
                     <div class="form-group">
-                        <label for="city">{{ 'City' | translate }}</label>
+                        <label for="city">City</label>
                         <div class="input-group"
                             [ngClass]="{ 'is-invalid' : (city.invalid && city.touched) || (city.invalid && ngForm.submitted) }">
                             <input type="text" id="city" formControlName="city" placeholder="Enter city">
                             <div class="input-help flex flex--not-even flex--align-center">
                                 <div class="input-help-status"></div>
                                 <div class="input-help-message">
-                                    <span>{{ 'City must be contain less than' | translate }} {{ city.errors?.maxlength.requiredLength }} {{ 'characters!' | translate }}</span>
+                                    <span>City must be contain less than {{ city.errors?.maxlength.requiredLength }} characters!</span>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="gender">{{ 'Gender' | translate }}</label>
+                        <label for="gender">Gender</label>
                         <div class="input-group"
                             [ngClass]="{ 'is-invalid' : (gender.invalid && gender.touched) || (gender.invalid && ngForm.submitted) }">
                             <select formControlName="gender" id="gender">
-                                <option value="">{{ 'Select Gender' | translate }}</option>
-                                <option value="male">{{ 'Male' | translate }}</option>
-                                <option value="female">{{ 'Female' | translate }}</option>
-                                <option value="other">{{ 'Other' | translate }}</option>
+                                <option value="">Select Gender</option>
+                                <option value="male">Male</option>
+                                <option value="female">Female</option>
+                                <option value="other">Other</option>
                             </select>
                             <div class="input-help flex flex--not-even flex--align-center">
                                 <div class="input-help-status"></div>
                                 <div class="input-help-message">
-                                    <span>{{ 'Gender can only be male, female and other!' | translate }}</span>
+                                    <span>Gender can only be male, female and other!</span>
                                 </div>
                             </div>
                         </div>
@@ -171,10 +171,10 @@
             </div>
             <div class="flex flex--not-even flex--between flex--align-center margin-top">
                 <div>
-                    <button type="submit" class="button button--large button--update" [disabled]="ngForm.submitted && ngForm.invalid">{{ 'Update User' | translate }}</button>
+                    <button type="submit" class="button button--large button--update" [disabled]="ngForm.submitted && ngForm.invalid">Update User</button>
                 </div>
                 <div>
-                    <button type="button" (click)="suspendUser()" class="button button--large button--delete">{{ (user.suspended ? 'Unsuspend User' : 'Suspend User') | translate }}</button>
+                    <button type="button" (click)="suspendUser()" class="button button--large button--delete">{{ (user.suspended ? 'Unsuspend User' : 'Suspend User') }}</button>
                 </div>
             </div>
         </form>

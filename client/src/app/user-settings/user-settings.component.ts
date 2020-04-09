@@ -4,7 +4,6 @@ import { ValidatorService } from '../services/validator.service';
 import { AuthenticationService } from '../services/authentication.service';
 import { UserService } from '../services/user.service';
 import { ActivatedRoute } from '@angular/router';
-import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-user-settings',
@@ -26,8 +25,7 @@ export class UserSettingsComponent implements OnInit {
     private validators: ValidatorService,
     private route: ActivatedRoute, // this is binded to email validator
     private authService: AuthenticationService,
-    private userService: UserService,
-    private translate: TranslateService
+    private userService: UserService
   ) { }
 
   ngOnInit() {
@@ -210,10 +208,5 @@ export class UserSettingsComponent implements OnInit {
     } else {
       return 'NOW!';
     }
-  }
-
-  languageChanged(value) {
-    localStorage.setItem('language', value);
-    this.translate.use(value);
   }
 }

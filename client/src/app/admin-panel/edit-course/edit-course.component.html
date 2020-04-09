@@ -2,17 +2,17 @@
     <div class="edit-course">
         <form class="form" [formGroup]="editCourseForm" #ngForm="ngForm" (ngSubmit)="onSubmit()">
             <div class="flex flex--not-even flex--align-center flex--between margin-bottom--small">
-                <h2>{{ 'Edit Course' | translate }}</h2>
+                <h2>Edit Course</h2>
                 <div>
-                    <button type="button" class="button button--small button--secondary" routerLink="/admin-panel">{{ 'Go Back' | translate }}</button>
+                    <button type="button" class="button button--small button--secondary" routerLink="/admin-panel">Go Back</button>
                 </div>
             </div>
 
             <div class="section section--large">
                 <div class="form-group">
                     <div class="flex flex-sm flex--align-center flex--not-even flex--between">
-                        <label for="title" class="required">{{ 'Title' | translate }}</label>
-                        <span class="slug">{{ 'Slug' | translate }}: {{ title.value | titleToSlug }}</span>
+                        <label for="title" class="required">Title</label>
+                        <span class="slug">Slug: {{ title.value | titleToSlug }}</span>
                     </div>
                     <div class="input-group"
                         [ngClass]="{ 'is-invalid' : (title.invalid && title.touched) || (title.invalid && ngForm.submitted) }">
@@ -21,82 +21,82 @@
                         <div class="input-help flex flex--not-even flex--align-center">
                             <div class="input-help-status"></div>
                             <div class="input-help-message">
-                                <span>{{ 'Title is required!' | translate }}</span>
+                                <span>Title is required!</span>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="flex">
                     <div class="form-group">
-                        <label for="difficulty" class="required">{{ 'Difficulty' | translate }}</label>
+                        <label for="difficulty" class="required">Difficulty</label>
                         <div class="input-group"
                             [ngClass]="{ 'is-invalid' : (difficulty.invalid && difficulty.touched) || (difficulty.invalid && ngForm.submitted) }">
                             <select formControlName="difficulty" id="difficulty">
-                                <option value="">{{ 'Select difficulty' | translate }}</option>
-                                <option value="beginner">{{ 'Beginner' | translate }}</option>
-                                <option value="advanced">{{ 'Advanced' | translate }}</option>
+                                <option value="">Select difficulty</option>
+                                <option value="beginner">Beginner</option>
+                                <option value="advanced">Advanced</option>
                             </select>
                             <div class="input-help flex flex--not-even flex--align-center">
                                 <div class="input-help-status"></div>
                                 <div class="input-help-message">
-                                    <span>{{ 'Course must have a difficulty!' | translate }}</span>
+                                    <span>Course must have a difficulty!</span>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="price" class="required">{{ 'Price' | translate }}</label>
+                        <label for="price" class="required">Price</label>
                         <div class="input-group"
                             [ngClass]="{ 'is-invalid' : (price.invalid && price.touched) || (price.invalid && ngForm.submitted) }">
                             <input type="number" id="price" formControlName="price"
-                                placeholder="{{ 'Enter course price' | translate }}">
+                                placeholder="Enter course price">
                             <div class="input-help flex flex--not-even flex--align-center">
                                 <div class="input-help-status"></div>
                                 <div class="input-help-message">
-                                    <span>{{ 'Price is required!' | translate }}</span>
+                                    <span>Price is required!</span>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="status" class="required">{{ 'Status' | translate }}</label>
+                    <label for="status" class="required">Status</label>
                     <div class="input-group"
                         [ngClass]="{ 'is-invalid' : (status.invalid && status.touched) || (status.invalid && ngForm.submitted) }">
                         <select formControlName="status" id="status">
-                            <option value="private">{{ 'Private' | translate }}</option>
-                            <option value="public">{{ 'Public' | translate }}</option>
+                            <option value="private">Private</option>
+                            <option value="public">Public</option>
                         </select>
                         <div class="input-help flex flex--not-even flex--align-center">
                             <div class="input-help-status"></div>
                             <div class="input-help-message">
-                                <span>{{ 'Course must have a status!' | translate }}</span>
+                                <span>Course must have a status!</span>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="flex">
                     <div class="form-group">
-                        <label for="shortName" class="required">{{ 'Programming Language / Short Name' | translate }}</label>
+                        <label for="shortName" class="required">Programming Language / Short Name</label>
                         <div class="input-group"
                             [ngClass]="{ 'is-invalid' : (shortName.invalid && shortName.touched) || (shortName.invalid && ngForm.submitted) }">
                             <input type="text" id="shortName" formControlName="shortName"
-                                placeholder="{{ 'Enter course programming language / short name' | translate }}">
+                                placeholder="Enter course programming language / short name">
                             <div class="input-help flex flex--not-even flex--align-center">
                                 <div class="input-help-status"></div>
                                 <div class="input-help-message">
-                                    <span>{{ 'Programming language / short name is required!' | translate }}</span>
+                                    <span>Programming language / short name is required!</span>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="color" class="required color-group-label">{{ 'Color' | translate }}</label>
+                        <label for="color" class="required color-group-label">Color</label>
                         <div class="input-group"
                             [ngClass]="{ 'is-invalid' : (color.invalid && color.touched) || (color.invalid && ngForm.submitted) }">
                             <div class="color-input-group flex flex-sm flex--not-even flex--align-center">
                                 <input type="text" id="color" formControlName="color"
-                                    placeholder="{{ 'Course color' | translate }}">
+                                    placeholder="Course color">
                                 <div class="color-picker">
                                     <label class="flex" for="color-picker" [ngStyle]="{ 'background-color': color.value }">
                                         <img src="assets/icons/color-picker.svg" alt="color-picker">
@@ -107,7 +107,7 @@
                             <div class="input-help flex flex--not-even flex--align-center">
                                 <div class="input-help-status"></div>
                                 <div class="input-help-message">
-                                    <span>{{ 'Color is required!' | translate }}</span>
+                                    <span>Color is required!</span>
                                 </div>
                             </div>
                         </div>
@@ -115,15 +115,15 @@
                 </div>
                 <div class="flex flex-sm flex--not-even flex--align-center">
                     <div class="form-group supported-language-group">
-                        <label for="supportedLanguage" class="required">{{ 'Supported Languages' | translate }}</label>
+                        <label for="supportedLanguage" class="required">Supported Languages</label>
                         <div class="input-group"
                             [ngClass]="{ 'is-invalid' : !supportedLanguage && supportedLanguageSubmitted }">
                             <input type="text" id="supportedLanguage" [ngModelOptions]="{standalone: true}" [(ngModel)]="supportedLanguage"
-                                placeholder="{{ 'Enter supported language to add' | translate }}">
+                                placeholder="Enter supported language to add">
                             <div class="input-help flex flex--not-even flex--align-center">
                                 <div class="input-help-status"></div>
                                 <div class="input-help-message">
-                                    <span>{{ 'Supported language can\'t be empty!' | translate }}</span>
+                                    <span>Supported language can\'t be empty!</span>
                                 </div>
                             </div>
                         </div>
@@ -136,23 +136,23 @@
                 </div>
                 <div class="supported-languages-list margin-bottom flex flex-sm flex--wrap flex--not-even flex--align-center">
                     <div class="supported-language flex flex-sm flex--not-even flex--align-center" *ngFor="let language of supportedLanguages; let i = index">
-                        <span class="text--capitalize">{{ language | translate }}</span>
+                        <span class="text--capitalize">{{ language }}</span>
                         <div (click)="removeSupportedLanguage(i)" class="remove-supported-language">
                             <img src="assets/icons/remove-supported-language.svg" alt="remove-supported-language">
                         </div>
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="description">{{ 'Course Description' | translate }}</label>
+                    <label for="description">Course Description</label>
                     <div class="input-group"
                         [ngClass]="{ 'is-invalid' : (description.invalid && description.touched) || (description.invalid && ngForm.submitted) }">
                         <textarea formControlName="description" id="description" cols="30" rows="5"
-                            placeholder="{{ 'Course description' | translate }}"></textarea>
+                            placeholder="Course description"></textarea>
                         <div class="input-help flex flex--not-even flex--align-center">
                             <div class="input-help-status"></div>
                             <div class="input-help-message">
-                                <span *ngIf="description.errors?.required">{{ 'Description is required!' | translate }}</span>
-                                <span *ngIf="description.errors?.maxlength">{{ 'Description must be contain less than' | translate }} {{ description.errors?.maxlength.requiredLength }} {{ 'characters!' | translate }}</span>
+                                <span *ngIf="description.errors?.required">Description is required!</span>
+                                <span *ngIf="description.errors?.maxlength">Description must be contain less than {{ description.errors?.maxlength.requiredLength }} characters!</span>
                             </div>
                         </div>
                     </div>
@@ -163,25 +163,25 @@
                 <file-upload [uploadText]="'Upload Course Image'" [imagePreview]="image.value" (onFileUpload)="onFileUpload($event)"></file-upload>
             </div>
             <div class="flex flex--not-even flex--between flex--align-start margin-top">
-                <button type="submit" class="button button--large button--update" [disabled]="editCourseForm.invalid && ngForm.submitted">{{ 'Update Course' | translate }}</button>
+                <button type="submit" class="button button--large button--update" [disabled]="editCourseForm.invalid && ngForm.submitted">Update Course</button>
                 <div>
                     <div class="flex flex--not-even flex--center">
-                        <button (click)="deleteCourse()" type="button" class="button button--large button--delete">{{ 'Delete Course' | translate }}</button>
+                        <button (click)="deleteCourse()" type="button" class="button button--large button--delete">Delete Course</button>
                     </div>
                     <div class="flex flex--not-even flex--center">
-                        <span class="course-delete-reminder">{{ 'and all its lectures' | translate }}</span>
+                        <span class="course-delete-reminder">and all its lectures</span>
                     </div>
                 </div>
             </div>
         </form>
         <div class="flex flex--not-even flex--align-end flex--between margin-top margin-bottom--small">
-            <h2>{{ 'Course Lectures' | translate }}</h2>
+            <h2>Course Lectures</h2>
             <div class="filter-lectures">
-                <input type="search" name="search" placeholder="{{ 'Search lectures' | translate }}" [(ngModel)]="searchInput" (input)="filterLectures()">
+                <input type="search" name="search" placeholder="Search lectures" [(ngModel)]="searchInput" (input)="filterLectures()">
                 <select name="status" [(ngModel)]="statusFilter" (change)="filterLectures()">
-                    <option value="">{{ 'Filter by status' | translate }}</option>
-                    <option value="private">{{ 'Private' | translate }}</option>
-                    <option value="public">{{ 'Public' | translate }}</option>
+                    <option value="">Filter by status</option>
+                    <option value="private">Private</option>
+                    <option value="public">Public</option>
                 </select>
             </div>
         </div>
@@ -191,25 +191,25 @@
                     <div class="lecture-title flex flex--not-even flex--align-center">
                         <img (click)="toggleLectureStatus(i)" *ngIf="lecture.status === 'public'" src="assets/icons/users.svg" alt="users" title="This lecture is public">
                         <img (click)="toggleLectureStatus(i)" *ngIf="lecture.status === 'private'" src="assets/icons/user-lock.svg" alt="user-lock" title="This lecture is private">
-                        <span [ngClass]="{ 'private-lecture-title': lecture.status === 'private' }" routerLink="{{'/lecture/' + lecture.slug}}">{{ lecture.title | translate }}</span>
+                        <span [ngClass]="{ 'private-lecture-title': lecture.status === 'private' }" routerLink="{{'/lecture/' + lecture.slug}}">{{ lecture.title }}</span>
                     </div>
                     <div class="lecture-actions flex flex--not-even flex--align-center">
                         <span routerLink="/admin-panel/edit-lecture/{{lecture.id}}" class="edit-lecture flex flex--not-even flex--align-center">
                             <img src="assets/icons/edit.svg" alt="pencil">
-                            <span>{{ 'Edit' | translate }}</span>
+                            <span>Edit</span>
                         </span>
                         <span (click)="deleteLecture(lecture.id, i)" class="delete-lecture flex flex--not-even flex--align-center">
                             <img src="assets/icons/delete.svg" alt="trash-can">
-                            <span>{{ 'Delete' | translate }}</span>
+                            <span>Delete</span>
                         </span>
                     </div>
                 </div>
             </div>
             <div class="no-lectures text--center" *ngIf="courseLectures.length < 1">
                 <img src="/assets/icons/frown.svg" alt="frown">
-                <p>{{ 'No lectures created yet' | translate }}</p>
+                <p>No lectures created yet</p>
             </div>
         </div>
-        <button [routerLink]="'/admin-panel/new-lecture/' + course.id" class="button button--create margin-top">{{ 'Create lecture for course' | translate }}</button>
+        <button [routerLink]="'/admin-panel/new-lecture/' + course.id" class="button button--create margin-top">Create lecture for course</button>
     </div>
 </div>

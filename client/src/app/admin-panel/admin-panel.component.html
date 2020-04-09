@@ -2,7 +2,7 @@
   <div class="admin-panel">
     <h2 class="flex flex--not-even flex--align-center image-heading">
       <img src="assets/icons/enrolled-courses.svg" alt="enrolled-courses">
-      <span>{{'Courses & Lectures' | translate}}</span>
+      <span>Courses & Lectures</span>
     </h2>
     <div class="section section--large">
       <div class="courses-and-lectures">
@@ -10,12 +10,12 @@
           <ng-container *ngIf="courses.length > 0">
             <div routerLink="/admin-panel/edit-course/{{courses[currentCourse]?.id}}" class="course" [ngStyle]="{'background-image': 'url(' + environment.HOST + courses[currentCourse].image + ')'}">
               <div class="course-info">
-                <h3 class="h2">{{ courses[currentCourse].title | translate }}</h3>
+                <h3 class="h2">{{ courses[currentCourse].title }}</h3>
                 <div class="info">
-                  <span>{{courses[currentCourse].numberOfLectures}} {{ (courses[currentCourse].numberOfLectures === 1 ? 'lecture' : 'lectures') | translate }}</span>
-                  <span>{{courses[currentCourse].totalErt}} {{ (courses[currentCourse].totalErt === 1 ? 'hour' : 'hours') | translate }}</span>
-                  <span class="text--capitalize">{{courses[currentCourse].difficulty | translate}}</span>
-                  <span class="text--capitalize">{{courses[currentCourse].status | translate}}</span>
+                  <span>{{courses[currentCourse].numberOfLectures}} {{ (courses[currentCourse].numberOfLectures === 1 ? 'lecture' : 'lectures') }}</span>
+                  <span>{{courses[currentCourse].totalErt}} {{ (courses[currentCourse].totalErt === 1 ? 'hour' : 'hours') }}</span>
+                  <span class="text--capitalize">courses[currentCourse].difficulty</span>
+                  <span class="text--capitalize">courses[currentCourse].status</span>
                 </div>
               </div>
             </div>
@@ -25,7 +25,7 @@
               </div>
               <div class="enrolled-courses-control-info">
                 <div>{{ currentCourse + 1 }} / {{ courses.length }}</div>
-                <div>{{'COURSES' | translate}}</div>
+                <div>COURSES</div>
               </div>
               <div class="arrow">
                 <img (click)="nextCourse()" [ngClass]="{ 'disabled': currentCourse === courses.length - 1 }" src="assets/icons/arrow-right.svg" alt="arrow-right">
@@ -34,40 +34,40 @@
           </ng-container>
           <div class="no-courses" *ngIf="courses.length < 1">
             <img src="/assets/icons/frown.svg" alt="frown">
-            <p>{{'No courses created yet' | translate}}</p>
+            <p>No courses created yet</p>
           </div>
         </div>
         <div routerLink="/admin-panel/new-course" class="new-course flex flex--align-center flex--center">
-          <span class="text--center">{{'Create New Course' | translate}}</span>
+          <span class="text--center">Create New Course</span>
         </div>
         <div routerLink="/admin-panel/edit-course/{{courses[currentCourse]?.id}}" [ngClass]="{ 'disabled': courses.length < 1 }" class="edit-course flex flex--align-center flex--center">
-          <span class="text--center">{{'Edit Course' | translate}}</span>
+          <span class="text--center">Edit Course</span>
         </div>
         <div routerLink="/admin-panel/new-lecture/{{courses[currentCourse]?.id}}" [ngClass]="{ 'disabled': courses.length < 1 }" class="new-lecture flex flex--align-center flex--center">
-          <span class="text--center">{{'Create Lecture' | translate}}</span>
+          <span class="text--center">Create Lecture</span>
         </div>
       </div>
     </div>
 
     <h2 class="margin-top flex flex--not-even flex--align-center image-heading">
       <img src="assets/icons/users-cog.svg" alt="users-cog">
-      <span>{{'Users' | translate}}</span>
+      <span>Users</span>
     </h2>
     <div class="section section--large">
       <div class="user-search-and-filter margin-bottom">
         <div class="flex flex--not-even flex--align-center flex--between">
-          <input type="search" name="search" placeholder="{{ 'Search users' | translate }}" [(ngModel)]="searchInput" (input)="filterUsers()">
+          <input type="search" name="search" placeholder="Search users" [(ngModel)]="searchInput" (input)="filterUsers()">
           <div class="filter">
             <select name="payment" [(ngModel)]="roleFilter" (change)="filterUsers()">
-                <option value="">{{'Filter by role' | translate}}</option>
-                <option value="user">{{'User' | translate}}</option>
-                <option value="administrator">{{'Administrator' | translate}}</option>
-                <option value="moderator">{{'Moderator' | translate}}</option>
+                <option value="">Filter by role</option>
+                <option value="user">User</option>
+                <option value="administrator">Administrator</option>
+                <option value="moderator">Moderator</option>
             </select>
             <select name="difficulty" [(ngModel)]="verifiedFilter" (change)="filterUsers()">
-                <option value="">{{'Filter by verified' | translate}}</option>
-                <option value="1">{{'Yes' | translate}}</option>
-                <option value="0">{{'No' | translate}}</option>
+                <option value="">Filter by verified</option>
+                <option value="1">Yes</option>
+                <option value="0">No</option>
             </select>
           </div>
         </div>
@@ -78,12 +78,12 @@
           <thead>
             <tr>
               <th class="sort-{{currentSortDirection}}" [ngClass]="{'hide-sort': currentSortField !== 'id' }" (click)="sortUsers('id')">ID</th>
-              <th class="sort-{{currentSortDirection}}" [ngClass]="{'hide-sort': currentSortField !== 'name' }" (click)="sortUsers('name')">{{'Name' | translate}}</th>
-              <th class="sort-{{currentSortDirection}}" [ngClass]="{'hide-sort': currentSortField !== 'email' }" (click)="sortUsers('email')">{{'Email' | translate}}</th>
-              <th class="sort-{{currentSortDirection}}" [ngClass]="{'hide-sort': currentSortField !== 'username' }" (click)="sortUsers('username')">{{'Username' | translate}}</th>
-              <th class="sort-{{currentSortDirection}}" [ngClass]="{'hide-sort': currentSortField !== 'role' }" (click)="sortUsers('role')">{{'Role' | translate}}</th>
-              <th class="sort-{{currentSortDirection}}" [ngClass]="{'hide-sort': currentSortField !== 'verified' }" (click)="sortUsers('verified')">{{'Verified' | translate}}</th>
-              <th>{{ 'Courses Fin./Enr.' | translate }}</th>
+              <th class="sort-{{currentSortDirection}}" [ngClass]="{'hide-sort': currentSortField !== 'name' }" (click)="sortUsers('name')">Name</th>
+              <th class="sort-{{currentSortDirection}}" [ngClass]="{'hide-sort': currentSortField !== 'email' }" (click)="sortUsers('email')">Email</th>
+              <th class="sort-{{currentSortDirection}}" [ngClass]="{'hide-sort': currentSortField !== 'username' }" (click)="sortUsers('username')">Username</th>
+              <th class="sort-{{currentSortDirection}}" [ngClass]="{'hide-sort': currentSortField !== 'role' }" (click)="sortUsers('role')">Role</th>
+              <th class="sort-{{currentSortDirection}}" [ngClass]="{'hide-sort': currentSortField !== 'verified' }" (click)="sortUsers('verified')">Verified</th>
+              <th>Courses Fin./Enr.</th>
             </tr>
           </thead>
           <tbody>
@@ -92,8 +92,8 @@
               <td>{{ user.name }}</td>
               <td>{{ user.email }}</td>
               <td>{{ user.username }}</td>
-              <td class="text--capitalize">{{ user.role | translate }}</td>
-              <td>{{ (user.verified ? 'Yes' : 'No') | translate }}</td>
+              <td class="text--capitalize">{{ user.role }}</td>
+              <td>{{ (user.verified ? 'Yes' : 'No') }}</td>
               <td>{{ user.finishedCourses }} / {{ user.finishedCourses }}</td>
             </tr>
           </tbody>
