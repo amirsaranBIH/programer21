@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { environment } from 'src/environments/environment';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-courses',
@@ -15,9 +16,14 @@ export class CoursesComponent implements OnInit {
   public difficultyFilter = '';
   public environment = environment;
 
-  constructor(private route: ActivatedRoute) { }
+  constructor(
+    private route: ActivatedRoute,
+    private titleService: Title
+  ) { }
 
   ngOnInit() {
+    this.titleService.setTitle('Programer21 | Check out all the courses');
+
     this.courses = this.route.snapshot.data.courses;
 
     this.unfilteredCourses = JSON.parse(JSON.stringify(this.courses));

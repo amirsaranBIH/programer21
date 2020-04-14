@@ -58,6 +58,7 @@ import { QuizQuestionsResolverService } from './resolvers/quiz-questions-resolve
 import { LectureGuardService } from './guards/lecture-guard.service';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { environment } from '../environments/environment';
+import { ErtMinutesToHoursPipe } from './pipes/ert-minutes-to-hours.pipe';
 
 const routes: Routes = [
   {
@@ -237,7 +238,8 @@ export function fetchUserDataProviderFactory(provider: AuthenticationService) {
     EditUserComponent,
     ForgotPasswordComponent,
     NewPasswordComponent,
-    VerifyEmailComponent
+    VerifyEmailComponent,
+    ErtMinutesToHoursPipe
   ],
   imports: [
     BrowserAnimationsModule,

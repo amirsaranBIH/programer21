@@ -4,6 +4,7 @@ import { ValidatorService } from '../services/validator.service';
 import { AuthenticationService } from '../services/authentication.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-new-password',
@@ -19,10 +20,13 @@ export class NewPasswordComponent implements OnInit {
     private router: Router,
     private toastr: ToastrService,
     private validators: ValidatorService,
-    private authService: AuthenticationService
+    private authService: AuthenticationService,
+    private titleService: Title
   ) { }
 
   ngOnInit() {
+    this.titleService.setTitle('Programer21 | New Password');
+
     this.newPasswordForm = this.fb.group({
       password: ['', [
         Validators.required,

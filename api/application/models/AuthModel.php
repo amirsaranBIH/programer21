@@ -35,7 +35,11 @@ class AuthModel extends CI_model {
         if ($isCorrectPassword) {  
             $jwt = $this->generateNewJwtToken($row->id);
             $weekFromNow = strtotime('+1 week');
-            if ((!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') || $_SERVER['SERVER_PORT'] == 443) {
+
+            $dotenv = \Dotenv\Dotenv::createImmutable(FCPATH);
+            $dotenv->load();
+
+            if (getenv('ENVIRONMENT') === 'production') {
                 header("Set-Cookie: PROGRAMER21_JWT={$jwt}; Max-Age={$weekFromNow}; Path=/; HttpOnly; SameSite=Lax; Secure");
             } else {
                 header("Set-Cookie: PROGRAMER21_JWT={$jwt}; Max-Age={$weekFromNow}; Path=/; HttpOnly; SameSite=Lax");

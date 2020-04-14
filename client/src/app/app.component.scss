@@ -6,6 +6,11 @@
     background: linear-gradient(to right, $dark_purple 0%, $light_purple 100%);
     color: white;
 
+    .brand img {
+        height: 30px;
+        width: auto;
+    }
+
     & > .navigation > ul li + li {
         margin-left: 3em;
     }
@@ -16,7 +21,7 @@
         top: 0;
         left: 0;
         width: 100%;
-        background: initial !important;
+        background: unset;
     }
 
     .profile-image {

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { environment } from 'src/environments/environment';
 import { ActivatedRoute } from '@angular/router';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-admin-panel',
@@ -20,10 +21,13 @@ export class AdminPanelComponent implements OnInit {
   public environment = environment;
 
   constructor(
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private titleService: Title
   ) {}
 
   ngOnInit() {
+    this.titleService.setTitle('Programer21 | Admin Panel');
+
     this.users = this.route.snapshot.data.users;
 
     this.unfilteredUsers = JSON.parse(JSON.stringify(this.users));

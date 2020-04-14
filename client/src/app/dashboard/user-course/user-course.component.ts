@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import * as moment from 'moment';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-user-course',
@@ -12,11 +13,14 @@ export class UserCourseComponent implements OnInit {
   public course;
 
   constructor(
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private titleService: Title
   ) { }
 
   ngOnInit() {
     this.course = this.route.snapshot.data.course;
+
+    this.titleService.setTitle('Programer21 | ' + this.course.title);
   }
 
   lectureShowMore(lecture) {

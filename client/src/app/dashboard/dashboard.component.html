@@ -71,7 +71,7 @@
         <div class="no-courses flex" *ngIf="enrolledCourses.length < 1">
           <div>
             <img src="/assets/icons/frown.svg" alt="frown">
-            <p>You haven\'t enrolled in any courses yet.</p>
+            <p>You haven't enrolled in any courses yet.</p>
             <div class="text--center">
               <span class="link" routerLink="/courses">Check out courses</span>
             </div>
@@ -88,7 +88,7 @@
             <span>Finished at {{ formatDateMonth(lecture.finishedAt) }} {{ formatDateDayAndYear(lecture.finishedAt) }}</span>
           </li>
           <div class="no-latest-lectures" *ngIf="latestLectures.length < 1">
-            <span>You haven\'t finished any courses lately</span>
+            <span>You haven't finished any courses lately</span>
           </div>
           <p class="text--center">
             <span (click)="toggleFinishedAndLatestLectuers()" class="toggle-finished-lectures">{{ (showAllFinishedLectures ? 'Show only latest finished lectures' : 'Show all finished lectures') }}</span>

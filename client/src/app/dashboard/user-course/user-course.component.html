@@ -7,7 +7,7 @@
                     <hr class="hr--small" [ngStyle]="{ 'background-color': course.color }">
                     <div class="course-info">
                         <span>{{course.courseLectures.length}}  (course.courseLectures.length === 1 ? 'lecture' : 'lectures')</span>
-                        <span>{{course.totalErt}} {{ (course.totalErt === 1 ? 'hour' : 'hours') }}</span>
+                        <span>{{course.totalErt | ertMinutesToHours}}</span>
                         <span class="text--capitalize">{{ course.difficulty }}</span>
                     </div>
                     <p>{{ course.description }}</p>

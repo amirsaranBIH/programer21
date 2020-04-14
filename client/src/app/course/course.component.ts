@@ -4,6 +4,7 @@ import * as moment from 'moment';
 import { AuthenticationService } from '../services/authentication.service';
 import { UserService } from '../services/user.service';
 import { ToastrService } from 'ngx-toastr';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-course',
@@ -18,11 +19,14 @@ export class CourseComponent implements OnInit {
     private router: Router,
     private toastr: ToastrService,
     private authService: AuthenticationService,
-    private userService: UserService
+    private userService: UserService,
+    private titleService: Title
   ) { }
 
   ngOnInit() {
     this.course = this.route.snapshot.data.course;
+
+    this.titleService.setTitle('Programer21 | ' + this.course.title);
   }
 
   lectureShowMore(lecture) {

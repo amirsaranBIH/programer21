@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { LectureService } from '../services/lecture.service';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-lecture',
@@ -14,11 +15,14 @@ export class LectureComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private lectureService: LectureService
+    private lectureService: LectureService,
+    private titleService: Title
   ) { }
 
   ngOnInit() {
     this.lecture = this.route.snapshot.data.lecture;
+
+    this.titleService.setTitle('Programer21 | ' + this.lecture.title);
 
     this.lectureService.getLectureQuizQuestionBySlug(this.lecture.slug).then((res: any) => {
       if (res.status) {

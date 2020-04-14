@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { ValidatorService } from '../services/validator.service';
 import { ToastrService } from 'ngx-toastr';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   templateUrl: './login.component.html',
@@ -17,10 +18,13 @@ export class LoginComponent implements OnInit {
     private router: Router,
     private fb: FormBuilder,
     private validators: ValidatorService,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private titleService: Title
   ) { }
 
   ngOnInit() {
+    this.titleService.setTitle('Programer21 | Log into your account');
+
     this.loginForm = this.fb.group({
       email: ['', [
         Validators.required,

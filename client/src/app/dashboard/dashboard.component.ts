@@ -4,6 +4,7 @@ import { AuthenticationService } from '../services/authentication.service';
 import { ActivatedRoute } from '@angular/router';
 import * as moment from 'moment';
 import { UserService } from '../services/user.service';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   templateUrl: './dashboard.component.html',
@@ -25,10 +26,13 @@ export class DashboardComponent implements OnInit {
   constructor(
       public auth: AuthenticationService,
       private userService: UserService,
-      private route: ActivatedRoute
+      private route: ActivatedRoute,
+      private titleService: Title
     ) {}
 
   ngOnInit() {
+    this.titleService.setTitle('Programer21 | My Dashboard');
+
     this.user = this.auth.userData;
     this.enrolledCourses = this.route.snapshot.data.enrolledCourses;
     this.courseActivityPercentages = this.route.snapshot.data.courseActivityPercentages;

@@ -4,6 +4,7 @@ import { ValidatorService } from '../services/validator.service';
 import { AuthenticationService } from '../services/authentication.service';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-forgot-password',
@@ -18,10 +19,13 @@ export class ForgotPasswordComponent implements OnInit {
     private validators: ValidatorService,
     private authService: AuthenticationService,
     private router: Router,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private titleService: Title
   ) { }
 
   ngOnInit() {
+    this.titleService.setTitle('Programer21 | Forgot Password');
+
     this.forgotPasswordForm = this.fb.group({
       email: ['', [
         Validators.required,

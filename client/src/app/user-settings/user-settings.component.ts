@@ -4,6 +4,8 @@ import { ValidatorService } from '../services/validator.service';
 import { AuthenticationService } from '../services/authentication.service';
 import { UserService } from '../services/user.service';
 import { ActivatedRoute } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-user-settings',
@@ -25,10 +27,14 @@ export class UserSettingsComponent implements OnInit {
     private validators: ValidatorService,
     private route: ActivatedRoute, // this is binded to email validator
     private authService: AuthenticationService,
-    private userService: UserService
+    private userService: UserService,
+    private toastr: ToastrService,
+    private titleService: Title
   ) { }
 
   ngOnInit() {
+    this.titleService.setTitle('Programer21 | Update user settings');
+
     this.user = this.authService.userData;
 
     this.unchangedUsername = this.user.username;
@@ -171,6 +177,7 @@ export class UserSettingsComponent implements OnInit {
       next: (res: any) => {
         if (res.status) {
           this.authService.fetchUserData();
+          this.toastr.success('Successfully updated account information!', 'Success');
         }
       }
     });
@@ -181,6 +188,7 @@ export class UserSettingsComponent implements OnInit {
       error: (err) => console.error(err),
       complete: () => {
         this.authService.fetchUserData();
+        this.toastr.success('Successfully updated additional information!', 'Success');
       }
     });
   }
@@ -191,6 +199,7 @@ export class UserSettingsComponent implements OnInit {
       next: (res: any) => {
         if (res.status) {
           this.authService.fetchUserData();
+          this.toastr.success('Successfully changed password!', 'Success');
         } else {
           this.password.setErrors({ wrongPassword: true });
         }
