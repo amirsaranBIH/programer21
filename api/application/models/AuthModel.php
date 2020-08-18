@@ -39,11 +39,13 @@ class AuthModel extends CI_model {
             $dotenv = \Dotenv\Dotenv::createImmutable(FCPATH);
             $dotenv->load();
 
+            $setCookieHeader = "Set-Cookie: PROGRAMER21_JWT={$jwt}; Max-Age={$weekFromNow}; Path=/; HttpOnly; SameSite=Lax; ";
+
             if (getenv('ENVIRONMENT') === 'production') {
-                header("Set-Cookie: PROGRAMER21_JWT={$jwt}; Max-Age={$weekFromNow}; Path=/; HttpOnly; SameSite=Lax; Secure");
-            } else {
-                header("Set-Cookie: PROGRAMER21_JWT={$jwt}; Max-Age={$weekFromNow}; Path=/; HttpOnly; SameSite=Lax");
-            }
+                $setCookieHeader .= 'Secure';
+            } 
+
+            header($setCookieHeader);
 
             return handleSuccess(true);
         } else {

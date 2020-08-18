@@ -5,7 +5,7 @@
                 <h1 class="h2">{{ course.title }}</h1>
                 <hr class="hr--small" [ngStyle]="{ 'background-color': course.color }">
                 <div class="course-info">
-                    <span>{{course.courseLectures.length}} {{ (course.courseLectures.length === 1 ? 'lecture' : 'lectures') }}</span>
+                    <span>{{course.courseLectures.length}} {{ course.courseLectures.length === 1 ? 'lecture' : 'lectures' }}</span>
                     <span>{{course.totalErt | ertMinutesToHours}}</span>
                     <span class="text--capitalize">{{ course.difficulty }}</span>
                 </div>
@@ -18,7 +18,7 @@
                     <img [src]="course.image" [alt]="course.slug">
                     <div class="thumbnail-info flex flex--not-even flex--align-center flex--between">
                         <span class="price">{{ course.price === 0 ? 'FREE' : ('$' + course.price) }}</span>
-                        <span class="students-enrolled">{{ course.enrolledStudents }}  (course.enrolledStudents === 1 ? 'student' : 'students') enrolled</span>
+                        <span class="students-enrolled">{{ course.enrolledStudents }} {{ course.enrolledStudents === 1 ? 'student' : 'students' }} enrolled</span>
                     </div>
                 </div>
                 <p *ngIf="course.price !== 0">30-Day Money-Back Guarantee</p>
@@ -31,6 +31,7 @@
             </div>
         </div>
         <div class="course-lectures-list">
+            <h2 class="margin-bottom--small">Course lectures</h2>
             <div class="course-lecture" *ngFor="let lecture of course.courseLectures">
                 <div class="flex flex--not-even flex--between flex--align-center">
                     <div class="lecture-title flex flex--not-even flex--align-center">

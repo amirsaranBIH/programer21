@@ -230,7 +230,7 @@ class UserModel extends CI_model {
                 return handleError($setUserImageResponse['message'], false);
             }
 
-            if (strpos($oldImage, 'user.png') !== false) {
+            if (strpos($oldImage, 'user.png') === false) {
                 $deleteOldImageResponse = $this->deleteOldImage($oldImage);
     
                 if (!$deleteOldImageResponse['status']) {
