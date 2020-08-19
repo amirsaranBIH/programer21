@@ -20,12 +20,12 @@
                 </li>
             </ul>
         </div>
-        <div class="flex flex--not-even flex--between flex--align-center">
+        <div class="flex flex--not-even flex--between flex--align-center" *ngIf="!lecture.finished">
             <div>
                 <button type="button" class="button button--large" (click)="verifyQuizQuestions()">Verify Answers</button>
             </div>
             <div>
-                <button type="button" class="button button--large button--update" *ngIf="!lecture.finished" (click)="finishLecture()">Finish Lecture</button>
+                <button type="button" class="button button--large button--update" (click)="finishLecture()">Finish Lecture</button>
             </div>
         </div>
     </div>    
