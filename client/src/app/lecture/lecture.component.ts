@@ -6,7 +6,7 @@ import { Title } from '@angular/platform-browser';
 @Component({
   selector: 'app-lecture',
   templateUrl: './lecture.component.html',
-  styleUrls: ['./lecture.component.scss']
+  styleUrls: ['./lecture.component.css']
 })
 export class LectureComponent implements OnInit {
   public lecture;

@@ -1,0 +1,112 @@
+.course .course-main-info {
+    padding-right: 1em;
+  }
+  .course .course-main-info .course-info {
+    color: #DC3545;
+    font-family: "Lato", sans-serif;
+    line-height: 1.2em;
+    font-weight: bold;
+  }
+  .course .course-main-info .course-info span + span {
+    position: relative;
+    margin-left: 1.5em;
+  }
+  .course .course-main-info .course-info span + span::before {
+    content: "";
+    display: block;
+    position: absolute;
+    width: 6px;
+    height: 6px;
+    border-radius: 6px;
+    background-color: #DC3545;
+    left: -16px;
+    top: 50%;
+    transform: translateY(-30%);
+  }
+  .course .course-main-info .course-supported-languages {
+    color: #DC3545;
+  }
+  .course .course-payment-info {
+    padding-left: 1em;
+  }
+  .course .course-payment-info .thumbnail {
+    position: relative;
+  }
+  .course .course-payment-info .thumbnail .thumbnail-info {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    padding: 0.5em 1em;
+    background-color: #28A745;
+    color: white;
+  }
+  .course .course-payment-info .thumbnail .thumbnail-info .price {
+    font-size: 1.5em;
+    margin-bottom: 0.25em;
+    font-weight: bold;
+    font-family: "Lato", sans-serif;
+    line-height: 1.2em;
+    margin-bottom: 0;
+  }
+  .course .course-lectures-list .course-lecture {
+    background-color: #EEF3FF;
+    padding: 1em;
+  }
+  .course .course-lectures-list .course-lecture .lecture-title {
+    flex: 1;
+  }
+  .course .course-lectures-list .course-lecture .lecture-title img {
+    cursor: pointer;
+    width: 18px;
+    margin-right: 0.75em;
+    transition: transform 0.4s ease;
+  }
+  .course .course-lectures-list .course-lecture .lecture-title .rotate-arrow {
+    transform: rotateZ(180deg);
+  }
+  .course .course-lectures-list .course-lecture .lecture-title span {
+    color: #401598;
+    font-family: "Lato", sans-serif;
+    line-height: 1.2em;
+    font-weight: bold;
+  }
+  .course .course-lectures-list .course-lecture .course-lecture-more-info {
+    margin-top: 1em;
+    padding-top: 0.5em;
+    border-top: 1px solid #E6E6E6;
+  }
+  .course .course-lectures-list .course-lecture .course-lecture-more-info p {
+    margin: 0;
+  }
+  .course .course-lectures-list .course-lecture + .course-lecture {
+    margin-top: 1em;
+  }
+  .course .no-lectures {
+    color: #010101;
+  }
+  .course .no-lectures div {
+    text-align: center;
+    margin: auto;
+  }
+  .course .no-lectures div img {
+    margin: 0 auto;
+    display: block;
+    width: 75px;
+  }
+  
+  @media (max-width: 768px) {
+    .course .course-main {
+      flex-direction: column-reverse;
+    }
+    .course .course-main .course-payment-info {
+      padding-left: 0;
+      margin-bottom: 0.5em;
+    }
+    .course .course-main .course-payment-info button {
+      margin: 1em 0;
+    }
+    .course .estimated-reading-time {
+      display: none;
+    }
+  }

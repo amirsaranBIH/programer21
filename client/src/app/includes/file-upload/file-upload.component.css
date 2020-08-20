@@ -1,0 +1,48 @@
+.file-upload {
+    padding: 4em 0;
+    position: relative;
+    display: block;
+    cursor: pointer;
+  }
+  .file-upload .file-upload-content {
+    margin: auto;
+    width: 40%;
+  }
+  .file-upload .file-upload-content p {
+    font-family: "Lato", sans-serif;
+    line-height: 1.2em;
+    font-size: 1.75em;
+    color: #AE87FF;
+  }
+  .file-upload .preview-image {
+    position: absolute;
+    top: 1em;
+    left: 1em;
+  }
+  .file-upload .preview-image img {
+    width: 250px;
+  }
+  .file-upload .preview-image div {
+    margin-top: 0.4em;
+  }
+  
+  .file-upload:hover {
+    background-color: #E6E6E6;
+  }
+  
+  @media (max-width: 768px) {
+    .file-upload .file-upload-content {
+      width: 50%;
+    }
+    .file-upload .preview-image img {
+      width: 200px;
+    }
+  }
+  @media (max-width: 768px) {
+    .file-upload .file-upload-content p {
+      font-size: 1.25em;
+    }
+    .file-upload .preview-image img {
+      width: 150px;
+    }
+  }

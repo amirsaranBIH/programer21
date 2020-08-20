@@ -10,7 +10,7 @@ import { LoadingService } from 'src/app/services/loading.service';
 @Component({
   selector: 'app-edit-course',
   templateUrl: './edit-course.component.html',
-  styleUrls: ['./edit-course.component.scss']
+  styleUrls: ['./edit-course.component.css']
 })
 export class EditCourseComponent implements OnInit {
   public course;

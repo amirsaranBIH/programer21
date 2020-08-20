@@ -1,0 +1,52 @@
+.new-lecture .add-quiz-question .add-quiz-question-input {
+    flex: 1;
+  }
+  .new-lecture .add-quiz-question .add-quiz-question-input input {
+    margin: 0;
+  }
+  .new-lecture .add-quiz-question .add-quiz-question-button button {
+    height: 54px;
+    margin-left: 1em;
+  }
+  .new-lecture .lecture-quiz-question .add-quiz-answer .add-quiz-answer-input {
+    flex: 1;
+  }
+  .new-lecture .lecture-quiz-question .add-quiz-answer .add-quiz-answer-input input {
+    margin: 0;
+  }
+  .new-lecture .lecture-quiz-question .add-quiz-answer .add-quiz-answer-button button {
+    height: 54px;
+    margin-left: 1em;
+  }
+  .new-lecture .lecture-quiz-answer p {
+    margin-top: 0;
+    margin-bottom: 0;
+    margin-left: 0.5em;
+    padding-right: 0.5em;
+  }
+  .new-lecture .lecture-quiz-answer p:hover ~ .remove-answer,
+  .new-lecture .lecture-quiz-question-text:hover .remove-answer,
+  .new-lecture .remove-answer:hover {
+    display: block;
+  }
+  .new-lecture .remove-answer {
+    display: none;
+    width: 10px;
+    cursor: pointer;
+  }
+  .new-lecture .lecture-quiz-question-text h3 {
+    padding-right: 0.5em;
+  }
+  .new-lecture .lecture-quiz-question-text .remove-answer {
+    position: relative;
+    bottom: 2px;
+  }
+  
+  @media (max-width: 768px) {
+    .new-lecture .add-quiz-question .add-quiz-question-button button {
+      height: 46px;
+    }
+    .new-lecture .lecture-quiz-question .add-quiz-answer .add-quiz-answer-button button {
+      height: 46px;
+    }
+  }

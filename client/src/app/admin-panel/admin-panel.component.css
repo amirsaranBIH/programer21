@@ -1,0 +1,230 @@
+.admin-panel .courses-and-lectures {
+    display: -ms-grid;
+    display: grid;
+    grid-gap: 2em;
+    -ms-grid-columns: 2fr 2em 1fr;
+    grid-template-columns: 2fr 1fr;
+    -ms-grid-rows: 2fr 2em 1fr 2em 1fr;
+    grid-template-rows: 2fr 1fr 1fr;
+    grid-template-areas: "courses new-course" "courses edit-course" "courses new-lecture";
+  }
+  .admin-panel .courses-and-lectures .courses {
+    -ms-grid-row: 1;
+    -ms-grid-row-span: 5;
+    -ms-grid-column: 1;
+    color: white;
+    grid-area: courses;
+    position: relative;
+  }
+  .admin-panel .courses-and-lectures .courses img {
+    height: 100%;
+  }
+  .admin-panel .courses-and-lectures .courses .course {
+    height: 100%;
+    background-position: center;
+    background-size: cover;
+  }
+  .admin-panel .courses-and-lectures .courses .enrolled-courses-controls {
+    position: absolute;
+    bottom: 105px;
+    right: 25px;
+    color: white;
+  }
+  .admin-panel .courses-and-lectures .courses .enrolled-courses-controls .arrow img {
+    width: 30px;
+    cursor: pointer;
+  }
+  .admin-panel .courses-and-lectures .courses .enrolled-courses-controls .enrolled-courses-control-info {
+    margin: 0 10px;
+    font-family: "Lato", sans-serif;
+    line-height: 1.2em;
+  }
+  .admin-panel .courses-and-lectures .courses .enrolled-courses-controls .enrolled-courses-control-info div:first-child {
+    font-size: 2.14em;
+    font-weight: bold;
+    line-height: 0.85;
+  }
+  .admin-panel .courses-and-lectures .courses .course-info {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    padding: 1em;
+    background-color: rgba(0, 0, 0, 0.5);
+  }
+  .admin-panel .courses-and-lectures .courses .course-info .info {
+    font-family: "Lato", sans-serif;
+    line-height: 1.2em;
+    font-weight: bold;
+  }
+  .admin-panel .courses-and-lectures .courses .course-info .info span + span {
+    position: relative;
+    margin-left: 1.5em;
+  }
+  .admin-panel .courses-and-lectures .courses .course-info .info span + span::before {
+    content: "";
+    display: block;
+    position: absolute;
+    width: 6px;
+    height: 6px;
+    border-radius: 6px;
+    background-color: white;
+    left: -16px;
+    top: 50%;
+    transform: translateY(-30%);
+  }
+  .admin-panel .courses-and-lectures .buttons {
+    font-family: "Lato", sans-serif;
+    line-height: 1.2em;
+    cursor: pointer;
+  }
+  .admin-panel .courses-and-lectures .new-course {
+    -ms-grid-row: 1;
+    -ms-grid-column: 3;
+    grid-area: new-course;
+    background-color: #DC3545;
+    font-family: "Lato", sans-serif;
+    line-height: 1.2em;
+    cursor: pointer;
+  }
+  .admin-panel .courses-and-lectures .new-course span {
+    color: white;
+    font-size: 2.5em;
+    padding: 1em 0.9em;
+    line-height: 1.2em;
+  }
+  .admin-panel .courses-and-lectures .edit-course {
+    -ms-grid-row: 3;
+    -ms-grid-column: 3;
+    grid-area: edit-course;
+    border: 3px solid #28A745;
+    font-family: "Lato", sans-serif;
+    line-height: 1.2em;
+    cursor: pointer;
+  }
+  .admin-panel .courses-and-lectures .edit-course span {
+    color: #28A745;
+    font-size: 1.75em;
+  }
+  .admin-panel .courses-and-lectures .edit-course:hover {
+    background-color: #28A745;
+  }
+  .admin-panel .courses-and-lectures .edit-course:hover span {
+    color: white;
+  }
+  .admin-panel .courses-and-lectures .new-lecture {
+    -ms-grid-row: 5;
+    -ms-grid-column: 3;
+    grid-area: new-lecture;
+    border: 3px solid #DC3545;
+    font-family: "Lato", sans-serif;
+    line-height: 1.2em;
+    cursor: pointer;
+  }
+  .admin-panel .courses-and-lectures .new-lecture span {
+    color: #DC3545;
+    font-size: 1.75em;
+  }
+  .admin-panel .courses-and-lectures .new-lecture:hover {
+    background-color: #DC3545;
+  }
+  .admin-panel .courses-and-lectures .new-lecture:hover span {
+    color: white;
+  }
+  .admin-panel .courses-and-lectures .no-courses {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #010101;
+  }
+  .admin-panel .courses-and-lectures .no-courses img {
+    margin: 0 auto;
+    display: block;
+    width: 100px;
+  }
+  .admin-panel .user-search-and-filter input,
+  .admin-panel .user-search-and-filter select {
+    border: 0;
+    color: #010101;
+    padding: 0.6em 1em;
+  }
+  .admin-panel .user-search-and-filter .filter select {
+    background-color: white;
+  }
+  .admin-panel .user-search-and-filter .filter select + select {
+    margin-left: 1em;
+  }
+  .admin-panel .users-table {
+    height: 500px;
+    max-height: 500px;
+    overflow-y: auto;
+  }
+  .admin-panel .users-table::-webkit-scrollbar {
+    width: 10px;
+  }
+  .admin-panel .users-table::-webkit-scrollbar-track {
+    background-color: #E6E6E6;
+  }
+  .admin-panel .users-table::-webkit-scrollbar-thumb {
+    background-color: #AE87FF;
+  }
+  .admin-panel .users-table table {
+    width: 100%;
+    background-color: white;
+  }
+  .admin-panel .users-table table thead {
+    border-bottom: 1px solid #A5A5A5;
+    font-weight: bold;
+  }
+  .admin-panel .users-table table .sort-up:not(.hide-sort)::after {
+    padding-left: 5px;
+    cursor: pointer;
+    content: url("/assets/icons/sort-alpha-up.svg");
+  }
+  .admin-panel .users-table table .sort-down:not(.hide-sort)::after {
+    padding-left: 5px;
+    cursor: pointer;
+    content: url("/assets/icons/sort-alpha-down.svg");
+  }
+  .admin-panel .users-table table tr {
+    cursor: pointer;
+  }
+  .admin-panel .users-table table th, .admin-panel .users-table table td {
+    padding: 0.75em;
+  }
+  .admin-panel .users-table table tbody tr:hover,
+  .admin-panel .users-table table th:hover {
+    background-color: #EEF3FF;
+  }
+  
+  @media (max-width: 1024px) {
+    .admin-panel .courses-and-lectures .new-course span {
+      font-size: 1.75em;
+      padding: 1em 0.75em;
+    }
+    .admin-panel .courses-and-lectures .course-info h3.h2 {
+      font-size: 1.25em;
+    }
+  }
+  @media (max-width: 867px) {
+    .admin-panel .courses-and-lectures {
+      grid-gap: 1em;
+      -ms-grid-columns: 1fr 1fr 1fr;
+      grid-template-columns: 1fr 1fr 1fr;
+      -ms-grid-rows: 3fr 1fr;
+      grid-template-rows: 3fr 1fr;
+      grid-template-areas: "courses courses courses" "new-course edit-course new-lecture";
+    }
+    .admin-panel .courses-and-lectures .courses .course {
+      padding-top: 60%;
+    }
+    .admin-panel .courses-and-lectures span {
+      font-size: 1.15em !important;
+      padding: 0.75em 0.5em !important;
+    }
+    .admin-panel .filter,
+  .admin-panel .info {
+      display: none;
+    }
+  }

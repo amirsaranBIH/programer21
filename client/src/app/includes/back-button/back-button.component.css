@@ -1,0 +1,7 @@
+.back-button {
+    border: 0;
+    padding: 0.35em 0.75em;
+    background-color: #28A745;
+    color: white;
+    cursor: pointer;
+  }

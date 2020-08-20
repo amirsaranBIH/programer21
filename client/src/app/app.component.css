@@ -1,0 +1,76 @@
+.header {
+    padding: 0 2em;
+    height: 50px;
+    background: linear-gradient(to right, #401598 0%, #AE87FF 100%);
+    color: white;
+  }
+  .header .brand img {
+    height: 30px;
+    width: auto;
+  }
+  .header > .navigation > ul li + li {
+    margin-left: 3em;
+  }
+  .header--fixed {
+    z-index: 100;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background: unset;
+  }
+  .header .profile-image {
+    height: 35px;
+    width: 35px;
+    margin-right: 0.5em;
+  }
+  
+  .account-link {
+    z-index: 1000;
+    position: relative;
+  }
+  .account-link img,
+  .account-link span {
+    cursor: pointer;
+  }
+  .account-link .account-dropdown {
+    position: absolute;
+    top: 115%;
+    right: 0;
+    width: 175px;
+  }
+  .account-link .account-dropdown ul {
+    background-color: #401598;
+  }
+  .account-link .account-dropdown ul li {
+    padding: 1em;
+    margin: 0 !important;
+    cursor: pointer;
+  }
+  .account-link .account-dropdown ul li:hover {
+    background-color: #AE87FF;
+  }
+  
+  .show-sm {
+    display: none;
+  }
+  
+  @media (max-width: 768px) {
+    .header > .navigation > ul li + li {
+      margin-left: 0;
+    }
+    .header > .navigation > ul li {
+      margin-right: 2em;
+    }
+    .header > .navigation > ul li:last-child {
+      margin-right: 0;
+    }
+  
+    .hide-sm {
+      display: none;
+    }
+  
+    .show-sm {
+      display: block;
+    }
+  }

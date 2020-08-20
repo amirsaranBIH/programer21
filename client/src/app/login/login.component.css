@@ -1,0 +1,7 @@
+.login {
+    max-width: 700px;
+  }
+  .login .alternate-links span:first-child {
+    display: inline-block;
+    margin-top: 0.25em;
+  }

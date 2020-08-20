@@ -4,7 +4,7 @@ import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
   // tslint:disable-next-line: component-selector
   selector: 'file-upload',
   templateUrl: './file-upload.component.html',
-  styleUrls: ['./file-upload.component.scss']
+  styleUrls: ['./file-upload.component.css']
 })
 export class FileUploadComponent implements OnInit {
 

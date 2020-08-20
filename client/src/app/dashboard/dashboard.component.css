@@ -1,0 +1,321 @@
+.dashboard {
+    height: calc(100vh - 50px);
+    display: -ms-grid;
+    display: grid;
+    grid-gap: 2em;
+    -ms-grid-rows: 100px 2em 1fr 2em 1fr;
+    grid-template-rows: 100px 1fr 1fr;
+    -ms-grid-columns: 375px 2em 1fr 2em 1fr;
+    grid-template-columns: 375px 1fr 1fr;
+    grid-template-areas: "user-details    enrolled-courses enrolled-courses" 
+                         "course-activity enrolled-courses enrolled-courses" 
+                         "latest-lectures monthly-activity monthly-activity";
+  }
+  .dashboard .user-details {
+    -ms-grid-row: 1;
+    grid-row: 1;
+    -ms-grid-column: 1;
+    grid-column: 1;
+    grid-area: user-details;
+    font-family: "Lato", sans-serif;
+    line-height: 1.2em;
+  }
+  .dashboard .user-details .h2 {
+    margin-bottom: 0;
+  }
+  .dashboard .user-details .user-image {
+    margin-right: 1em;
+  }
+  .dashboard .user-details .user-image img {
+    width: 100px;
+    height: 100px;
+    border-radius: 100px;
+  }
+  .dashboard .user-details .user-username {
+    color: #A5A5A5;
+  }
+  .dashboard .user-details .user-role {
+    margin-top: 0.5em;
+    color: #2A2A2A;
+    font-weight: bold;
+  }
+  .dashboard .course-activity {
+    -ms-grid-row: 3;
+    grid-row: 3;
+    -ms-grid-column: 1;
+    grid-column: 1;
+    grid-area: course-activity;
+  }
+  .dashboard .course-activity .section {
+    flex: 1;
+  }
+  .dashboard .course-activity .course-activity-graph {
+    width: 80%;
+    padding-top: 80%;
+    margin: 0 auto;
+    border-radius: 100%;
+    position: relative;
+  }
+  .dashboard .course-activity .course-activity-graph > * {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+  }
+  .dashboard .course-activity .course-activity-graph .no-course-activity {
+    display: flex;
+  }
+  .dashboard .course-activity .course-activity-graph .no-course-activity span {
+    margin: auto;
+    position: relative;
+    z-index: 10;
+  }
+  .dashboard .course-activity .course-activity-legend {
+    margin: 1em auto 0 auto;
+    width: 80%;
+  }
+  .dashboard .course-activity .course-activity-legend .course-activity-color {
+    display: block;
+    margin-right: 0.2em;
+    width: 13px;
+    height: 13px;
+    background-color: #E6E6E6;
+  }
+  .dashboard .course-activity .course-activity-course + .course-activity-course {
+    margin-left: 0.5em;
+  }
+  .dashboard .enrolled-courses {
+    -ms-grid-row: 1;
+    grid-row: 1;
+    -ms-grid-row-span: 3;
+    -ms-grid-column: 3;
+    grid-column: 3;
+    -ms-grid-column-span: 3;
+    grid-area: enrolled-courses;
+  }
+  .dashboard .enrolled-courses > .flex:first-child {
+    height: 40px;
+  }
+  .dashboard .enrolled-courses .image-heading {
+    flex: 1;
+  }
+  .dashboard .enrolled-courses .enrolled-courses-list {
+    position: relative;
+    flex: 1;
+  }
+  .dashboard .enrolled-courses .enrolled-course {
+    cursor: pointer;
+    height: 100%;
+    background-position: center;
+    background-size: cover;
+  }
+  .dashboard .enrolled-courses .enrolled-course h3 {
+    position: absolute;
+    bottom: -7px;
+    left: 0;
+    width: 100%;
+    padding: 0.5em 0.5em 0.5em 1em;
+    color: white;
+    background-color: rgba(0, 0, 0, 0.5);
+  }
+  .dashboard .enrolled-courses .enrolled-courses-controls {
+    position: absolute;
+    bottom: 75px;
+    right: 25px;
+    color: white;
+  }
+  .dashboard .enrolled-courses .enrolled-courses-controls .arrow img {
+    width: 30px;
+    cursor: pointer;
+  }
+  .dashboard .enrolled-courses .enrolled-courses-controls .enrolled-courses-control-info {
+    margin: 0 10px;
+    font-family: "Lato", sans-serif;
+    line-height: 1.2em;
+  }
+  .dashboard .enrolled-courses .enrolled-courses-controls .enrolled-courses-control-info div:first-child {
+    font-size: 2.14em;
+    font-weight: bold;
+    line-height: 0.85;
+  }
+  .dashboard .enrolled-courses .no-courses {
+    background-color: #EEF3FF;
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    color: #010101;
+  }
+  .dashboard .enrolled-courses .no-courses div {
+    text-align: center;
+    margin: auto;
+  }
+  .dashboard .enrolled-courses .no-courses div img {
+    margin: 0 auto;
+    display: block;
+    width: 100px;
+  }
+  .dashboard .latest-lectures {
+    -ms-grid-row: 5;
+    grid-row: 5;
+    -ms-grid-column: 1;
+    grid-column: 1;
+    grid-area: latest-lectures;
+  }
+  .dashboard .latest-lectures .toggle-finished-lectures {
+    cursor: pointer;
+    position: relative;
+    z-index: 1000;
+  }
+  .dashboard .latest-lectures .section {
+    position: relative;
+    flex: 1;
+  }
+  .dashboard .latest-lectures .section .latest-lectures-list {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    list-style: none;
+    overflow-y: auto;
+    padding: 1em;
+  }
+  .dashboard .latest-lectures .section .latest-lectures-list::-webkit-scrollbar {
+    width: 10px;
+  }
+  .dashboard .latest-lectures .section .latest-lectures-list::-webkit-scrollbar-track {
+    background-color: #E6E6E6;
+  }
+  .dashboard .latest-lectures .section .latest-lectures-list::-webkit-scrollbar-thumb {
+    background-color: #AE87FF;
+  }
+  .dashboard .latest-lectures .section .latest-lectures-list .latest-lecture {
+    background-color: white;
+    border-left: 20px solid #E6E6E6;
+    padding: 0.5em;
+  }
+  .dashboard .latest-lectures .section .latest-lectures-list .latest-lecture h3 {
+    font-family: "PT Serif", serif;
+  }
+  .dashboard .latest-lectures .section .latest-lectures-list .latest-lecture span {
+    color: #A5A5A5;
+  }
+  .dashboard .latest-lectures .section .latest-lectures-list .latest-lecture + .latest-lecture {
+    margin-top: 1em;
+  }
+  .dashboard .latest-lectures .section .latest-lectures-list .no-latest-lectures {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+  }
+  .dashboard .latest-lectures .section .latest-lectures-list .no-latest-lectures span {
+    margin: auto;
+  }
+  .dashboard .monthly-activity {
+    -ms-grid-row: 5;
+    grid-row: 5;
+    -ms-grid-column: 3;
+    grid-column: 3;
+    -ms-grid-column-span: 3;
+    grid-area: monthly-activity;
+  }
+  .dashboard .monthly-activity .current-month-text {
+    width: 180px;
+  }
+  .dashboard .monthly-activity .current-month-arrow img {
+    width: 8px;
+    cursor: pointer;
+  }
+  .dashboard .monthly-activity .section {
+    flex: 1;
+  }
+  .dashboard .monthly-activity .section .current-month {
+    color: #A5A5A5;
+  }
+  .dashboard .monthly-activity .section .monthly-activity-days {
+    align-items: stretch;
+    flex: 1;
+  }
+  .dashboard .monthly-activity .section .monthly-activity-days .monthly-activity-day {
+    padding: 0 0.3em;
+  }
+  .dashboard .monthly-activity .section .monthly-activity-days .monthly-activity-day .monthly-activity-bar {
+    background-color: #E3AAFF;
+    margin-bottom: 0.3em;
+  }
+  .dashboard .monthly-activity .section .monthly-activity-days .monthly-activity-day .day {
+    font-family: "Lato", sans-serif;
+    line-height: 1.2em;
+  }
+  .dashboard .monthly-activity .section .monthly-activity-days .monthly-activity-day:first-child {
+    padding-left: 0;
+  }
+  .dashboard .monthly-activity .section .monthly-activity-days .monthly-activity-day:last-child {
+    padding-right: 0;
+  }
+  
+  @media (max-width: 1024px) {
+    .dashboard {
+      height: auto;
+      -ms-grid-rows: 1fr;
+      grid-template-rows: 1fr;
+      -ms-grid-columns: 1fr 1fr;
+      grid-template-columns: 1fr 1fr;
+      grid-template-areas: "enrolled-courses enrolled-courses" 
+                           "user-details course-activity" 
+                           "latest-lectures latest-lectures" 
+                           "monthly-activity monthly-activity";
+    }
+    .dashboard .enrolled-courses {
+      min-height: 400px;
+    }
+    .dashboard .enrolled-courses .enrolled-courses-list .enrolled-course {
+      padding-top: 60%;
+    }
+    .dashboard .latest-lectures {
+      height: 400px;
+    }
+    .dashboard .monthly-activity {
+      height: 400px;
+    }
+    .dashboard .day {
+      font-size: 0.5em !important;
+    }
+    .dashboard .monthly-activity-days {
+      overflow: auto;
+    }
+    .dashboard .monthly-activity-day {
+      padding: 0 0.1em;
+    }
+  }
+  @media (max-width: 768px) {
+    .dashboard {
+      height: auto;
+      -ms-grid-rows: 1fr;
+      grid-template-rows: 1fr;
+      -ms-grid-columns: 1fr 1fr;
+      grid-template-columns: 1fr 1fr;
+      grid-template-areas: "enrolled-courses enrolled-courses" 
+                           "user-details user-details" 
+                           "latest-lectures latest-lectures" 
+                           "monthly-activity monthly-activity";
+    }
+    .dashboard .course-activity {
+      display: none;
+    }
+    .dashboard .latest-lectures {
+      height: 300px;
+    }
+    .dashboard .monthly-activity {
+      height: 300px;
+    }
+    .dashboard .enrolled-courses a {
+      display: none;
+    }
+  }

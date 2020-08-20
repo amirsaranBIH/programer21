@@ -5,7 +5,7 @@ import { Title } from '@angular/platform-browser';
 
 @Component({
   templateUrl: './signup.component.html',
-  styleUrls: ['./signup.component.scss']
+  styleUrls: ['./signup.component.css']
 })
 export class SignupComponent implements OnInit {
 

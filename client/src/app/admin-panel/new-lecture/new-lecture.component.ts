@@ -9,7 +9,7 @@ import { ToastrService } from 'ngx-toastr';
 @Component({
   selector: 'app-new-lecture',
   templateUrl: './new-lecture.component.html',
-  styleUrls: ['./new-lecture.component.scss']
+  styleUrls: ['./new-lecture.component.css']
 })
 export class NewLectureComponent implements OnInit {
   public createLectureForm: FormGroup;

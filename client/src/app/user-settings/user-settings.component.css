@@ -1,0 +1,76 @@
+.user-settings .image-upload {
+    flex: 1;
+    padding-right: 1em;
+  }
+  .user-settings .image-upload label {
+    cursor: pointer;
+    color: #401598;
+  }
+  .user-settings .image-upload label img {
+    width: 13px;
+    margin-right: 0.35em;
+  }
+  .user-settings .image-upload label .profile-image {
+    width: 150px;
+    height: 150px;
+    border-radius: 200px;
+  }
+  .user-settings .image-upload label .profile-image:hover ~ .edit-hover-image {
+    display: block;
+  }
+  .user-settings .image-upload .profile-image-label {
+    position: relative;
+  }
+  .user-settings .image-upload .profile-image-label .edit-hover-image {
+    display: none;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 50px;
+    opacity: 0.5;
+  }
+  .user-settings .image-upload .profile-image-label .edit-hover-image:hover {
+    display: block;
+  }
+  .user-settings .fullname {
+    padding-left: 1em;
+    flex: 2;
+  }
+  .user-settings .email-verified {
+    color: #28A745;
+    margin-top: 0.25em;
+  }
+  .user-settings .email-verified img {
+    width: 13px;
+    margin-right: 0.35em;
+  }
+  .user-settings .can-change-username {
+    margin-top: 0.25em;
+  }
+  .user-settings .username-input,
+  .user-settings .email-input {
+    margin-bottom: 0 !important;
+  }
+  .user-settings .not-verified {
+    color: #DC3545;
+  }
+  
+  @media (max-width: 867px) {
+    .user-settings .fullname {
+      padding-left: 0;
+    }
+    .user-settings .file-upload-text {
+      margin: 1em 0;
+    }
+  
+    .section .form .flex:not(.flex-sm) {
+      flex-direction: column;
+    }
+    .section .form .flex > .form-group:first-child {
+      padding-right: 0;
+    }
+    .section .form .flex > .form-group:last-child {
+      padding-left: 0;
+    }
+  }

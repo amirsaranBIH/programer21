@@ -6,7 +6,7 @@ import { Title } from '@angular/platform-browser';
 @Component({
   selector: 'app-user-course',
   templateUrl: './user-course.component.html',
-  styleUrls: ['./user-course.component.scss']
+  styleUrls: ['./user-course.component.css']
 })
 export class UserCourseComponent implements OnInit {
   public courseLectures = [];

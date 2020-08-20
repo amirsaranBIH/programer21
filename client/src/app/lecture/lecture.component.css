@@ -1,0 +1,29 @@
+
+.lecture .error-message {
+    display: none;
+    color: #DC3545;
+  }
+  .lecture .lecture-quiz-question.answer-error .error-message {
+    display: block;
+  }
+  .lecture .lecture-quiz-answers .lecture-quiz-answer {
+    border: 1px solid #E6E6E6;
+    padding: 1em;
+  }
+  .lecture .lecture-quiz-answers .lecture-quiz-answer p {
+    margin-top: 0;
+    margin-bottom: 0;
+    margin-left: 1em;
+  }
+  .lecture .lecture-quiz-answers .lecture-quiz-answer.answer-error {
+    border-color: #DC3545;
+  }
+  .lecture .lecture-quiz-answers .lecture-quiz-answer.answer-correct {
+    border-color: #28A745;
+  }
+  .lecture .lecture-quiz-answers .lecture-quiz-answer:hover {
+    background-color: #E6E6E6;
+  }
+  .lecture .lecture-quiz-answers .lecture-quiz-answer + .lecture-quiz-answer {
+    margin-top: 1em;
+  }

@@ -1,0 +1,154 @@
+.edit-course .color-picker label {
+    height: 54px;
+    width: 54px;
+    background-color: #010101;
+    margin-left: 1em;
+    cursor: pointer;
+  }
+  .edit-course .color-picker img {
+    height: 25px;
+    width: 25px;
+    margin: auto;
+  }
+  .edit-course .color-group-label {
+    display: inline-block;
+    margin-bottom: 0.5em;
+  }
+  .edit-course .color-input-group input {
+    flex: 1;
+  }
+  .edit-course .color-input-group input {
+    margin: 0;
+  }
+  .edit-course .supported-language-group {
+    flex: 1;
+  }
+  .edit-course .filter-lectures input,
+  .edit-course .filter-lectures select {
+    border: 0;
+    background-color: #E6E6E6;
+    color: #010101;
+    padding: 0.6em 1em;
+  }
+  .edit-course .filter-lectures * + * {
+    margin-left: 1em;
+  }
+  .edit-course .add-language-button {
+    margin: auto;
+  }
+  .edit-course .add-language-button button {
+    height: 54px;
+    width: 54px;
+    border: 0;
+    background-color: #28A745;
+    cursor: pointer;
+  }
+  .edit-course .add-language-button button img {
+    height: 25px;
+    width: 25px;
+  }
+  .edit-course .supported-languages-list .supported-language {
+    background-color: #28A745;
+    padding: 0.5em;
+  }
+  .edit-course .supported-languages-list .supported-language span {
+    color: white;
+  }
+  .edit-course .supported-languages-list .supported-language img {
+    width: 15px;
+    margin-left: 0.5em;
+  }
+  .edit-course .supported-languages-list .supported-language {
+    margin-top: 0.5em;
+    margin-right: 1em;
+  }
+  .edit-course .supported-languages-list .supported-language:last-child {
+    margin-right: 0;
+  }
+  .edit-course .course-lectures-list .course-lecture {
+    background-color: #EEF3FF;
+    padding: 1em;
+  }
+  .edit-course .course-lectures-list .course-lecture .lecture-title {
+    flex: 1;
+  }
+  .edit-course .course-lectures-list .course-lecture .lecture-title img {
+    width: 25px;
+    margin-right: 0.75em;
+    transition: transform 0.4s ease;
+  }
+  .edit-course .course-lectures-list .course-lecture .lecture-title span {
+    color: #71A5FF;
+    font-family: "Lato", sans-serif;
+    line-height: 1.2em;
+    font-weight: bold;
+  }
+  .edit-course .course-lectures-list .course-lecture .lecture-title .private-lecture-title {
+    color: #401598;
+  }
+  .edit-course .course-lectures-list .course-lecture .lecture-actions span {
+    cursor: pointer;
+  }
+  .edit-course .course-lectures-list .course-lecture .lecture-actions span img {
+    margin-right: 0.2em;
+  }
+  .edit-course .course-lectures-list .course-lecture .lecture-actions .edit-lecture {
+    color: #28A745;
+  }
+  .edit-course .course-lectures-list .course-lecture .lecture-actions .edit-lecture img {
+    width: 15px;
+  }
+  .edit-course .course-lectures-list .course-lecture .lecture-actions .delete-lecture {
+    cursor: pointer;
+  }
+  .edit-course .course-lectures-list .course-lecture .lecture-actions .delete-lecture img {
+    width: 12px;
+  }
+  .edit-course .course-lectures-list .course-lecture .lecture-actions span + span {
+    margin-left: 1em;
+  }
+  .edit-course .course-lectures-list .course-lecture + .course-lecture {
+    margin-top: 1em;
+  }
+  .edit-course .course-delete-reminder {
+    margin-top: 0.25em;
+  }
+  .edit-course .no-lectures {
+    color: #010101;
+  }
+  .edit-course .no-lectures img {
+    margin: 0 auto;
+    display: block;
+    width: 50px;
+  }
+  
+  @media (max-width: 768px) {
+    .edit-course .color-picker label {
+      height: 46px;
+      width: 46px;
+    }
+    .edit-course .color-picker img {
+      height: 18px;
+      width: 18px;
+    }
+    .edit-course .add-language-button {
+      margin-left: 1em;
+    }
+    .edit-course .add-language-button button {
+      height: 46px;
+      width: 46px;
+    }
+    .edit-course .add-language-button button img {
+      height: 20px;
+      width: 20px;
+    }
+    .edit-course .supported-language-group input {
+      margin: 0.5em 0 1.5em 0;
+    }
+    .edit-course .color-input-group {
+      margin-bottom: 1.25em !important;
+    }
+    .edit-course .filter-lectures select {
+      display: none;
+    }
+  }

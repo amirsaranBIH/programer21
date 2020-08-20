@@ -9,7 +9,7 @@ import { LoadingService } from 'src/app/services/loading.service';
 @Component({
   selector: 'app-edit-lecture',
   templateUrl: './edit-lecture.component.html',
-  styleUrls: ['./edit-lecture.component.scss']
+  styleUrls: ['./edit-lecture.component.css']
 })
 export class EditLectureComponent implements OnInit {
   public editLectureForm: FormGroup;

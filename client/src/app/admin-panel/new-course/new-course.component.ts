@@ -9,7 +9,7 @@ import { LoadingService } from 'src/app/services/loading.service';
 @Component({
   selector: 'app-new-course',
   templateUrl: './new-course.component.html',
-  styleUrls: ['./new-course.component.scss']
+  styleUrls: ['./new-course.component.css']
 })
 export class NewCourseComponent implements OnInit {
   public createCourseForm: FormGroup;
