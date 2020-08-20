@@ -1,7 +1,7 @@
 .new-course .color-picker label {
     height: 54px;
     width: 54px;
-    background-color: #010101;
+    background-color: var(--black);
     margin-left: 1em;
     cursor: pointer;
   }
@@ -30,7 +30,7 @@
     height: 54px;
     width: 54px;
     border: 0;
-    background-color: #28A745;
+    background-color: var(--green);
     cursor: pointer;
   }
   .new-course .add-language-button button img {
@@ -38,7 +38,7 @@
     width: 25px;
   }
   .new-course .supported-languages-list .supported-language {
-    background-color: #28A745;
+    background-color: var(--green);
     padding: 0.5em;
   }
   .new-course .supported-languages-list .supported-language span {

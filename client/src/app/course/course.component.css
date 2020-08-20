@@ -2,7 +2,7 @@
     padding-right: 1em;
   }
   .course .course-main-info .course-info {
-    color: #DC3545;
+    color: var(--red);
     font-family: "Lato", sans-serif;
     line-height: 1.2em;
     font-weight: bold;
@@ -18,13 +18,13 @@
     width: 6px;
     height: 6px;
     border-radius: 6px;
-    background-color: #DC3545;
+    background-color: var(--red);
     left: -16px;
     top: 50%;
     transform: translateY(-30%);
   }
   .course .course-main-info .course-supported-languages {
-    color: #DC3545;
+    color: var(--red);
   }
   .course .course-payment-info {
     padding-left: 1em;
@@ -38,7 +38,7 @@
     left: 0;
     width: 100%;
     padding: 0.5em 1em;
-    background-color: #28A745;
+    background-color: var(--green);
     color: white;
   }
   .course .course-payment-info .thumbnail .thumbnail-info .price {
@@ -50,7 +50,7 @@
     margin-bottom: 0;
   }
   .course .course-lectures-list .course-lecture {
-    background-color: #EEF3FF;
+    background-color: var(--lighter_grey);
     padding: 1em;
   }
   .course .course-lectures-list .course-lecture .lecture-title {
@@ -66,7 +66,7 @@
     transform: rotateZ(180deg);
   }
   .course .course-lectures-list .course-lecture .lecture-title span {
-    color: #401598;
+    color: var(--dark_purple);
     font-family: "Lato", sans-serif;
     line-height: 1.2em;
     font-weight: bold;
@@ -74,7 +74,7 @@
   .course .course-lectures-list .course-lecture .course-lecture-more-info {
     margin-top: 1em;
     padding-top: 0.5em;
-    border-top: 1px solid #E6E6E6;
+    border-top: 1px solid var(--light_grey);
   }
   .course .course-lectures-list .course-lecture .course-lecture-more-info p {
     margin: 0;
@@ -83,7 +83,7 @@
     margin-top: 1em;
   }
   .course .no-lectures {
-    color: #010101;
+    color: var(--black);
   }
   .course .no-lectures div {
     text-align: center;

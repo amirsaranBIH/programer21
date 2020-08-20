@@ -1,13 +1,13 @@
 
 .lecture .error-message {
     display: none;
-    color: #DC3545;
+    color: var(--red);
   }
   .lecture .lecture-quiz-question.answer-error .error-message {
     display: block;
   }
   .lecture .lecture-quiz-answers .lecture-quiz-answer {
-    border: 1px solid #E6E6E6;
+    border: 1px solid var(--light_grey);
     padding: 1em;
   }
   .lecture .lecture-quiz-answers .lecture-quiz-answer p {
@@ -16,13 +16,13 @@
     margin-left: 1em;
   }
   .lecture .lecture-quiz-answers .lecture-quiz-answer.answer-error {
-    border-color: #DC3545;
+    border-color: var(--red);
   }
   .lecture .lecture-quiz-answers .lecture-quiz-answer.answer-correct {
-    border-color: #28A745;
+    border-color: var(--green);
   }
   .lecture .lecture-quiz-answers .lecture-quiz-answer:hover {
-    background-color: #E6E6E6;
+    background-color: var(--light_grey);
   }
   .lecture .lecture-quiz-answers .lecture-quiz-answer + .lecture-quiz-answer {
     margin-top: 1em;

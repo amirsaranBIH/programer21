@@ -4,7 +4,7 @@
   }
   .user-settings .image-upload label {
     cursor: pointer;
-    color: #401598;
+    color: var(--dark_purple);
   }
   .user-settings .image-upload label img {
     width: 13px;
@@ -38,7 +38,7 @@
     flex: 2;
   }
   .user-settings .email-verified {
-    color: #28A745;
+    color: var(--green);
     margin-top: 0.25em;
   }
   .user-settings .email-verified img {
@@ -53,7 +53,7 @@
     margin-bottom: 0 !important;
   }
   .user-settings .not-verified {
-    color: #DC3545;
+    color: var(--red);
   }
   
   @media (max-width: 867px) {

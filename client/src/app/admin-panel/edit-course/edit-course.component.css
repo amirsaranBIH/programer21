@@ -1,7 +1,7 @@
 .edit-course .color-picker label {
     height: 54px;
     width: 54px;
-    background-color: #010101;
+    background-color: var(--black);
     margin-left: 1em;
     cursor: pointer;
   }
@@ -26,8 +26,8 @@
   .edit-course .filter-lectures input,
   .edit-course .filter-lectures select {
     border: 0;
-    background-color: #E6E6E6;
-    color: #010101;
+    background-color: var(--light_grey);
+    color: var(--black);
     padding: 0.6em 1em;
   }
   .edit-course .filter-lectures * + * {
@@ -40,7 +40,7 @@
     height: 54px;
     width: 54px;
     border: 0;
-    background-color: #28A745;
+    background-color: var(--green);
     cursor: pointer;
   }
   .edit-course .add-language-button button img {
@@ -48,7 +48,7 @@
     width: 25px;
   }
   .edit-course .supported-languages-list .supported-language {
-    background-color: #28A745;
+    background-color: var(--green);
     padding: 0.5em;
   }
   .edit-course .supported-languages-list .supported-language span {
@@ -66,7 +66,7 @@
     margin-right: 0;
   }
   .edit-course .course-lectures-list .course-lecture {
-    background-color: #EEF3FF;
+    background-color: var(--lighter_grey);
     padding: 1em;
   }
   .edit-course .course-lectures-list .course-lecture .lecture-title {
@@ -78,13 +78,13 @@
     transition: transform 0.4s ease;
   }
   .edit-course .course-lectures-list .course-lecture .lecture-title span {
-    color: #71A5FF;
+    color: var(--blue);
     font-family: "Lato", sans-serif;
     line-height: 1.2em;
     font-weight: bold;
   }
   .edit-course .course-lectures-list .course-lecture .lecture-title .private-lecture-title {
-    color: #401598;
+    color: var(--dark_purple);
   }
   .edit-course .course-lectures-list .course-lecture .lecture-actions span {
     cursor: pointer;
@@ -93,7 +93,7 @@
     margin-right: 0.2em;
   }
   .edit-course .course-lectures-list .course-lecture .lecture-actions .edit-lecture {
-    color: #28A745;
+    color: var(--green);
   }
   .edit-course .course-lectures-list .course-lecture .lecture-actions .edit-lecture img {
     width: 15px;
@@ -114,7 +114,7 @@
     margin-top: 0.25em;
   }
   .edit-course .no-lectures {
-    color: #010101;
+    color: var(--black);
   }
   .edit-course .no-lectures img {
     margin: 0 auto;

@@ -1,7 +1,7 @@
 .header {
     padding: 0 2em;
     height: 50px;
-    background: linear-gradient(to right, #401598 0%, #AE87FF 100%);
+    background: linear-gradient(to right, var(--dark_purple) 0%, var(--light_purple) 100%);
     color: white;
   }
   .header .brand img {
@@ -40,7 +40,7 @@
     width: 175px;
   }
   .account-link .account-dropdown ul {
-    background-color: #401598;
+    background-color: var(--dark_purple);
   }
   .account-link .account-dropdown ul li {
     padding: 1em;
@@ -48,7 +48,7 @@
     cursor: pointer;
   }
   .account-link .account-dropdown ul li:hover {
-    background-color: #AE87FF;
+    background-color: var(--light_purple);
   }
   
   .show-sm {

@@ -32,7 +32,7 @@
     border-radius: 100px;
   }
   .dashboard .user-details .user-username {
-    color: #A5A5A5;
+    color: var(--grey);
   }
   .dashboard .user-details .user-role {
     margin-top: 0.5em;
@@ -80,7 +80,7 @@
     margin-right: 0.2em;
     width: 13px;
     height: 13px;
-    background-color: #E6E6E6;
+    background-color: var(--light_grey);
   }
   .dashboard .course-activity .course-activity-course + .course-activity-course {
     margin-left: 0.5em;
@@ -125,28 +125,28 @@
     right: 25px;
     color: white;
   }
-  .dashboard .enrolled-courses .enrolled-courses-controls .arrow img {
+  .dashboard .enrolled-courses .arrow img {
     width: 30px;
     cursor: pointer;
   }
-  .dashboard .enrolled-courses .enrolled-courses-controls .enrolled-courses-control-info {
+  .dashboard .enrolled-courses .enrolled-courses-control-info {
     margin: 0 10px;
     font-family: "Lato", sans-serif;
     line-height: 1.2em;
   }
-  .dashboard .enrolled-courses .enrolled-courses-controls .enrolled-courses-control-info div:first-child {
+  .dashboard .enrolled-courses .enrolled-courses-control-info div:first-child {
     font-size: 2.14em;
     font-weight: bold;
     line-height: 0.85;
   }
   .dashboard .enrolled-courses .no-courses {
-    background-color: #EEF3FF;
+    background-color: var(--lighter_grey);
     position: absolute;
     top: 0;
     right: 0;
     bottom: 0;
     left: 0;
-    color: #010101;
+    color: var(--black);
   }
   .dashboard .enrolled-courses .no-courses div {
     text-align: center;
@@ -173,7 +173,7 @@
     position: relative;
     flex: 1;
   }
-  .dashboard .latest-lectures .section .latest-lectures-list {
+  .dashboard .latest-lectures-list {
     position: absolute;
     top: 0;
     left: 0;
@@ -183,30 +183,30 @@
     overflow-y: auto;
     padding: 1em;
   }
-  .dashboard .latest-lectures .section .latest-lectures-list::-webkit-scrollbar {
+  .dashboard .latest-lectures-list::-webkit-scrollbar {
     width: 10px;
   }
-  .dashboard .latest-lectures .section .latest-lectures-list::-webkit-scrollbar-track {
-    background-color: #E6E6E6;
+  .dashboard .latest-lectures-list::-webkit-scrollbar-track {
+    background-color: var(--light_grey);
   }
-  .dashboard .latest-lectures .section .latest-lectures-list::-webkit-scrollbar-thumb {
-    background-color: #AE87FF;
+  .dashboard .latest-lectures-list::-webkit-scrollbar-thumb {
+    background-color: var(--light_purple);
   }
-  .dashboard .latest-lectures .section .latest-lectures-list .latest-lecture {
+  .dashboard .latest-lectures-list .latest-lecture {
     background-color: white;
-    border-left: 20px solid #E6E6E6;
+    border-left: 20px solid var(--light_grey);
     padding: 0.5em;
   }
-  .dashboard .latest-lectures .section .latest-lectures-list .latest-lecture h3 {
+  .dashboard .latest-lectures-list .latest-lecture h3 {
     font-family: "PT Serif", serif;
   }
-  .dashboard .latest-lectures .section .latest-lectures-list .latest-lecture span {
-    color: #A5A5A5;
+  .dashboard .latest-lectures-list .latest-lecture span {
+    color: var(--grey);
   }
-  .dashboard .latest-lectures .section .latest-lectures-list .latest-lecture + .latest-lecture {
+  .dashboard .latest-lectures-list .latest-lecture + .latest-lecture {
     margin-top: 1em;
   }
-  .dashboard .latest-lectures .section .latest-lectures-list .no-latest-lectures {
+  .dashboard .latest-lectures-list .no-latest-lectures {
     position: absolute;
     top: 0;
     left: 0;
@@ -214,7 +214,7 @@
     bottom: 0;
     display: flex;
   }
-  .dashboard .latest-lectures .section .latest-lectures-list .no-latest-lectures span {
+  .dashboard .latest-lectures-list .no-latest-lectures span {
     margin: auto;
   }
   .dashboard .monthly-activity {
@@ -235,28 +235,28 @@
   .dashboard .monthly-activity .section {
     flex: 1;
   }
-  .dashboard .monthly-activity .section .current-month {
-    color: #A5A5A5;
+  .dashboard .current-month {
+    color: var(--grey);
   }
-  .dashboard .monthly-activity .section .monthly-activity-days {
+  .dashboard .monthly-activity-days {
     align-items: stretch;
     flex: 1;
   }
-  .dashboard .monthly-activity .section .monthly-activity-days .monthly-activity-day {
+  .dashboard .monthly-activity-days .monthly-activity-day {
     padding: 0 0.3em;
   }
-  .dashboard .monthly-activity .section .monthly-activity-days .monthly-activity-day .monthly-activity-bar {
-    background-color: #E3AAFF;
+  .dashboard .monthly-activity-days .monthly-activity-day .monthly-activity-bar {
+    background-color: var(--pink);
     margin-bottom: 0.3em;
   }
-  .dashboard .monthly-activity .section .monthly-activity-days .monthly-activity-day .day {
+  .dashboard .monthly-activity-days .monthly-activity-day .day {
     font-family: "Lato", sans-serif;
     line-height: 1.2em;
   }
-  .dashboard .monthly-activity .section .monthly-activity-days .monthly-activity-day:first-child {
+  .dashboard .monthly-activity-days .monthly-activity-day:first-child {
     padding-left: 0;
   }
-  .dashboard .monthly-activity .section .monthly-activity-days .monthly-activity-day:last-child {
+  .dashboard .monthly-activity-days .monthly-activity-day:last-child {
     padding-right: 0;
   }
   

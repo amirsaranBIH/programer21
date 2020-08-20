@@ -3,7 +3,7 @@
     padding-right: 1em;
   }
   .user-course .course-main-info .course-info {
-    color: #DC3545;
+    color: var(--red);
     font-family: "Lato", sans-serif;
     line-height: 1.2em;
     font-weight: bold;
@@ -19,13 +19,13 @@
     width: 6px;
     height: 6px;
     border-radius: 6px;
-    background-color: #DC3545;
+    background-color: var(--red);
     left: -16px;
     top: 50%;
     transform: translateY(-30%);
   }
   .user-course .course-main-info .course-supported-languages {
-    color: #DC3545;
+    color: var(--red);
   }
   .user-course .course-payment-info {
     flex: 2;
@@ -40,11 +40,11 @@
     left: 0;
     height: 20px;
     width: 100%;
-    background-color: #E6E6E6;
+    background-color: var(--light_grey);
   }
   .user-course .course-payment-info .thumbnail .course-percentage .percentage {
     height: 100%;
-    background-color: #28A745;
+    background-color: var(--green);
   }
   .user-course .course-payment-info .thumbnail .course-text-percentage {
     position: absolute;
@@ -52,7 +52,7 @@
     left: -20px;
     width: 40px;
     height: 40px;
-    background-color: #28A745;
+    background-color: var(--green);
     box-shadow: 4px 4px 10px #00000059;
   }
   .user-course .course-payment-info .thumbnail .course-text-percentage span {
@@ -62,7 +62,7 @@
     line-height: 1.2em;
   }
   .user-course .course-lectures-list .course-lecture {
-    background-color: #EEF3FF;
+    background-color: var(--lighter_grey);
     padding: 0.55em 1em;
   }
   .user-course .course-lectures-list .course-lecture .lecture-title {
@@ -78,7 +78,7 @@
     transform: rotateZ(180deg);
   }
   .user-course .course-lectures-list .course-lecture .lecture-title span {
-    color: #401598;
+    color: var(--dark_purple);
     font-family: "Lato", sans-serif;
     line-height: 1.2em;
     font-weight: bold;
@@ -99,7 +99,7 @@
     margin: 0;
   }
   .user-course .course-lectures-list .lecture-finished {
-    background-color: #28A745;
+    background-color: var(--green);
     color: white;
   }
   .user-course .course-lectures-list .lecture-finished .lecture-title span {

@@ -1,8 +1,8 @@
 .courses .course-search-and-filter input,
 .courses .course-search-and-filter select {
   border: 0;
-  background-color: #EEF3FF;
-  color: #010101;
+  background-color: var(--lighter_grey);
+  color: var(--black);
   padding: 0.6em 1em;
 }
 .courses .course-search-and-filter * + * {
@@ -31,11 +31,11 @@
   font-weight: bold;
   font-family: "Lato", sans-serif;
   line-height: 1.2em;
-  background-color: #28A745;
+  background-color: var(--green);
   text-align: center;
 }
 .courses .courses-list .course .course-info {
-  color: #DC3545;
+  color: var(--red);
   font-family: "Lato", sans-serif;
   line-height: 1.2em;
   font-weight: bold;
@@ -51,7 +51,7 @@
   width: 6px;
   height: 6px;
   border-radius: 6px;
-  background-color: #DC3545;
+  background-color: var(--red);
   left: -16px;
   top: 50%;
   transform: translateY(-30%);
@@ -60,7 +60,7 @@
   margin-bottom: 0;
 }
 .courses .no-courses {
-  color: #010101;
+  color: var(--black);
 }
 .courses .no-courses div {
   text-align: center;
